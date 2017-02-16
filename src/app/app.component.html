@@ -1,54 +1,33 @@
-<div class="fcs-realtime-geo-wrapper">
-        <div class="fcs-realtime-geo-scale">
-            <div class="geo-scale-minute"></div>
-            <div class="geo-scale-separator">
-                <a href="#"><i class="fa fa-angle-right"></i></a>
-                <a href="#"><i class="fa fa-angle-left"></i></a>
-            </div>
-            <div class="geo-scale-seconds"></div>
-        </div>
-        <div class="fcs-realtime-geo-view-wrapper">
-            <div class="fcs-realtime-geo-metadata-wrapper">
-                <ul class="fcs-realtime-geo-metadata-row-items">
-                    <li class="fcs-realtime-geo-metadata-row-item">
-                        <h3 class="fcs-realtime-title">Last 24 Hours Activities</h3>
-                        <ul class="geo-row-data-items">
-                            <li class="geo-row-data-item"><span class="geo-row-data-large">212,004</span></li>
-                        </ul>
-                    </li>
-                    <li class="fcs-realtime-geo-metadata-row-item">
-                        <h3>Top 5 Markets</h3>
-                        <ul class="geo-row-data-items">
-                            <li class="geo-row-data-item"><label>Florida : </label>123,021</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <geo-chart class="fcs-realtime-geo-chart" id="geo-chart">
-                <!-- Geo Chart Goes Here -->
-            </geo-chart>
-        </div>
-        <div class="fcs-division-geo-view-wrapper">
-            <ul class="fcs-division-items">
-                <li class="fcs-division-item">
-                    <h3 class="fcs-realtime-title">Central Divition</h3>
-                    <div class="fcs-division-chart-container">
-                        <!-- Geo Chart Goes Here -->
-                    </div>
-                </li>
-                <li class="fcs-division-item">
-                    <h3 class="fcs-realtime-title">Northeast Divition</h3>
-                    <div class="fcs-division-chart-container">
-                        <!-- Geo Chart Goes Here -->
-                    </div>
-                </li>
-                <li class="fcs-division-item">
-                    <h3 class="fcs-realtime-title">West Divition</h3>
-                    <div class="fcs-division-chart-container">
-                        <!-- Geo Chart Goes Here -->
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
+<h3>
+  Angular 2 Seed
+</h3>
+<nav>
+	<a [routerLink]="['/']">
+    Home
+  </a>
+  |
+	<a [routerLink]="['/about']">
+    About
+  </a>
+  |
+	<a [routerLink]="['/github', 'angular']">
+    Github Repos
+  </a>
+  |
+	<a [routerLink]="['/contact']">
+    Contact Us
+  </a>
+  |
+  <a [routerLink]="['/realtime-scale']">
+    Realtime Scale
+  </a>
+</nav>
 
+<main>
+	<router-outlet></router-outlet>
+</main>
+
+
+<footer>
+  © 2016
+</footer>
