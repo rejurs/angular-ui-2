@@ -3,7 +3,6 @@
 }
 
 .border {
-    fill: none;
     stroke: #fff;
     stroke-linejoin: round;
     stroke-linecap: round;
@@ -29,4 +28,19 @@
     fill: #777;
     font: 10px sans-serif;
     text-anchor: middle;
+}
+
+.feature {
+    stroke: grey;
+    stroke-width: 1px;
+    stroke-linejoin: round;
+}
+.mesh {
+    fill: none;
+    stroke: lightgrey;
+    stroke-width: 2px;
+    stroke-linejoin: round;
+}
+h1 {
+    font-family: sans-serif;
 }
