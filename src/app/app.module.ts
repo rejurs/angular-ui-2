@@ -16,6 +16,8 @@ import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { ContactComponent } from './contact/contact.component';
 import { GeoChartComponent } from './geochart/geochart.component';
 import { D3Service } from 'd3-ng2-service';
+import { GeoDataService } from './services/geoservice';
+import { RealtimeScaleComponent } from './realtimescale/realtime-scale.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { D3Service } from 'd3-ng2-service';
     RepoDetailComponent,
     HomeComponent,
     ContactComponent,
-    GeoChartComponent
+    GeoChartComponent,
+    RealtimeScaleComponent
   ],
   imports: [
     BrowserModule,
@@ -37,7 +40,8 @@ import { D3Service } from 'd3-ng2-service';
   ],
   providers: [
     GithubService,
-    D3Service
+    D3Service,
+    GeoDataService
   ],
   bootstrap: [ AppComponent ]
 })

@@ -23,7 +23,7 @@
   float: left;
 }
 
-.geo-scale-separator a {
+.geo-scale-separator a, .scale-background {
   color: #000000;
   display: block;
   height: 25px;
