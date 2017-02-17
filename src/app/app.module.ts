@@ -18,6 +18,7 @@ import { GeoChartComponent } from './geochart/geochart.component';
 import { D3Service } from 'd3-ng2-service';
 import { GeoDataService } from './services/geoservice';
 import { RealtimeScaleComponent } from './realtimescale/realtime-scale.component';
+import { GeoMetaDataComponent } from './geometadata/geometadata.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { RealtimeScaleComponent } from './realtimescale/realtime-scale.component
     HomeComponent,
     ContactComponent,
     GeoChartComponent,
-    RealtimeScaleComponent
+    RealtimeScaleComponent,
+    GeoMetaDataComponent
   ],
   imports: [
     BrowserModule,

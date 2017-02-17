@@ -2,7 +2,8 @@ import {Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChange
 import { D3Service, D3, Selection} from 'd3-ng2-service';
 import { GeoDataService } from '../services/geoservice';
 import {Observable} from 'rxjs/Rx';
-import { GeoDataModel } from '../geodata/geodata.model'
+import { GeoDataModel } from '../geodata/geodata.model';
+import { HubNames } from '../geodata/hubnames.model';
 
 declare var d3: any;
 declare var topojson: any;
@@ -15,6 +16,7 @@ export class GeoChartComponent implements OnInit {
     private dg3: D3;
     private parentNativeElement: any;
     private geoData: Array<GeoDataModel>;
+    private hubnames: HubNames[];
     constructor(element: ElementRef, d3Service: D3Service, private geoService: GeoDataService) { // <-- pass the D3 Service into the constructor
         this.dg3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
         this.parentNativeElement = element.nativeElement;
@@ -22,8 +24,8 @@ export class GeoChartComponent implements OnInit {
 
     getInitialGeoData() {
        return this.geoService.getGeoData().map(
-      (users) => {
-        this.geoData = users;
+      (geoData) => {
+        this.geoData = geoData;
       })
      .catch((error) => {
         throw error;
@@ -33,9 +35,9 @@ export class GeoChartComponent implements OnInit {
 
     ngOnInit() {       
 
-        this.getInitialGeoData().subscribe(_ => {;
+        this.getInitialGeoData().subscribe(_ => {
             if(this.geoData) {
-                this.generateGeoView(this.geoData);
+                this.generateGeoView(this.geoData[0]["hubs"]);
             }
         });
     }
@@ -71,7 +73,7 @@ export class GeoChartComponent implements OnInit {
 
             var legend = svg.append("g")
                 .attr("class", "legend")
-                .attr("transform", "translate(" + (width - 50) + "," + (height - 20) + ")")
+                .attr("transform", "translate(" + (width - 50) + "," + (height / 2) + ")")
                 .selectAll("g")
                 .data([1e6, 5e6, 1e7])
                 .enter().append("g");
@@ -111,18 +113,11 @@ export class GeoChartComponent implements OnInit {
                 .attr("transform", "translate(" + (width - 50) + "," + (height - 20) + ")") 
                 .attr("d", path);
 
-            geoData.forEach(element => {
-                let hubDetails = element.geoData.Hub;
-                hubDetails.forEach(hubElement => {
-                    plotData.push(hubElement); 
-                });
-            });
-
-            plotData.sort(function(a, b) {
+            geoData.sort(function(a, b) {
                          return b.Total - a.Total; 
                     });
 
-            plotData.forEach(bubbleData => {
+            geoData.forEach(bubbleData => {
                     var bubbleTooltip = `
                         <ul class="geoDataToolTip">
                             <li class="geoDataToolTipItem">
@@ -165,8 +160,8 @@ export class GeoChartComponent implements OnInit {
                             .duration(200)
                             .style("opacity", .9);
                         div.html(bubbleTooltip)
-                            .style("left", (d3.event.pageX) + "px")
-                            .style("top", (d3.event.pageY - 28) + "px");
+                            .style("left", (d3.event.pageX + 5) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
                     })
                     .on("mouseout", function(d) {
                         div.transition()

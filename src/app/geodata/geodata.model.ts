@@ -1,23 +1,15 @@
 export class GeoDataModel {
-    // overallCount: string;
-    // countByErrorCode: Array<any>;
-    // countByDivision: Array<any>;
-    // countByMarket: Array<any>;
-    // hub: Array<any>;
-    // constructor(overallCount: string, 
-    //             countByErrorCode: Array<any>,
-    //             countByDivision: Array<any>,
-    //             countByMarket: Array<any>,
-    //             hub: Array<any>) {
-    //   this.overallCount = overallCount;
-    //   this.countByErrorCode = countByErrorCode;
-    //   this.countByDivision = countByDivision;
-    //   this.countByMarket = countByMarket;
-    //   this.hub = hub;
-    // }
-
-    geoData : any;
+    geoData: any;
+    hubs : any;
+    overallCount: string;
+    divisionCount : any;
+    errorCodeCount : any;
+    marketCount : any;
     constructor(geoData: any) {
-        this.geoData = geoData;
+        this.hubs = geoData["Hub"];
+        this.overallCount = geoData["overallCount"];
+        this.divisionCount = geoData["countByDivision"];
+        this.errorCodeCount = geoData["countByErrorCode"];
+        this.marketCount = geoData["countByMarket"];
     }
   }

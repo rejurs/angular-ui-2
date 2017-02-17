@@ -5,10 +5,11 @@ import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { GeoDataModel } from '../geodata/geodata.model';
+import { HubNames } from '../geodata/hubnames.model';
 
 @Injectable()
 export class GeoDataService{
-
+    hubNames: HubNames[];
     constructor(private http: Http) {
         console.log('Geo Service created...');
     }
@@ -20,6 +21,7 @@ export class GeoDataService{
         .map((geoData: Array<any>) => {
             let results:Array<GeoDataModel> = [];
             if(geoData) {
+                this.hubNames = geoData["Hub"];
                 results.push(
                     new GeoDataModel(geoData) 
                     );
