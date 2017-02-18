@@ -19,6 +19,9 @@ export class GeoChartComponent implements OnInit {
     private hubnames: HubNames[];
 
     @Input() hubData:any;
+    @Input() height: number;
+    @Input() width: number;
+    @Input() divId: string;
     
     constructor(element: ElementRef, d3Service: D3Service, private geoService: GeoDataService) { // <-- pass the D3 Service into the constructor
         this.dg3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
@@ -33,6 +36,7 @@ export class GeoChartComponent implements OnInit {
      .catch((error) => {
         throw error;
       });
+        // .subscribe(res => this.geoData = res);
     }
 
     ngOnInit() {       
@@ -45,11 +49,33 @@ export class GeoChartComponent implements OnInit {
     }
 
     generateGeoView (geoData) {
-        var height=600, width=950;
+        let that = this;
+        var height=Number(this.height), width=Number(this.width), divId = this.divId;
 
+        //Setting Translate Width/Height for the default geo map
+        let translateConfig;
+        let scale;
+        switch (divId) {
+            case 'geo-central-division' :
+                translateConfig = [width - width/0.56, height - height/0.85];
+                scale=1200;
+                break;
+            case 'geo-ne-division': 
+                translateConfig = [width - width/0.65, height - height/2.6];
+                scale=800;
+                break;
+            case 'geo-west-division':
+                translateConfig = [width/2,  height/2.1];
+                scale=550;
+                break;
+            default:
+                translateConfig = [width / 3, height/2.3];
+                scale = 900;
+                break;
+        }
         var projection = d3.geo.mercator()
-        .scale(1000)
-        .translate([width / 3, height/2.1]);
+        .scale(scale)
+        .translate(translateConfig);
 
         var radius = d3.scale.sqrt()
             .domain([0, 1e6])
@@ -61,54 +87,39 @@ export class GeoChartComponent implements OnInit {
             var states = topojson.feature(data, data.objects.states).features
 
             projection
-                .scale(850)
+                .scale(scale)
                 .center([-106, 37.5]);
             
             var radius = d3.scale.sqrt()
                 .domain([0, 1e6])
                 .range([0, 15]);
 
-            var svg = d3.select("#geo-chart").append("svg")
+            var svg = d3.select('#' + divId)
+                    .append("div")
+                    .classed("svg-container", true)
+                    .append("svg")
                     .attr("width", width)
-                    .attr("height", height).
-                    attr("viewbox", "0 0 width height");
+                    .attr("height", height)
+                    .attr("preserveAspectRatio", "xMinYMin meet")
+                    .attr("viewBox", "0 0 "+width+ " " + height)
+                    .classed("svg-content-responsive", true);
 
-            var legend = svg.append("g")
-                .attr("class", "legend")
-                .attr("transform", "translate(" + (width - 50) + "," + (height / 2) + ")")
-                .selectAll("g")
-                .data([1e6, 5e6, 1e7])
-                .enter().append("g");
-
-            var aa = {
-                "coords": [-84.044998, 33.804443],
-                "properties": {
-                        "hub_name":"G5SNELLVILLE (GA)",
-                        "population": 1153795
-                    },
-            };
+            if(divId === "geo-chart") {
+                that.plotLegend(svg, width, height);
+            }
 
             var plotData = [];
 
             var div = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
-
-            legend.append("circle")
-                .attr("cy", function(d) { return -radius(d); })
-                .attr("r", radius);
-
-            legend.append("text")
-                .attr("y", function(d) { return -2 * radius(d); })
-                .attr("dy", "1.3em")
-                .text(d3.format(".1s"));
             
             svg.selectAll("path")
                 .data(states).enter()
                 .append("path")
                 .attr("class", "border border--state land")
                 .attr("d", path);
-
+            if(divId)
             svg.append("path")
                 .datum(topojson.mesh(data, data.objects.states, function(a, b) { return a !== b; }))
                 .attr("class", "mesh")
@@ -177,4 +188,35 @@ export class GeoChartComponent implements OnInit {
             .style("width", width + "px");
     }
 
+    plotLegend (svg, width, height) {
+        var radius = d3.scale.sqrt()
+                .domain([0, 1e6])
+                .range([0, 15]);
+
+        var legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", "translate(" + (width - 50) + "," + (height / 1.9) + ")")
+                .selectAll("g")
+                .data([1e6, 5e6, 1e7])
+                .enter().append("g");
+
+        legend.append("circle")
+            .attr("cy", function(d) { return -radius(d); })
+            .attr("r", radius);
+
+        legend.append("text")
+            .attr("y", function(d) { return -2 * radius(d); })
+            .attr("dy", "1.3em")
+            .text(d3.format(".1s"));
+
+        // var legendCalc = svg.append("g")
+        //         .attr("class", "legend")
+        //         .attr("transform", "translate(" + (width - 50) + "," + (height /2) + ")")
+        //         .selectAll("g")
+        //         .data(["1e6, 5e6, 1e7"])
+        //         .enter().append("g");
+
+        // legendCalc.append("text")
+        //     .text(d3.format(".1s"));
+    }
 }

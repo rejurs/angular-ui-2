@@ -2,29 +2,27 @@
         <realtime-scale></realtime-scale>
         <div class="fcs-realtime-geo-view-wrapper">
             <geo-meta-data></geo-meta-data>
-            <geo-chart class="fcs-realtime-geo-chart" id="geo-chart" [hubData]="hubData">
-                <!-- Geo Chart Goes Here -->
-            </geo-chart>
+            <geo-chart class="fcs-realtime-geo-chart" id="geo-chart" [height]="mainGeoChart.height" [width]="mainGeoChart.width" [divId]="mainGeoChart.divId"></geo-chart>
         </div>
         <div class="fcs-division-geo-view-wrapper">
             <ul class="fcs-division-items">
                 <li class="fcs-division-item">
-                    <h3 class="fcs-realtime-title">Central Divition</h3>
-                    <div class="fcs-division-chart-container">
+                    <h3 class="fcs-realtime-title">CENTRAL DIVISION</h3>
+                    <geo-chart class="fcs-division-chart-container" id="geo-central-division" [height]="divisionChart.height" [width]="divisionChart.width" [divId]="divisionChart.centralDivId">
                         <!-- Geo Chart Goes Here -->
-                    </div>
+                    </geo-chart>
                 </li>
                 <li class="fcs-division-item">
-                    <h3 class="fcs-realtime-title">Northeast Divition</h3>
-                    <div class="fcs-division-chart-container">
+                    <h3 class="fcs-realtime-title">NORTHEAST DIVISION</h3>
+                    <geo-chart class="fcs-division-chart-container" id="geo-ne-division" [height]="divisionChart.height" [width]="divisionChart.width" [divId]="divisionChart.neDivId">
                         <!-- Geo Chart Goes Here -->
-                    </div>
+                    </geo-chart>
                 </li>
                 <li class="fcs-division-item">
-                    <h3 class="fcs-realtime-title">West Divition</h3>
-                    <div class="fcs-division-chart-container">
+                    <h3 class="fcs-realtime-title">WEST DIVISION</h3>
+                    <geo-chart class="fcs-division-chart-container" id="geo-west-division" [height]="divisionChart.height" [width]="divisionChart.width" [divId]="divisionChart.westDivId">
                         <!-- Geo Chart Goes Here -->
-                    </div>
+                    </geo-chart>
                 </li>
             </ul>
         </div>
