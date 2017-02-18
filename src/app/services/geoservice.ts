@@ -9,23 +9,33 @@ import { GeoDataModel } from '../geodata/geodata.model';
 @Injectable()
 export class GeoDataService{
 
+    private geoDataDetails : any;
+    private errorCodes: any;
+    private divisions: any;
+    private markets : any;
+    private overallCount: any;
+
     constructor(private http: Http) {
         console.log('Geo Service created...');
     }
 
     getGeoData () {
-        return this.http.get('./app/geodata/geodatamock.json').map((res:Response) => {
-            return res.json()
-        })
-        .map((geoData: Array<any>) => {
-            let results:Array<GeoDataModel> = [];
-            if(geoData) {
-                results.push(
-                    new GeoDataModel(geoData) 
-                    );
-            }
-            return results;
-        });
+        if(this.geoDataDetails) {
+            console.log("here the call....");
+            return Observable.of(this.geoDataDetails);
+        } else {
+            return this.http.get('./app/geodata/geodatamock.1.json')
+                .map((res:Response) => {
+                return res.json()
+            })
+            .do((data => {
+                this.geoDataDetails = data;
+                this.errorCodes = data['countByErrorCode'];
+                this.divisions = data['countByDivision'];
+                this.markets = data['countByMarket'];
+                this.overallCount = data['overallCount'];
+            }));
+        }
     }
 
 }

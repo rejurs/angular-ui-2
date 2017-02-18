@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import { GeoDataService } from './services/geoservice';
 
 @Component({
   selector: 'app',

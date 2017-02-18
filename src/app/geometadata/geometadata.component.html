@@ -3,34 +3,25 @@
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">LAST 24 HOURS ACTIVITIES</h3>
             <ul class="geo-row-data-items">
-                <li class="geo-row-data-item"><span class="geo-row-data-large">{{overallCount}}</span></li>
+                <li class="geo-row-data-item"><span class="geo-row-data-large">{{overallCount | number :0}}</span></li>
             </ul>
         </li>
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">TOP 5 MARKETS</h3>
             <ul class="geo-row-data-items">
-                <!--<li *ngFor="let marketItem of markets">{{marketItem.}}</li>-->
-                <li class="geo-row-data-item"><label>Florida : </label>123,021</li>
-                <li class="geo-row-data-item"><label>Boston : </label>23,021</li>
-                <li class="geo-row-data-item"><label>California : </label>13,021</li>
-                <li class="geo-row-data-item"><label>Beltway : </label>3,044</li>
-                <li class="geo-row-data-item"><label>Keystone : </label>1,021</li>
+                <li class="geo-row-data-item" *ngFor='let key of markets | keys | slice:0:5; let i=index'><label>{{key.marketName}} : </label>{{key.marketCount | number: 0 }}</li>
             </ul>
         </li>
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">COUNTS BY DIVISIONS</h3>
             <ul class="geo-row-data-items">
-                <li class="geo-row-data-item"><label>Central : </label>123,021</li>
+                <li class="geo-row-data-item" *ngFor='let key of divisions | keys'><label>{{key.divisionName}} : </label>{{key.divisionCount | number: 0 }}</li>
             </ul>
         </li>
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">COUNTS BY MISMATCH CONDITIONS</h3>
             <ul class="geo-row-data-items">
-                <!--<li *ngFor="let #errorCode of erroCodes | keys">{{errorCode.key}} , Value : {{errorCode.value}}</li>-->
-                <li class="geo-row-data-item"><label>1600112 : </label>123,021</li>
-                <li class="geo-row-data-item"><label>1600117 : </label>23,021</li>
-                <li class="geo-row-data-item"><label>1600118 : </label>3,021</li>
-                <li class="geo-row-data-item"><label>1600119 : </label>2,021</li>
+                <li class="geo-row-data-item" *ngFor='let key of errorCodes | keys'><label>{{key.errorCode}} : </label>{{key.errorCount | number: 0 }}</li>
             </ul>
         </li>
     </ul>

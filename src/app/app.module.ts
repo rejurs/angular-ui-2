@@ -19,6 +19,7 @@ import { D3Service } from 'd3-ng2-service';
 import { GeoDataService } from './services/geoservice';
 import { RealtimeScaleComponent } from './realtimescale/realtime-scale.component';
 import { GeoMetaDataComponent } from './geometadata/geometadata.component';
+import { KeysPipe } from './utils/pipemap.util';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { GeoMetaDataComponent } from './geometadata/geometadata.component';
     ContactComponent,
     GeoChartComponent,
     RealtimeScaleComponent,
-    GeoMetaDataComponent
+    GeoMetaDataComponent,
+    KeysPipe
   ],
   imports: [
     BrowserModule,

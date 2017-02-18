@@ -15,8 +15,11 @@ declare var topojson: any;
 export class GeoChartComponent implements OnInit {
     private dg3: D3;
     private parentNativeElement: any;
-    private geoData: Array<GeoDataModel>;
+    private geoData: Array<Object>;
     private hubnames: HubNames[];
+
+    @Input() hubData:any;
+    
     constructor(element: ElementRef, d3Service: D3Service, private geoService: GeoDataService) { // <-- pass the D3 Service into the constructor
         this.dg3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
         this.parentNativeElement = element.nativeElement;
@@ -30,14 +33,13 @@ export class GeoChartComponent implements OnInit {
      .catch((error) => {
         throw error;
       });
-        // .subscribe(res => this.geoData = res);
     }
 
     ngOnInit() {       
 
         this.getInitialGeoData().subscribe(_ => {
             if(this.geoData) {
-                this.generateGeoView(this.geoData[0]["hubs"]);
+                this.generateGeoView(this.geoData["Hub"]);
             }
         });
     }
