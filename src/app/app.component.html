@@ -1,52 +1,27 @@
 <div class="fcs-realtime-geo-wrapper">
-        <div class="fcs-realtime-geo-scale">
-            <div class="geo-scale-minute"></div>
-            <div class="geo-scale-separator">
-                <a href="#"><i class="fa fa-angle-right"></i></a>
-                <a href="#"><i class="fa fa-angle-left"></i></a>
-            </div>
-            <div class="geo-scale-seconds"></div>
-        </div>
         <div class="fcs-realtime-geo-view-wrapper">
-            <div class="fcs-realtime-geo-metadata-wrapper">
-                <ul class="fcs-realtime-geo-metadata-row-items">
-                    <li class="fcs-realtime-geo-metadata-row-item">
-                        <h3 class="fcs-realtime-title">Last 24 Hours Activities</h3>
-                        <ul class="geo-row-data-items">
-                            <li class="geo-row-data-item"><span class="geo-row-data-large">212,004</span></li>
-                        </ul>
-                    </li>
-                    <li class="fcs-realtime-geo-metadata-row-item">
-                        <h3>Top 5 Markets</h3>
-                        <ul class="geo-row-data-items">
-                            <li class="geo-row-data-item"><label>Florida : </label>123,021</li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <geo-chart class="fcs-realtime-geo-chart" id="geo-chart">
-                <!-- Geo Chart Goes Here -->
-            </geo-chart>
+            <geo-meta-data></geo-meta-data>
+            <geo-chart class="fcs-realtime-geo-chart" id="geo-chart" [height]="mainGeoChart.height" [width]="mainGeoChart.width" [divId]="mainGeoChart.divId" [hubdata]="hubDetails"></geo-chart>
         </div>
         <div class="fcs-division-geo-view-wrapper">
             <ul class="fcs-division-items">
                 <li class="fcs-division-item">
-                    <h3 class="fcs-realtime-title">Central Divition</h3>
-                    <div class="fcs-division-chart-container">
+                    <h3 class="fcs-realtime-title">CENTRAL DIVISION</h3>
+                    <geo-chart class="fcs-division-chart-container" id="geo-central-division" [height]="divisionChart.height" [width]="divisionChart.width" [divId]="divisionChart.centralDivId">
                         <!-- Geo Chart Goes Here -->
-                    </div>
+                    </geo-chart>
                 </li>
                 <li class="fcs-division-item">
-                    <h3 class="fcs-realtime-title">Northeast Divition</h3>
-                    <div class="fcs-division-chart-container">
+                    <h3 class="fcs-realtime-title">NORTHEAST DIVISION</h3>
+                    <geo-chart class="fcs-division-chart-container" id="geo-ne-division" [height]="divisionChart.height" [width]="divisionChart.width" [divId]="divisionChart.neDivId">
                         <!-- Geo Chart Goes Here -->
-                    </div>
+                    </geo-chart>
                 </li>
                 <li class="fcs-division-item">
-                    <h3 class="fcs-realtime-title">West Divition</h3>
-                    <div class="fcs-division-chart-container">
+                    <h3 class="fcs-realtime-title">WEST DIVISION</h3>
+                    <geo-chart class="fcs-division-chart-container" id="geo-west-division" [height]="divisionChart.height" [width]="divisionChart.width" [divId]="divisionChart.westDivId">
                         <!-- Geo Chart Goes Here -->
-                    </div>
+                    </geo-chart>
                 </li>
             </ul>
         </div>

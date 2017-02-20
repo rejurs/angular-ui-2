@@ -1,4 +1,4 @@
-declare var require: any; 
+declare var require: any;
 /*
  * Custom Type Definitions
  * When including 3rd party modules you also need to include the type definition for the module
@@ -29,4 +29,3 @@ import * as _ from 'lodash'
  * see https://github.com/typings/registry
  *
  */
-  

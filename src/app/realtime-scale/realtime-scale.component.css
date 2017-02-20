@@ -4,7 +4,7 @@
 }
 
 .fcs-realtime-geo-scale {
-  height: 50px;
+  height: 55px;
   background: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
   margin-bottom: 1em;
@@ -16,14 +16,15 @@
   width: 49%;
   height: 50px;
   float: left;
+  border: 1px solid red;
 }
 
 .geo-scale-separator {
-  width: 2%;
+  width: 1%;
   float: left;
 }
 
-.geo-scale-separator a, .scale-background {
+.geo-scale-separator a {
   color: #000000;
   display: block;
   height: 25px;
@@ -48,88 +49,5 @@
   width: 49%;
   height: 50px;
   float: left;
-}
-
-.fcs-realtime-geo-view-wrapper {
-  background: #f0f0f0;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  height: 530px;
-  margin-bottom: 1em;
-  padding: .5em;
-  position: relative;
-}
-
-.fcs-division-geo-view-wrapper {
-  height: 300px;
-}
-
-.fcs-division-items {
-  display: -webkit-flex;
-  display: flex;
-  flex-flow: row;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0px;
-}
-
-.fcs-division-item {
-  flex-grow: 1;
-  background: #f0f0f0;
-  margin-right: 1em;
-  min-height: 300px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  padding: .5em;
-  list-style-type: none;
-}
-
-.fcs-division-item:last-child {
-  margin-right: 0;
-}
-
-.fcs-realtime-geo-chart {
-  width: calc(100% - 220px);
-  position: absolute;
-  right: 0;
-}
-
-.fcs-realtime-geo-chart .land {
-  fill: #ddd;
-}
-
-.fcs-realtime-geo-chart .border {
-  fill: none;
-  stroke: #fff;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-}
-
-.fcs-realtime-geo-chart .bubble {
-  fill: brown;
-  fill-opacity: .5;
-  stroke: #fff;
-  stroke-width: .5px;
-}
-
-.fcs-realtime-geo-chart .bubble :hover {
-  stroke: #000;
-}
-
-.fcs-realtime-geo-chart .legend circle {
-  fill: none;
-  stroke: #ccc;
-}
-
-.fcs-realtime-geo-chart .legend text {
-  fill: #777;
-  font: 10px sans-serif;
-  text-anchor: middle;
-}
-
-.fcs-realtime-title {
-  font-size: .800em;
-  font-weight: 600;
-  border-bottom: 1px solid darkgray;
-  padding-bottom: .5em;
-  margin-bottom: .5em;
-  font-family: sans-serif;
+  border: 1px solid blue;
 }
