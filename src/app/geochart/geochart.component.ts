@@ -2,7 +2,6 @@ import {Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChange
 import { D3Service, D3, Selection} from 'd3-ng2-service';
 import { GeoDataService } from '../services/geoservice';
 import {Observable} from 'rxjs/Rx';
-import { GeoDataModel } from '../geodata/geodata.model';
 import { HubNames } from '../geodata/hubnames.model';
 
 declare var d3: any;
@@ -17,6 +16,7 @@ export class GeoChartComponent implements OnInit {
     private parentNativeElement: any;
     private geoData: Array<Object>;
     private hubnames: HubNames[];
+    private newVal: HubNames[];
 
     @Input() hubdata:any
     @Input() height: number
@@ -30,17 +30,66 @@ export class GeoChartComponent implements OnInit {
 
     getHubDetails() {
         this.geoService.getHubData().subscribe( (data) => {
-            this.geoData = data;
-            this.generateGeoView(this.geoData);
+            this.hubnames = data;
+            this.generateGeoView(this.hubnames);
         });
     }
 
     ngOnInit() {
+        let that = this;
 
         setTimeout ( () => {
             this.getHubDetails();
         }, 2000);
 
+/** Logic to add the data */
+        setTimeout( () => {
+            this.regenrateMap('COLORADO (CO)');
+        }, 5000);
+        setTimeout( () => {
+            this.regenrateMap('CONNECTICUT (CT)');
+        }, 8000);
+        setTimeout( () => {
+            this.regenrateMap('KEY WEST 1 (FL)');
+        }, 9000);
+        setTimeout( () => {
+            this.regenrateMap('KEY LARGO 1 (FL)');
+        }, 10000);
+        setTimeout( () => {
+            this.regenrateMap('MARATHON 1 (FL)');
+        }, 15000);
+        /**  */
+    }
+
+    regenrateMap(market: string) {
+        let that = this;
+        this.hubnames.forEach(element => {
+                if(element.HubName == market) {
+                    element.Total = String(Number(element.Total) + 1);
+                    element.isNew = true;
+                }
+            });
+            let id;
+            switch (this.divId) {
+                case 'geo-central-division' :
+                    id="central-division";
+                    break;
+                case 'geo-ne-division': 
+                    id="ne-division";
+                    break;
+                case 'geo-west-division':
+                    id="west-division";
+                    break;
+                default:
+                    id="main-geo-chart";
+                    break;
+            }
+            d3.select("#" + id).remove();
+            that.generateGeoView(this.hubnames);
+    }
+
+    ngOnChanges(data) {
+        console.log(data);
     }
 
     generateGeoView (geoData) {
@@ -49,23 +98,27 @@ export class GeoChartComponent implements OnInit {
 
         //Setting Translate Width/Height for the default geo map
         let translateConfig;
-        let scale;
+        let scale, id;
         switch (divId) {
             case 'geo-central-division' :
                 translateConfig = [width - width/0.56, height - height/0.85];
                 scale=1200;
+                id="central-division";
                 break;
             case 'geo-ne-division': 
                 translateConfig = [width - width/0.65, height - height/2.6];
                 scale=800;
+                id="ne-division";
                 break;
             case 'geo-west-division':
                 translateConfig = [width/2,  height/2.1];
                 scale=550;
+                id="west-division";
                 break;
             default:
                 translateConfig = [width / 3, height/2.3];
                 scale = 900;
+                id="main-geo-chart";
                 break;
         }
         var projection = d3.geo.mercator()
@@ -91,6 +144,7 @@ export class GeoChartComponent implements OnInit {
             var svg = d3.select('#' + divId)
                     .append("div")
                     .classed("svg-container", true)
+                    .attr("id", id)
                     .append("svg")
                     .attr("width", width)
                     .attr("height", height)
@@ -160,8 +214,13 @@ export class GeoChartComponent implements OnInit {
                 .attr("cx", function (d) { return projection(d.coords)[0]; })
                 .attr("cy", function (d) { return projection(d.coords)[1];})
                 .attr("r", function(d) { return radius(d.Total); })
+                .attr("class", function(d) {
+                    let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
+                    d.isNew = false;
+                    return className;
+                })
                 .attr("fill", "lightred")
-                .attr('class', 'hvr-pulse')
+                // .attr('class', 'hvr-pulse')
                 .on("mouseover", function(d) {
                     div.transition()
                         .duration(200)
@@ -204,15 +263,5 @@ export class GeoChartComponent implements OnInit {
             .attr("y", function(d) { return -2 * radius(d); })
             .attr("dy", "1.3em")
             .text(d3.format(".1s"));
-
-        // var legendCalc = svg.append("g")
-        //         .attr("class", "legend")
-        //         .attr("transform", "translate(" + (width - 50) + "," + (height /2) + ")")
-        //         .selectAll("g")
-        //         .data(["1e6, 5e6, 1e7"])
-        //         .enter().append("g");
-
-        // legendCalc.append("text")
-        //     .text(d3.format(".1s"));
     }
 }

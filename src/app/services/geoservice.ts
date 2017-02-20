@@ -4,17 +4,14 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { GeoDataModel } from '../geodata/geodata.model';
+import { HubNames } from '../geodata/hubnames.model';
 
 @Injectable()
 export class GeoDataService{
 
     private geoDataDetails : any;
-    // private errorCodes: any;
-    // private divisions: any;
-    // private markets : any;
     private usCoordinates: any;
-    private hubDetails: any;
+    private hubDetails: HubNames[];
 
     constructor(private http: Http) {
         console.log('Geo Service created...');
@@ -31,9 +28,18 @@ export class GeoDataService{
             })
             .do((data => {
                 this.geoDataDetails = data;
-                this.hubDetails = data['Hub'];
+                Observable.of(this.hubDetails = data['Hub']);
             }));
         }
+    }
+    
+    ngOnInit() {
+        setTimeout( () => {
+            this.hubDetails.forEach(hubItem => {
+                hubItem.Total += 1;
+            });
+            console.log(this.hubDetails);
+        }, 5000)
     }
 
     generateUsCoordinates () {

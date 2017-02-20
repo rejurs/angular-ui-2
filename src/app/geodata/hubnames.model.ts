@@ -1,4 +1,4 @@
-export interface HubNames {
+export class HubNames {
     lat: string;
     lng: string;
     market: string;
@@ -8,4 +8,5 @@ export interface HubNames {
     Total: string;
     WithinHeadend: string;
     HubName: string;
+    isNew: boolean = false;
 }

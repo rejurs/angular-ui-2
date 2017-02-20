@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, OnInit, Pipe, PipeTransform, OnChanges } from '@angular/core';
 import { GeoDataService } from '../services/geoservice';
 import {Observable} from 'rxjs/Rx';
 import { GeoDataModel } from '../geodata/geodata.model';
@@ -36,7 +36,6 @@ export class GeoMetaDataComponent {
 
     getHubDetails() {
         this.geoService.getGeoViewData().subscribe( (geoData) => {
-            console.log(geoData);
             this.overallCount = geoData['overallCount'];
             this.errorCodes = geoData['countByErrorCode'];
             this.divisions = geoData['countByDivision'];
@@ -73,7 +72,7 @@ export class GeoMetaDataComponent {
         return marketData;
     }
 
-    ngOnInitChanges() {
-        console.log(this.errorCodes);
+    ngOnChanges(data) {
+        console.log(data);
     }
 }
