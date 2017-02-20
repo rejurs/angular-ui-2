@@ -1,0 +1,11 @@
+<div class="fcs-realtime-geo-wrapper">
+        <div class="fcs-realtime-geo-scale">
+            <div class="geo-scale-minute" [@openClose]="minuteState">
+            </div>
+            <div class="geo-scale-separator">
+                <a href="#" (click)="slideRight($event)"><i class="fa fa-angle-right"></i></a>
+                <a href="#" (click)="slideLeft($event)"><i class="fa fa-angle-left"></i></a>
+            </div>
+            <div class="geo-scale-seconds" [@openClose]="secondsState"></div>
+        </div>
+</div>
