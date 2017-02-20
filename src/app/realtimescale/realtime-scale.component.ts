@@ -100,7 +100,7 @@ export class RealtimeScaleComponent {
                  */
                 this.data = [];
 
-                var svgWidth = 700, svgHeight = 30, barWidth = 4, barHeight = 30;
+                var svgWidth = 350, svgHeight = 50, barWidth = 4, barHeight = 50;
 
                 /**
                  * Initial set of data for
