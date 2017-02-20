@@ -1,20 +1,43 @@
-import {Component} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { GeoDataService } from './services/geoservice';
 
 @Component({
   selector: 'app',
-  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
-  mainGeoChart: any = {
-    height: 600,
-    width:  950,
-    divId: "geo-chart"
-  };
-  divisionChart: any = {
-    height: 300,
-    width:  400,
-    centralDivId: "geo-central-division",
-    neDivId: "geo-ne-division",
-    westDivId: "geo-west-division"
-  };
+
+  mainGeoChart:any
+
+  divisionChart: any
+
+  hubDetails: any
+
+  constructor(private _geoservice: GeoDataService) {
+
+    this.mainGeoChart = {
+      height: 600,
+      width:  950,
+      divId: "geo-chart"
+    };
+    this.divisionChart = {
+      height: 300,
+      width:  400,
+      centralDivId: "geo-central-division",
+      neDivId: "geo-ne-division",
+      westDivId: "geo-west-division"
+    };
+  }
+
+  ngOnInit() {
+    this._geoservice.getGeoData().subscribe( data => {
+      console.log("Geo Data Fetched ! ");
+    });
+
+    this._geoservice.generateUsCoordinates().subscribe( data => {
+      console.log("Us Coordinates generated and ready to fetch !");
+    })
+  }
+  
 }
