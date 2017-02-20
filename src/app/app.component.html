@@ -1,33 +1,30 @@
-<h3>
-  Angular 2 Seed
-</h3>
-<nav>
-	<a [routerLink]="['/']">
-    Home
-  </a>
-  |
-	<a [routerLink]="['/about']">
-    About
-  </a>
-  |
-	<a [routerLink]="['/github', 'angular']">
-    Github Repos
-  </a>
-  |
-	<a [routerLink]="['/contact']">
-    Contact Us
-  </a>
-  |
-  <a [routerLink]="['/realtime-scale']">
-    Realtime Scale
-  </a>
-</nav>
+<div class="fcs-realtime-geo-wrapper">
+        <realtime-scale></realtime-scale>
+        <div class="fcs-realtime-geo-view-wrapper">
+            <geo-meta-data></geo-meta-data>
+            <geo-chart class="fcs-realtime-geo-chart" id="geo-chart" [height]="mainGeoChart.height" [width]="mainGeoChart.width" [divId]="mainGeoChart.divId" [hubdata]="hubDetails"></geo-chart>
+        </div>
+        <div class="fcs-division-geo-view-wrapper">
+            <ul class="fcs-division-items">
+                <li class="fcs-division-item">
+                    <h3 class="fcs-realtime-title">CENTRAL DIVISION</h3>
+                    <geo-chart class="fcs-division-chart-container" id="geo-central-division" [height]="divisionChart.height" [width]="divisionChart.width" [divId]="divisionChart.centralDivId">
+                        <!-- Geo Chart Goes Here -->
+                    </geo-chart>
+                </li>
+                <li class="fcs-division-item">
+                    <h3 class="fcs-realtime-title">NORTHEAST DIVISION</h3>
+                    <geo-chart class="fcs-division-chart-container" id="geo-ne-division" [height]="divisionChart.height" [width]="divisionChart.width" [divId]="divisionChart.neDivId">
+                        <!-- Geo Chart Goes Here -->
+                    </geo-chart>
+                </li>
+                <li class="fcs-division-item">
+                    <h3 class="fcs-realtime-title">WEST DIVISION</h3>
+                    <geo-chart class="fcs-division-chart-container" id="geo-west-division" [height]="divisionChart.height" [width]="divisionChart.width" [divId]="divisionChart.westDivId">
+                        <!-- Geo Chart Goes Here -->
+                    </geo-chart>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-<main>
-	<router-outlet></router-outlet>
-</main>
-
-
-<footer>
-  © 2016
-</footer>
