@@ -34,26 +34,21 @@ export class GeoMetaDataComponent {
         console.log("calling geo meta data service");
     }
 
-    getInitialGeoData() {
-        let that = this.errorCodes;
-       return this.geoService.getGeoData().map(
-        (geoData) => {
+    getHubDetails() {
+        this.geoService.getGeoViewData().subscribe( (geoData) => {
+            console.log(geoData);
             this.overallCount = geoData['overallCount'];
             this.errorCodes = geoData['countByErrorCode'];
             this.divisions = geoData['countByDivision'];
             this.markets = this.sortMarkets(geoData['countByMarket']);
-        })
-        .catch((error) => {
-            throw error;
         });
     }
 
     ngOnInit() {
-        this.getInitialGeoData().subscribe(_ => {
-            if(this.geoData) {
-                //this.generateGeoView(this.geoData[0]["hubs"]);
-            }
-        });
+
+        setTimeout ( () => {
+            this.getHubDetails();
+        }, 2000);
     }
 
     formatObject(errorTempData) {

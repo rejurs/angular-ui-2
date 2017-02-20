@@ -10,10 +10,11 @@ import { GeoDataModel } from '../geodata/geodata.model';
 export class GeoDataService{
 
     private geoDataDetails : any;
-    private errorCodes: any;
-    private divisions: any;
-    private markets : any;
-    private overallCount: any;
+    // private errorCodes: any;
+    // private divisions: any;
+    // private markets : any;
+    private usCoordinates: any;
+    private hubDetails: any;
 
     constructor(private http: Http) {
         console.log('Geo Service created...');
@@ -30,12 +31,31 @@ export class GeoDataService{
             })
             .do((data => {
                 this.geoDataDetails = data;
-                this.errorCodes = data['countByErrorCode'];
-                this.divisions = data['countByDivision'];
-                this.markets = data['countByMarket'];
-                this.overallCount = data['overallCount'];
+                this.hubDetails = data['Hub'];
             }));
         }
+    }
+
+    generateUsCoordinates () {
+        return this.http.get('./app/uscoordinates.json')
+            .map((res: Response) => {
+            return res.json();
+        })
+        .do((data => {
+            this.usCoordinates = data;
+        }));
+    }
+
+    getHubData () {
+        return Observable.of(this.hubDetails).publish().refCount();
+    }
+
+    getGeoViewData () {
+        return Observable.of(this.geoDataDetails).publish().refCount();
+    }
+
+    getUsCoordinates () {
+        return Observable.of(this.usCoordinates).publish().refCount();
     }
 
 }
