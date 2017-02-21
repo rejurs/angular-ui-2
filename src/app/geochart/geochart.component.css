@@ -140,3 +140,15 @@ div.tooltip {
   animation-iteration-count: 3;
   cursor: pointer;
 }
+
+.newItem {
+  -webkit-animation-name: hvr-pulse;
+  animation-name: hvr-pulse;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: 3;
+  animation-iteration-count: 3;
+  cursor: pointer;
+}
