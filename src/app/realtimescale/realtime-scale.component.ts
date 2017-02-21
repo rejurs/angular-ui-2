@@ -1,5 +1,7 @@
 import {Component, ViewEncapsulation, NgModule, animate, state, style, transition, trigger} from '@angular/core';
 import { Scale } from './realtime-scale.interface';
+import { GeoDataService } from '../services/geoservice';
+import { HubNames } from '../geodata/hubnames.model.ts';
 
 declare var d3: any;
 @Component({
@@ -52,6 +54,8 @@ export class RealtimeScaleComponent {
   secondsScale: any;
   minuteScale: any;
 
+  constructor(private _geoservice: GeoDataService) {}
+
   slideRight(event){
     event.preventDefault();
     if(this.minuteState == "normal" || undefined == this.minuteState){
@@ -62,7 +66,6 @@ export class RealtimeScaleComponent {
       this.minuteState = 'normal';
       this.secondsState = 'normal';
     }
-    console.log("slideRight")
   }
 
   slideLeft(event){
@@ -72,14 +75,26 @@ export class RealtimeScaleComponent {
       this.secondsState = 'expanded';
     }
     else if(this.minuteState == "expanded"){
-    console.log("expanded")
       this.minuteState = 'normal';
       this.secondsState = 'normal';
     }
-    console.log("slideLeft")
   }
 
+  generateData (hubname: any) {
+      this.data.seconds.push({
+          time: +new Date(),
+          name: hubname.HubName,
+          uid: hubname.uid
+      });
+  }
+  
   ngOnInit () {
+
+    this._geoservice.socketData.subscribe( (value: HubNames[]) => {
+        value.forEach(element => {
+          element.isNew ? this.generateData(element) : '';
+        });
+    });
 
     /**
      * Holds the full list of
@@ -90,20 +105,20 @@ export class RealtimeScaleComponent {
         minute: []
     };
 
-    /**
-     * Initial set of data for
-     * first 60 seconds/1 hour
-     * should come from the server
-     */
-    for (let i = 0; i < 60; i++) {
-        if (Math.random() > 0.8) {
-            let date = +new Date();
-            date -= (i * 1000);
-            this.data.seconds.push({
-                time: date 
-            });
-        }
-    }
+    // /**
+    //  * Initial set of data for
+    //  * first 60 seconds/1 hour
+    //  * should come from the server
+    //  */
+    // for (let i = 0; i < 60; i++) {
+    //     if (Math.random() > 0.8) {
+    //         let date = +new Date();
+    //         date -= (i * 1000);
+    //         this.data.seconds.push({
+    //             time: date 
+    //         });
+    //     }
+    // }
 
     for (let i = 0; i < 60; i++) {
         if (Math.random() > 0.8) {
@@ -148,25 +163,25 @@ export class RealtimeScaleComponent {
   setInterval(function () {
       i++;
 
-      if (Math.random() > 0.8) {
-          /**
-           * This need to be from
-           * the socket
-           */
-          that.data.seconds.push({
-              time: +new Date()
-          });
+      // if (Math.random() > 0.8) {
+      //     /**
+      //      * This need to be from
+      //      * the socket
+      //      */
+      //     that.data.seconds.push({
+      //         time: +new Date()
+      //     });
           
-          if (i == 60) {
-              /**
-               * This need to be from
-               * the socket
-               */
-              that.data.minute.push({
-                  time: +new Date()
-              });
-          }
-      }
+      //     if (i == 60) {
+      //         /**
+      //          * This need to be from
+      //          * the socket
+      //          */
+      //         that.data.minute.push({
+      //             time: +new Date()
+      //         });
+      //     }
+      // }
 
       /**
        * Remove the first entry
@@ -249,7 +264,10 @@ export class RealtimeScaleComponent {
             .attr('class', 'rect')
             .attr('fill', '#dc4223')
             .attr('width', scaleProps.barWidth)
-            .attr('height', scaleProps.barHeight);
+            .attr('height', scaleProps.barHeight)
+            .on('mouseover', function (item) {
+                d3.select('#'+item.uid).classed("newItem", true);
+            });
     }
 
     /**
@@ -258,8 +276,6 @@ export class RealtimeScaleComponent {
      * in every seconds/minute
      */
     tick(scale: any, scaleProps: Scale, items: Array<any>) : void {
-
-        console.log(scaleProps.type);
         
         let multiplier = scaleProps.type == 'seconds' ? 1 : 60;
         let end = +new Date();
@@ -282,7 +298,10 @@ export class RealtimeScaleComponent {
             .attr('class', 'rect')
             .attr('fill', '#dc4223')
             .attr('width', scaleProps.barWidth)
-            .attr('height', scaleProps.barHeight);
+            .attr('height', scaleProps.barHeight)
+            .on('mouseover', function (item) {
+                d3.select('#'+item.uid).classed("newItem", true);
+            });
 
         points.transition()
             .duration(100)

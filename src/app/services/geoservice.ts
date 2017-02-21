@@ -65,15 +65,27 @@ export class GeoDataService{
 
         return Observable.of(setInterval( () => {
             var data = "";
-            data = hubs[Math.floor(Math.random()*hubs.length)];
-            this.hubDetails.forEach(element => {
-            if(element.HubName == data) {
-                element.Total = String(Number(element.Total) + 1);
-                element.isNew = true;
+            if(Math.random() > 0.85) {
+                data = hubs[Math.floor(Math.random()*hubs.length)];
+                this.hubDetails.forEach(element => {
+                if(element.HubName == data) {
+                    element.Total = String(Number(element.Total) + 1);
+                    element.isNew = true;
+                    element.uid = this.slugify(element.HubName);
+                }
+                });
+                this.socketData.next(this.hubDetails);
             }
-            });
-            this.socketData.next(this.hubDetails);
-        }, 5000))
+        }, 1000))
+    }
+
+    slugify (arg: string) {
+        return arg.toString().toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '');            // Trim - from end of text
     }
 
 }

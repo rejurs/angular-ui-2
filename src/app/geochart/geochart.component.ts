@@ -164,6 +164,9 @@ export class GeoChartComponent implements OnInit {
                 .attr("cx", function (d) { return projection(d.coords)[0]; })
                 .attr("cy", function (d) { return projection(d.coords)[1];})
                 .attr("r", function(d) { return radius(d.Total); })
+                .attr("id", function(d) { 
+                    if(d.uid) return d.uid; 
+                })
                 .attr("class", function(d) {
                     let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
                     return className;
