@@ -88,9 +88,9 @@ export class GeoChartComponent implements OnInit {
             that.generateGeoView(this.hubnames);
     }
 
-    ngOnChanges(data) {
-        console.log(data);
-    }
+    // ngOnChanges(data) {
+    //     console.log(data);
+    // }
 
     generateGeoView (geoData) {
         let that = this;
@@ -121,15 +121,15 @@ export class GeoChartComponent implements OnInit {
                 id="main-geo-chart";
                 break;
         }
-        var projection = d3.geo.mercator()
+        var projection = d3.geoMercator()
         .scale(scale)
         .translate(translateConfig);
 
-        var radius = d3.scale.sqrt()
+        var radius = d3.scaleSqrt()
             .domain([0, 1e6])
             .range([0, 15]);
 
-        var path = d3.geo.path().projection(projection);
+        var path = d3.geoPath().projection(projection);
         this.geoService.getUsCoordinates().subscribe( (data) => {
             var states = topojson.feature(data, data.objects.states).features
 
@@ -137,7 +137,7 @@ export class GeoChartComponent implements OnInit {
                 .scale(scale)
                 .center([-106, 37.5]);
             
-            var radius = d3.scale.sqrt()
+            var radius = d3.scaleSqrt()
                 .domain([0, 1e6])
                 .range([0, 15]);
 
@@ -244,7 +244,7 @@ export class GeoChartComponent implements OnInit {
     }
 
     plotLegend (svg, width, height) {
-        var radius = d3.scale.sqrt()
+        var radius = d3.scaleSqrt()
                 .domain([0, 1e6])
                 .range([0, 15]);
 
