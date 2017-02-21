@@ -58,3 +58,7 @@
   height: 50px;
   float: left;
 }
+
+.chart rect {
+    fill: #dc4223!important;
+}

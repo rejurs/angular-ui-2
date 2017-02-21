@@ -4,14 +4,16 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { HubNames } from '../geodata/hubnames.model';
+import { GeoDataModel } from '../geodata/geodata.model';
 
 @Injectable()
 export class GeoDataService{
 
     private geoDataDetails : any;
-    private usCoordinates: any;
-    private hubDetails: HubNames[];
+    private errorCodes: any;
+    private divisions: any;
+    private markets : any;
+    private overallCount: any;
 
     constructor(private http: Http) {
         console.log('Geo Service created...');
@@ -28,40 +30,12 @@ export class GeoDataService{
             })
             .do((data => {
                 this.geoDataDetails = data;
-                Observable.of(this.hubDetails = data['Hub']);
+                this.errorCodes = data['countByErrorCode'];
+                this.divisions = data['countByDivision'];
+                this.markets = data['countByMarket'];
+                this.overallCount = data['overallCount'];
             }));
         }
-    }
-    
-    ngOnInit() {
-        setTimeout( () => {
-            this.hubDetails.forEach(hubItem => {
-                hubItem.Total += 1;
-            });
-            console.log(this.hubDetails);
-        }, 5000)
-    }
-
-    generateUsCoordinates () {
-        return this.http.get('./app/uscoordinates.json')
-            .map((res: Response) => {
-            return res.json();
-        })
-        .do((data => {
-            this.usCoordinates = data;
-        }));
-    }
-
-    getHubData () {
-        return Observable.of(this.hubDetails).publish().refCount();
-    }
-
-    getGeoViewData () {
-        return Observable.of(this.geoDataDetails).publish().refCount();
-    }
-
-    getUsCoordinates () {
-        return Observable.of(this.usCoordinates).publish().refCount();
     }
 
 }
