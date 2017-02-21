@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, OnInit, Pipe, PipeTransform, OnChanges } from '@angular/core';
 import { GeoDataService } from '../services/geoservice';
 import {Observable} from 'rxjs/Rx';
 import { GeoDataModel } from '../geodata/geodata.model';
@@ -34,26 +34,20 @@ export class GeoMetaDataComponent {
         console.log("calling geo meta data service");
     }
 
-    getInitialGeoData() {
-        let that = this.errorCodes;
-       return this.geoService.getGeoData().map(
-        (geoData) => {
+    getHubDetails() {
+        this.geoService.getGeoViewData().subscribe( (geoData) => {
             this.overallCount = geoData['overallCount'];
             this.errorCodes = geoData['countByErrorCode'];
             this.divisions = geoData['countByDivision'];
             this.markets = this.sortMarkets(geoData['countByMarket']);
-        })
-        .catch((error) => {
-            throw error;
         });
     }
 
     ngOnInit() {
-        this.getInitialGeoData().subscribe(_ => {
-            if(this.geoData) {
-                //this.generateGeoView(this.geoData[0]["hubs"]);
-            }
-        });
+
+        setTimeout ( () => {
+            this.getHubDetails();
+        }, 2000);
     }
 
     formatObject(errorTempData) {
@@ -78,7 +72,7 @@ export class GeoMetaDataComponent {
         return marketData;
     }
 
-    ngOnInitChanges() {
-        console.log(this.errorCodes);
+    ngOnChanges(data) {
+        console.log(data);
     }
 }

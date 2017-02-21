@@ -1,11 +1,12 @@
-import {Component, NgModule, OnInit, animate, state, style, transition, trigger} from '@angular/core';
+import {Component, ViewEncapsulation, NgModule, animate, state, style, transition, trigger} from '@angular/core';
+import { Scale } from './realtime-scale.interface';
 
 declare var d3: any;
-
 @Component({
   selector: 'realtime-scale',
   styleUrls: ['./realtime-scale.component.css'],
   templateUrl: './realtime-scale.component.html',
+  encapsulation: ViewEncapsulation.None,
   animations: [trigger(
       'openClose',
       [
@@ -18,21 +19,41 @@ declare var d3: any;
         transition('expanded => normal', [animate(500, style({width: '49%'})), animate(500)])
       ])]
 })
-
 export class RealtimeScaleComponent {
-
+  // Scale: Scale;
   minuteState: string;
   secondsState: string;
-
-  x: any;
-  chart: any;
   data: any;
+  chart: any;
+  /**
+   * Scale properties
+   * seconds & minute
+   */
+  secScaleProps: Scale = {
+      type: 'seconds',
+      width: 350,
+      height: 50,
+      barWidth: 4,
+      barHeight: 50
+  };
+
+  minScaleProps: Scale = {
+      type: 'minute',
+      width: 350,
+      height: 50,
+      barWidth: 4,
+      barHeight: 50
+  };
+
+  /**
+   * Scale objects
+   * seconds & minute
+   */
+  secondsScale: any;
+  minuteScale: any;
 
   slideRight(event){
     event.preventDefault();
-    //this.minuteState = 'normal';
-    //console.log(this.secondsState)
-    //this.secondsState = 'normal';
     if(this.minuteState == "normal" || undefined == this.minuteState){
       this.minuteState = 'expanded';
       this.secondsState = 'collapsed';
@@ -46,8 +67,6 @@ export class RealtimeScaleComponent {
 
   slideLeft(event){
     event.preventDefault();
-    //this.minuteState = 'collapsed';
-    //this.secondsState = 'expanded';
     if(this.minuteState == "normal" || undefined == this.minuteState){
       this.minuteState = 'collapsed';
       this.secondsState = 'expanded';
@@ -60,137 +79,214 @@ export class RealtimeScaleComponent {
     console.log("slideLeft")
   }
 
-
-            /**
-                 * Plotting the new points
-                 * (rectangular bars) into the svg
-                 */
-                tick (barWidth, barHeight, svgWidth) {
-
-                    var end = +new Date();
-                    var start = end - 60*1000;
-
-                    var x = d3.time.scale()
-                    .domain([start, end])
-                    .range([0, svgWidth]);
-
-                    x.domain( [start, end] );
-
-                    var points = this.chart.selectAll('rect')
-                        .data(this.data);
-                    
-                    points.exit().remove();
-
-                    points.enter().append('rect')    
-                        .attr('x', function(d, i) { return x(d.time) ; })
-                        .attr('y', 0 )
-                        .attr('width', barWidth )
-                        .attr('height', barHeight );
-                    
-                    points.transition()
-                        .duration(100)
-                        .attr('x', function(d, i) { return x(d.time) ; });
-                }
-
   ngOnInit () {
 
     /**
-                 * Holds the full list of
-                 * points to be plotted
-                 */
-                this.data = [];
+     * Holds the full list of
+     * points to be plotted
+     */
+    this.data = {
+        seconds: [],
+        minute: []
+    };
 
-                var svgWidth = 350, svgHeight = 50, barWidth = 4, barHeight = 50;
+    /**
+     * Initial set of data for
+     * first 60 seconds/1 hour
+     * should come from the server
+     */
+    for (let i = 0; i < 60; i++) {
+        if (Math.random() > 0.8) {
+            let date = +new Date();
+            date -= (i * 1000);
+            this.data.seconds.push({
+                time: date 
+            });
+        }
+    }
 
-                /**
-                 * Initial set of data for
-                 * first 60 seconds
-                 * if available
-                 */
-                for (var i=0; i<60; i++) {
+    for (let i = 0; i < 60; i++) {
+        if (Math.random() > 0.8) {
+            let date = +new Date();
+            date -= (i * 1000 * 60);
+            this.data.minute.push({
+                time: date
+            });
+        }
+    }
 
-                    if (Math.random() > 0.8) {
+    /**
+     * Build seconds scale
+     */
+    this.secondsScale = this.initScale('.geo-scale-seconds', this.secScaleProps);
 
-                        var date = +new Date();
-                        date -= (i*1000);
+    /**
+     * Render seconds scale
+     * initial data
+     */
+    this.renderScaleData(this.secondsScale, this.secScaleProps, this.data.seconds);
 
-                        this.data.push({
-                            time: date // from server 
-                        });
-                    }
-                }
 
-                /**
-                 * Creating the chart
-                 */
-                this.chart = d3.select('.geo-scale-seconds')
-                    .append('svg:svg')
-                    .attr('class', 'chart')
-                    .attr('width', svgWidth )
-                    .attr('height', svgHeight);
-                
-                /**
-                 * Building up the initial scale
-                 * start: current time - 60 sec
-                 * end: current time
-                 */
-                var end = +new Date();
-                var start = end - 60*1000;
+    /**
+     * Build minute scale
+     */
+    this.minuteScale = this.initScale('.geo-scale-minute', this.minScaleProps);
 
-                var x = d3.time.scale()
-                    .domain([start, end])
-                    .range([0, svgWidth]);
-                
-                /**
-                 * Plotting the initial points
-                 * (rectangular bars) into the svg
-                 */
-                this.chart.selectAll('rect')
-                    .data(this.data)
-                    .enter().append('svg:rect')
-                    .attr('x', function(d, i) { return x(d.time) ; })
-                    .attr('y', 0)
-                    .attr('width', barWidth)
-                    .attr('height', barHeight);
-                
-                let that = this;
+    /**
+     * Render minute scale
+     * initial data
+     */
+    this.renderScaleData(this.minuteScale, this.minScaleProps, this.data.minute);
 
-                /**
-                 * Shifting the bar
-                 * in every seconds
-                 */
-                setInterval(function () {
+  /**
+   * Shifting the bar
+   * in every seconds
+   */
+  let i = 0;
+  let that = this;
 
-                    if (Math.random() > 0.8) {
-                        
-                        /**
-                         * This need to be from
-                         * the socket
-                         */
-                        that.data.push({
-                            time: +new Date()
-                        });
-                    }
+  setInterval(function () {
+      i++;
 
-                    /**
-                     * Remove the first entry
-                     * if the total data length/size
-                     * exceeds certain limit
-                     */
-                    if (that.data.length > 100) {
-                        that.data.shift();
-                    }
+      if (Math.random() > 0.8) {
+          /**
+           * This need to be from
+           * the socket
+           */
+          that.data.seconds.push({
+              time: +new Date()
+          });
+          
+          if (i == 60) {
+              /**
+               * This need to be from
+               * the socket
+               */
+              that.data.minute.push({
+                  time: +new Date()
+              });
+          }
+      }
 
-                    that.tick(barWidth, barHeight, svgWidth);
+      /**
+       * Remove the first entry
+       * if the total data length/size
+       * exceeds certain limit
+       */
+      if (that.data.seconds.length > 100) {
+          that.data.seconds.shift();
+      }
+      
+      that.tick(that.secondsScale, that.secScaleProps, that.data.seconds);
 
-                }, 1000);
+      if (i == 60) {
+          /**
+           * Remove the first entry
+           * if the total data length/size
+           * exceeds certain limit
+           */
+          if (that.data.minute.length > 100) {
+              that.data.minute.shift();
+          }
+          that.tick(that.minuteScale, that.minScaleProps, that.data.minute);
+          i = 0;
+      }
 
-            }
+  }, 1000);
   }
 
+  /**
+     * Initialize the scale
+     * build the responsive svg
+     * and push to to the container
+     */
+    initScale(container: string, scaleProps: Scale) : any {
 
-/*
-collapsed
-expanded
-normal
-*/
+        /**
+         * Building the chart
+         */
+        let chart = d3.select(container)
+            .append('div')
+            //container class to make it responsive
+            .classed('scale-container', true)
+            .append('svg:svg')
+            //responsive SVG needs these 2 attributes and no width and height attr
+            .attr('preserveAspectRatio', 'xMinYMin meet')
+            .attr('viewBox', '0 0 ' + scaleProps.width + ' ' + scaleProps.height)
+            //class to make it responsive
+            .classed('scale-content-responsive', true);
+
+        return chart;
+    }
+
+    /**
+     * Render scale initial data
+     */
+    renderScaleData(scale: any, scaleProps: Scale, items: Array<any>) : void {
+
+        /**
+         * Building up the initial scale
+         * start: current time - 60 sec
+         * end: current time
+         */
+        let multiplier = (scaleProps.type == 'seconds') ? 1 : 60;
+        let end = +new Date();
+        let start = end - (multiplier * 60 * 1000);
+
+        let x = d3.scaleTime()
+            .domain([start, end])
+            .range([0, scaleProps.width]);
+        
+        /**
+         * Plotting the initial points
+         * (rectangular bars) into the svg
+         */
+        scale.selectAll('rect')
+            .data(items)
+            .enter().append('svg:rect')
+            .attr('x', function (d, i) { return x(d.time); })
+            .attr('y', 0)
+            .attr('class', 'rect')
+            .attr('fill', '#dc4223')
+            .attr('width', scaleProps.barWidth)
+            .attr('height', scaleProps.barHeight);
+    }
+
+    /**
+     * Plotting the new points
+     * (rectangular bars) into the svg
+     * in every seconds/minute
+     */
+    tick(scale: any, scaleProps: Scale, items: Array<any>) : void {
+
+        console.log(scaleProps.type);
+        
+        let multiplier = scaleProps.type == 'seconds' ? 1 : 60;
+        let end = +new Date();
+        let start = end - (multiplier * 60 * 1000);
+
+        let x = d3.scaleTime()
+            .domain([start, end])
+            .range([0, scaleProps.width]);
+
+        x.domain([start, end]);
+
+        let points = scale.selectAll('rect')
+            .data(items);
+
+        points.exit().remove();
+
+        points.enter().append('rect')
+            .attr('x', function (d, i) { return x(d.time); })
+            .attr('y', 0)
+            .attr('class', 'rect')
+            .attr('fill', '#dc4223')
+            .attr('width', scaleProps.barWidth)
+            .attr('height', scaleProps.barHeight);
+
+        points.transition()
+            .duration(100)
+            .attr('x', function (d, i) { return x(d.time); });
+    }
+
+}

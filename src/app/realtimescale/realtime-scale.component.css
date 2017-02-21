@@ -14,7 +14,7 @@
 
 .geo-scale-minute {
   width: 49%;
-  height: 50px;
+  height: 55px;
   float: left;
   background-size: 100%;
 }
@@ -35,7 +35,7 @@
 .geo-scale-separator a {
   color: #000000;
   display: block;
-  height: 25px;
+  height: 27px;
   text-align: center;
   line-height: 21px;
   background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuMCIgeTE9IjAuNSIgeDI9IjEuMCIgeTI9IjAuNSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Q3ZDdkNyIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjBmMGYwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZDdkN2Q3Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g');
@@ -48,17 +48,17 @@
 }
 
 .geo-scale-separator a:first-child {
-  height: 24px;
+  height: 27px;
   border-bottom: 1px solid darkgray;
   border-top: none;
 }
 
 .geo-scale-seconds {
   width: 49%;
-  height: 50px;
+  height: 55px;
   float: left;
 }
 
-.chart rect {
-    fill: #dc4223!important;
+.rect-line{
+  background-color: #dc4223 !important;
 }
