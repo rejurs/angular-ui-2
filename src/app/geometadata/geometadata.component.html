@@ -9,19 +9,19 @@
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">TOP 5 MARKETS</h3>
             <ul class="geo-row-data-items">
-                <li class="geo-row-data-item" *ngFor='let key of markets | keys | slice:0:5; let i=index'><label>{{key.marketName}} : </label>{{key.marketCount | number: 0 }}</li>
+                <li class="geo-row-data-item" *ngFor='let key of markets | keys | slice:0:5; let i=index'><label>{{key.name}} : </label>{{key.count | number: 0 }}</li>
             </ul>
         </li>
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">COUNTS BY DIVISIONS</h3>
             <ul class="geo-row-data-items">
-                <li class="geo-row-data-item" *ngFor='let key of divisions | keys'><label>{{key.divisionName}} : </label>{{key.divisionCount | number: 0 }}</li>
+                <li class="geo-row-data-item" *ngFor='let key of divisions | keys'><label>{{key.name}} : </label>{{key.count | number: 0 }}</li>
             </ul>
         </li>
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">COUNTS BY MISMATCH CONDITIONS</h3>
             <ul class="geo-row-data-items">
-                <li class="geo-row-data-item" *ngFor='let key of errorCodes | keys'><label>{{key.errorCode}} : </label>{{key.errorCount | number: 0 }}</li>
+                <li class="geo-row-data-item" *ngFor='let key of errorCodes | keys'><label>{{key.name}} : </label>{{key.count | number: 0 }}</li>
             </ul>
         </li>
     </ul>

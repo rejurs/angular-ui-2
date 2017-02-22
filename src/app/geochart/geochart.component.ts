@@ -40,9 +40,9 @@ export class GeoChartComponent implements OnInit {
     ngOnInit() {
         let that = this;
 
-        setTimeout ( () => {
-            this.getHubDetails();
-        }, 2000);
+        // setTimeout ( () => {
+        //     this.getHubDetails();
+        // }, 2000);
 
         this.geoService.socketData.subscribe( (value: HubNames[]) => {
             this.regenrateMap(value);
@@ -51,8 +51,18 @@ export class GeoChartComponent implements OnInit {
     }
 
     regenrateMap(market: HubNames[]) {
-        d3.select("#main-geo-chart").remove();
-        d3.select(".tooltip").remove();
+        let id;
+        switch(this.divId) {
+            case 'geo-central-division': id="central-division";
+                break;
+            case 'geo-ne-division': id="ne-division";
+                break;
+            case 'geo-west-division': id="west-division";
+                break;
+            default: id="main-geo-chart";
+                break; 
+        }
+        d3.select("#" + id).remove();
         this.hubnames = market;
         this.generateGeoView(this.hubnames);
     }
@@ -68,9 +78,25 @@ export class GeoChartComponent implements OnInit {
         //Setting Translate Width/Height for the default geo map
         let translateConfig;
         let scale, id;
-        translateConfig = [width / 3, height/2.3];
-        scale = 900;
-        id="main-geo-chart";
+        switch(divId) {
+            case 'geo-central-division': translateConfig = [width - width/0.52, height - height/0.82];
+                scale=1200;
+                id="central-division";
+                break;
+            case 'geo-ne-division': translateConfig = [width - width/0.65, height - height/2.6];
+                scale=800;
+                id="ne-division";
+                break;
+            case 'geo-west-division': translateConfig = [width/2.3,  height/2.1];
+                scale=550;
+                id="west-division";
+                break;
+            default: translateConfig = [width / 3, height/2.5];
+                scale = 800;
+                id="main-geo-chart";
+                break; 
+        }
+
         var projection = d3.geoMercator()
         .scale(scale)
         .translate(translateConfig);
@@ -96,8 +122,8 @@ export class GeoChartComponent implements OnInit {
                     .classed("svg-container", true)
                     .attr("id", id)
                     .append("svg")
-                    .attr("width", width)
-                    .attr("height", height)
+                    .attr("width", "100%")
+                    .attr("height", "100%")
                     .attr("preserveAspectRatio", "xMinYMin meet")
                     .attr("viewBox", "0 0 "+width+ " " + height)
                     .classed("svg-content-responsive", true);
@@ -107,7 +133,7 @@ export class GeoChartComponent implements OnInit {
             }
 
             var plotData = [];
-
+            
             var div = d3.select("body").append("div")
                 .attr("class", "tooltip")
                 .style("opacity", 0);
@@ -125,67 +151,67 @@ export class GeoChartComponent implements OnInit {
                 .attr("d", path);
 
             geoData.sort(function(a, b) {
-                         return b.Total - a.Total; 
+                         return b.total - a.total; 
                     });
 
             geoData.forEach(bubbleData => {
                 var bubbleTooltip = `
                     <ul class="geoDataToolTip">
                         <li class="geoDataToolTipItem">
-                            <strong> Hub : </strong> ` + bubbleData.HubName + ` 
+                            <strong> Hub : </strong> ` + bubbleData.name + ` 
                         </li>
                         <li class="geoDataToolTipItem">
                             <strong> Region : </strong> ` + bubbleData.market + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Division : </strong> ` + bubbleData.Division + ` 
+                            <strong> Division : </strong> ` + bubbleData.division + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Total : </strong> ` + bubbleData.Total + ` 
+                            <strong> Total : </strong> ` + bubbleData.total + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Outside Headend : </strong> ` + bubbleData.OutsideHeadend + ` 
+                            <strong> Outside Headend : </strong> ` + bubbleData.outsideHeadEnd + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Within Headend : </strong> ` + bubbleData.WithinHeadend + ` 
+                            <strong> Within Headend : </strong> ` + bubbleData.withinHeadEnd + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> FTA / FiberNodeIssue : </strong> ` + bubbleData.FTAFiberNodeissue + ` 
+                            <strong> FTA / FiberNodeIssue : </strong> ` + bubbleData.fiberNodeIssue + ` 
                         </li>
                     </ul>
                 `;
-                    
-                bubbleData.coords = [(bubbleData.lng), (bubbleData.lat)];
-                svg.append("g")
-                .attr("class", "bubble")
-                .selectAll("circle")
-                .data([bubbleData]).enter()
-                .append("circle")
-                .attr("cx", function (d) { return projection(d.coords)[0]; })
-                .attr("cy", function (d) { return projection(d.coords)[1];})
-                .attr("r", function(d) { return radius(d.Total); })
-                .attr("id", function(d) { 
-                    if(d.uid) return d.uid; 
-                })
-                .attr("class", function(d) {
-                    let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
-                    return className;
-                })
-                .attr("fill", "lightred")
-                // .attr('class', 'hvr-pulse')
-                .on("mouseover", function(d) {
-                    div.transition()
-                        .duration(200)
-                        .style("opacity", .9);
-                    div.html(bubbleTooltip)
-                        .style("left", (d3.event.pageX + 5) + "px")
-                        .style("top", (d3.event.pageY + 20) + "px");
-                })
-                .on("mouseout", function(d) {
-                    div.transition()
-                        .duration(500)
-                        .style("opacity", 0);
-                });
+                if(bubbleData.lon && bubbleData.lat) {
+                    bubbleData.coords = [(bubbleData.lon), (bubbleData.lat)];
+                    svg.append("g")
+                    .attr("class", "bubble")
+                    .selectAll("circle")
+                    .data([bubbleData]).enter()
+                    .append("circle")
+                    .attr("cx", function (d) { return projection(d.coords)[0]; })
+                    .attr("cy", function (d) { return projection(d.coords)[1];})
+                    .attr("r", function(d) { return radius(d.total); })
+                    .attr("id", function(d) { 
+                        if(d.uid) return d.uid; 
+                    })
+                    .attr("class", function(d) {
+                        let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
+                        id=="west-division" ? d.isNew = false : '';
+                        return className;
+                    })
+                    .on("mouseover", function(d) {
+                        div.transition()
+                            .duration(200)
+                            .style("opacity", .9);    
+                        div.html(bubbleTooltip)
+                            .style("left", (d3.event.pageX + 5) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
+                    })
+                    .on("mouseout", function(d) {
+                        div.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+                }
             });
 
         

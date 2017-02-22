@@ -83,7 +83,7 @@ export class RealtimeScaleComponent {
   generateData (hubname: any) {
       this.data.seconds.push({
           time: +new Date(),
-          name: hubname.HubName,
+          name: hubname.name,
           uid: hubname.uid
       });
   }

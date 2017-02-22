@@ -67,7 +67,7 @@ export class GeoMetaDataComponent {
     sortMarkets(marketData) {
         let data = [];
         marketData.sort(function(a, b) {
-            return b.marketCount - a.marketCount;
+            return b.count - a.count;
         })
         return marketData;
     }

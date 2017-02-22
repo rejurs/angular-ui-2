@@ -19,10 +19,10 @@
 }
 
 .scale-background {
-    background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #e6e6e6), color-stop(50%, #f7f7f7), color-stop(100%, #d4d4d4));
-    background-image: -moz-linear-gradient(bottom, #d4d4d4, #f7f7f7, #d4d4d4);
-    background-image: -webkit-linear-gradient(bottom, #d4d4d4, #f7f7f7, #d4d4d4);
-    background-image: linear-gradient(to top, #d4d4d4, #f7f7f7, #d4d4d4);
+    background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #e6e6e6), color-stop(50%, #f7f7f7), color-stop(100%, #e6e6e6));
+    background-image: -moz-linear-gradient(bottom, #e6e6e6, #f7f7f7, #e6e6e6);
+    background-image: -webkit-linear-gradient(bottom, #e6e6e6, #f7f7f7, #e6e6e6);
+    background-image: linear-gradient(to top, #e6e6e6, #f7f7f7, #e6e6e6);
 }
 
 .geo-scale-separator {
