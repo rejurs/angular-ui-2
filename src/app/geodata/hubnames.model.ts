@@ -9,4 +9,5 @@ export class HubNames {
     WithinHeadend: string;
     HubName: string;
     isNew: boolean = false;
+    uid: string;
 }

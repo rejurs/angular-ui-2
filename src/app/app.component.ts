@@ -38,6 +38,10 @@ export class AppComponent {
     this._geoservice.generateUsCoordinates().subscribe( data => {
       console.log("Us Coordinates generated and ready to fetch !");
     })
+
+    this._geoservice.generateSocketData().subscribe( data => {
+      console.log("Socket connection established...");
+    })
   }
   
 }

@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnChanges, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, ViewEncapsulation, OnInit} from '@angular/core';
 import { D3Service, D3, Selection} from 'd3-ng2-service';
 import { GeoDataService } from '../services/geoservice';
 import {Observable} from 'rxjs/Rx';
@@ -7,13 +7,13 @@ import { HubNames } from '../geodata/hubnames.model';
 declare var d3: any;
 declare var topojson: any;
 @Component({
-  selector: 'geo-chart',
+  selector: 'west-div-chart',
   encapsulation: ViewEncapsulation.None,
   template: '',
   styleUrls: ['./geochart.component.css']
 })
 
-export class GeoChartComponent implements OnInit {
+export class WestDivisionComponent implements OnInit {
     private dg3: D3;
     private parentNativeElement: any;
     private geoData: Array<Object>;
@@ -51,15 +51,11 @@ export class GeoChartComponent implements OnInit {
     }
 
     regenrateMap(market: HubNames[]) {
-        d3.select("#main-geo-chart").remove();
+        d3.select("#west-division").remove();
         d3.select(".tooltip").remove();
         this.hubnames = market;
         this.generateGeoView(this.hubnames);
     }
-
-    // ngOnChanges(data) {
-    //     console.log(data);
-    // }
 
     generateGeoView (geoData) {
         let that = this;
@@ -68,9 +64,9 @@ export class GeoChartComponent implements OnInit {
         //Setting Translate Width/Height for the default geo map
         let translateConfig;
         let scale, id;
-        translateConfig = [width / 3, height/2.3];
-        scale = 900;
-        id="main-geo-chart";
+        translateConfig = [width/2,  height/2.1];
+        scale=550;
+        id="west-division";
         var projection = d3.geoMercator()
         .scale(scale)
         .translate(translateConfig);
@@ -164,11 +160,9 @@ export class GeoChartComponent implements OnInit {
                 .attr("cx", function (d) { return projection(d.coords)[0]; })
                 .attr("cy", function (d) { return projection(d.coords)[1];})
                 .attr("r", function(d) { return radius(d.Total); })
-                .attr("id", function(d) { 
-                    if(d.uid) return d.uid; 
-                })
                 .attr("class", function(d) {
                     let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
+                    d.isNew = false;
                     return className;
                 })
                 .attr("fill", "lightred")

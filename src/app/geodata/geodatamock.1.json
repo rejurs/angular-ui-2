@@ -131,8 +131,8 @@
          "Division":"CENTRAL",
          "market":"FLORIDA REGION",
          "Total":"900000",
-         "Outside Headend":"36520",
-         "Within Headend":"86501",
+         "OutsideHeadend":"36520",
+         "WithinHeadend":"86501",
          "FTAFiberNodeissue":"50254"
       },
       {  

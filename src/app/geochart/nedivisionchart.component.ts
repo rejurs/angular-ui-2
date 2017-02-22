@@ -7,13 +7,13 @@ import { HubNames } from '../geodata/hubnames.model';
 declare var d3: any;
 declare var topojson: any;
 @Component({
-  selector: 'geo-chart',
+  selector: 'ne-div-chart',
   encapsulation: ViewEncapsulation.None,
   template: '',
   styleUrls: ['./geochart.component.css']
 })
 
-export class GeoChartComponent implements OnInit {
+export class NorthEastDivisionComponent implements OnInit {
     private dg3: D3;
     private parentNativeElement: any;
     private geoData: Array<Object>;
@@ -51,26 +51,20 @@ export class GeoChartComponent implements OnInit {
     }
 
     regenrateMap(market: HubNames[]) {
-        d3.select("#main-geo-chart").remove();
+        d3.select("#ne-division").remove();
         d3.select(".tooltip").remove();
         this.hubnames = market;
         this.generateGeoView(this.hubnames);
     }
 
-    // ngOnChanges(data) {
-    //     console.log(data);
-    // }
-
     generateGeoView (geoData) {
         let that = this;
         var height=Number(this.height), width=Number(this.width), divId = this.divId;
-
-        //Setting Translate Width/Height for the default geo map
         let translateConfig;
         let scale, id;
-        translateConfig = [width / 3, height/2.3];
-        scale = 900;
-        id="main-geo-chart";
+        translateConfig = [width - width/0.65, height - height/2.6];
+        scale=800;
+        id="ne-division";
         var projection = d3.geoMercator()
         .scale(scale)
         .translate(translateConfig);
@@ -164,9 +158,6 @@ export class GeoChartComponent implements OnInit {
                 .attr("cx", function (d) { return projection(d.coords)[0]; })
                 .attr("cy", function (d) { return projection(d.coords)[1];})
                 .attr("r", function(d) { return radius(d.Total); })
-                .attr("id", function(d) { 
-                    if(d.uid) return d.uid; 
-                })
                 .attr("class", function(d) {
                     let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
                     return className;

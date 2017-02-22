@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Injectable }     from '@angular/core';
 import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
+import { Subject }    from 'rxjs/Subject';
 import { HubNames } from '../geodata/hubnames.model';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class GeoDataService{
     private geoDataDetails : any;
     private usCoordinates: any;
     private hubDetails: HubNames[];
+    socketData: Subject<HubNames[]> = new Subject<HubNames[]>();
 
     constructor(private http: Http) {
         console.log('Geo Service created...');
@@ -33,14 +35,7 @@ export class GeoDataService{
         }
     }
     
-    ngOnInit() {
-        setTimeout( () => {
-            this.hubDetails.forEach(hubItem => {
-                hubItem.Total += 1;
-            });
-            console.log(this.hubDetails);
-        }, 5000)
-    }
+    ngOnInit() {}
 
     generateUsCoordinates () {
         return this.http.get('./app/uscoordinates.json')
@@ -62,6 +57,35 @@ export class GeoDataService{
 
     getUsCoordinates () {
         return Observable.of(this.usCoordinates).publish().refCount();
+    }
+
+    generateSocketData() {
+        /** Logic to add the data */
+        let hubs = ['KEY WEST (FL)', 'MARATHON (FL)', 'COLORADO 1 (CO)', 'COLORADO (CO)', 'CONNECTICUT (CT)', 'KEY WEST 1 (FL)', 'KEY LARGO 1 (FL)', 'MARATHON 1 (FL)', 'COLORADO 2 (CO)'];
+
+        return Observable.of(setInterval( () => {
+            var data = "";
+            if(Math.random() > 0.85) {
+                data = hubs[Math.floor(Math.random()*hubs.length)];
+                this.hubDetails.forEach(element => {
+                if(element.HubName == data) {
+                    element.Total = String(Number(element.Total) + 1);
+                    element.isNew = true;
+                    element.uid = this.slugify(element.HubName);
+                }
+                });
+                this.socketData.next(this.hubDetails);
+            }
+        }, 1000))
+    }
+
+    slugify (arg: string) {
+        return arg.toString().toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '');            // Trim - from end of text
     }
 
 }

@@ -20,6 +20,9 @@ import { GeoDataService } from './services/geoservice';
 import { RealtimeScaleComponent } from './realtimescale/realtime-scale.component';
 import { GeoMetaDataComponent } from './geometadata/geometadata.component';
 import { KeysPipe } from './utils/pipemap.util';
+import { CentralDivisionComponent } from './geochart/centraldivisionchart.component';
+import { NorthEastDivisionComponent } from './geochart/nedivisionchart.component';
+import { WestDivisionComponent } from './geochart/westdivisionchart.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +36,10 @@ import { KeysPipe } from './utils/pipemap.util';
     GeoChartComponent,
     RealtimeScaleComponent,
     GeoMetaDataComponent,
-    KeysPipe
+    KeysPipe,
+    CentralDivisionComponent,
+    NorthEastDivisionComponent,
+    WestDivisionComponent
   ],
   imports: [
     BrowserModule,
