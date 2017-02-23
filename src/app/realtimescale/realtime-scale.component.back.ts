@@ -42,17 +42,17 @@ export class RealtimeScaleComponent {
     secScaleProps: Scale = {
         type        : 'seconds',
         width       : 350,
-        height      : 31,
+        height      : 50,
         barWidth    : 4,
-        barHeight   : 31
+        barHeight   : 50
     };
 
     minScaleProps: Scale = {
         type        : 'minute',
         width       : 350,
-        height      : 31,
+        height      : 50,
         barWidth    : 4,
-        barHeight   : 31
+        barHeight   : 50
     };
 
     /**
@@ -61,7 +61,7 @@ export class RealtimeScaleComponent {
      */
     secondsScale: any;
     minuteScale: any;
-    
+
     constructor(private geoDataService: GeoDataService) { }
 
     slideRight(event) {
@@ -106,7 +106,7 @@ export class RealtimeScaleComponent {
      * build the responsive svg
      * and push to to the container
      */
-    initScale(container: string, scaleProps: Scale) : any {
+    initScale(container: string, scaleProps: Scale): any {
 
         /**
          * Building the chart
@@ -118,7 +118,7 @@ export class RealtimeScaleComponent {
             .append('svg:svg')
             //responsive SVG needs these 2 attributes and no width and height attr
             .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '0 0 ' + scaleProps.width + ' ' + 50) // scaleProps.height
+            .attr('viewBox', '0 0 ' + scaleProps.width + ' ' + scaleProps.height)
             //class to make it responsive
             .classed('scale-content-responsive', true);
 
@@ -130,51 +130,10 @@ export class RealtimeScaleComponent {
      * and events
      * if it's available
      */
-    renderScaleData(scale: any, scaleProps: Scale, items: Array<any>) : void {
+    renderScaleData(scale: any, scaleProps: Scale, items: Array<any>): void {
 
         // let that = this;
-
-        let labels: Array<any>;
-
-        if (scaleProps.type == 'seconds') {
-
-            labels = [
-
-                {label: '............ -60 sec'},
-                {label: '-45 sec'},
-                {label: '-30 sec'},
-                {label: '-15 sec'},
-                {label: '0 sec'}
-            ];
-
-        } else {
-
-            labels = [
-
-                {label: '-60 min'},
-                {label: '-50 min'},
-                {label: '-40 min'},
-                {label: '-30 min'},
-                {label: '-20 min'},
-                {label: '-10 min'},
-                {label: '0 min'}
-            ];
-        }
-
-        let xBand: any = d3.scaleBand().rangeRound([-45, scaleProps.width+45]);
-        let xAxis: any = d3.axisBottom(xBand).ticks(labels.length);
-
-        xBand.domain(labels.map(function(d) {
-            return d.label;
-        }));
-
-        scale.append('g')
-            .attr('class', 'x axis')
-            .attr('transform', 'translate(0,' + scaleProps.height + ')')
-            .call(xAxis);
-
-        // scale.selectAll(".axis text").attr("text-anchor", "right");  
-
+        
         /**
          * Building up the initial scale
          * start: current time - 60 sec
@@ -200,7 +159,7 @@ export class RealtimeScaleComponent {
             .attr('class', 'rect')
             .attr('fill', '#dc4223')
             .attr('width', scaleProps.barWidth)
-            .attr('height', scaleProps.barHeight)
+            .attr('height', scaleProps.barHeight);
             // .on('mouseover', function (item) {
                 
             //     d3.select('#' + item.uid).classed('newItem', true);
@@ -231,7 +190,7 @@ export class RealtimeScaleComponent {
      * (rectangular bars) into the svg
      * in every seconds/minute
      */
-    tick(scale: any, scaleProps: Scale, items: Array<any>) : void {
+    tick(scale: any, scaleProps: Scale, items: Array<any>): void {
 
         // let that = this;
 
@@ -255,7 +214,7 @@ export class RealtimeScaleComponent {
             .attr('class', 'rect')
             .attr('fill', '#dc4223')
             .attr('width', scaleProps.barWidth)
-            .attr('height', scaleProps.barHeight)
+            .attr('height', scaleProps.barHeight);
             // .on('mouseover', function (item) {
                 
             //     d3.select('#' + item.uid).classed('newItem', true);
@@ -281,7 +240,7 @@ export class RealtimeScaleComponent {
             // });
 
         bars.transition()
-            .duration(1000)
+            .duration(100)
             .attr('x', function (d, i) { return x(d.time); });
     }
 
@@ -331,12 +290,12 @@ export class RealtimeScaleComponent {
          * Subscribe
          * to the realtime data
          */
-        // this.geoDataService.socketData.subscribe((value: HubNames[]) => {
+        this.geoDataService.socketData.subscribe((value: HubNames[]) => {
 
-        //     value.forEach(element => {
-        //         element.isNew ? this.generateData(element) : '';
-        //     });
-        // });
+            value.forEach(element => {
+                element.isNew ? this.generateData(element) : '';
+            });
+        });
 
         /**
          * Holds the full list of
@@ -352,34 +311,26 @@ export class RealtimeScaleComponent {
          * first 60 seconds/1 hour
          * should come from the server
          */
-        for (let i = 0; i < 60; i++) {
-
-            if (Math.random() > 0.8) {
-
-                let date = +new Date();
-                date -= (i * 1000);
-
-                this.data.seconds.push({
-                    time: date,
-                    name: 'SecPoint '+i
-                });
-            }
-        }
+        // for (let i = 0; i < 60; i++) {
+        //     if (Math.random() > 0.8) {
+        //         let date = +new Date();
+        //         date -= (i * 1000);
+        //         this.data.seconds.push({
+        //             time: date 
+        //         });
+        //     }
+        // }
 
         for (let i = 0; i < 60; i++) {
-
             if (Math.random() > 0.8) {
-
                 let date = +new Date();
                 date -= (i * 1000 * 60);
-
                 this.data.minute.push({
-                    time: date,
-                    name: 'MinPoint '+i
+                    time: date
                 });
             }
         }
-        
+
         /**
          * Build seconds scale
          */
@@ -413,17 +364,16 @@ export class RealtimeScaleComponent {
         setInterval(function () {
 
             i++;
-            
+
             if (Math.random() > 0.8) {
 
                 /**
                  * This need to be from
                  * the socket
                  */
-                that.data.seconds.push({
-                    time: +new Date(),
-                    name: 'SecPoint '+i
-                });
+                // that.data.seconds.push({
+                //     time: +new Date()
+                // });
 
                 if (i == 60) {
 
@@ -432,8 +382,7 @@ export class RealtimeScaleComponent {
                      * the socket
                      */
                     that.data.minute.push({
-                        time: +new Date(),
-                        name: 'MinPoint '+i
+                        time: +new Date()
                     });
                 }
             }
@@ -446,11 +395,10 @@ export class RealtimeScaleComponent {
             if (that.data.seconds.length > 100) {
                 that.data.seconds.shift();
             }
-            
+
             that.tick(that.secondsScale, that.secScaleProps, that.data.seconds);
 
             if (i == 60) {
-
                 /**
                  * Remove the first entry
                  * if the total data length/size
@@ -461,18 +409,11 @@ export class RealtimeScaleComponent {
                 }
 
                 that.tick(that.minuteScale, that.minScaleProps, that.data.minute);
-
+                
                 i = 0;
             }
 
         }, 1000);
-
     }
+
 }
-
-
-/*
-collapsed
-expanded
-normal
-*/

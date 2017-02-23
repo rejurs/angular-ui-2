@@ -3,7 +3,7 @@
 }
 
 .fcs-realtime-geo-scale {
-  height: 50px;
+  height: 80px;
   background: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
   margin-bottom: 1em;
@@ -11,18 +11,11 @@
   clear: both;
 }
 
-.geo-scale-minute {
-  width: 49%;
-  height: 55px;
-  float: left;
-  background-size: 100%;
-}
-
 .scale-background {
-    background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #e6e6e6), color-stop(50%, #f7f7f7), color-stop(100%, #e6e6e6));
-    background-image: -moz-linear-gradient(bottom, #e6e6e6, #f7f7f7, #e6e6e6);
-    background-image: -webkit-linear-gradient(bottom, #e6e6e6, #f7f7f7, #e6e6e6);
-    background-image: linear-gradient(to top, #e6e6e6, #f7f7f7, #e6e6e6);
+    background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #e6e6e6), color-stop(50%, #f7f7f7), color-stop(100%, #d4d4d4));
+    background-image: -moz-linear-gradient(bottom, #d4d4d4, #f7f7f7, #d4d4d4);
+    background-image: -webkit-linear-gradient(bottom, #d4d4d4, #f7f7f7, #d4d4d4);
+    background-image: linear-gradient(to top, #d4d4d4, #f7f7f7, #d4d4d4);
 }
 
 .geo-scale-separator {
@@ -47,16 +40,50 @@
 
 .geo-scale-separator a:first-child {
   height: 27px;
-  border-bottom: 1px solid darkgray;
+  /*border-bottom: 1px solid darkgray;*/
   border-top: none;
+}
+
+.geo-scale-minute {
+  width: 49%;
+  height: 55px;
+  float: left;
+  background-size: 100%;
+
+  /*overflow: hidden;*/
 }
 
 .geo-scale-seconds {
   width: 49%;
   height: 55px;
   float: left;
+
+  /*overflow: hidden;*/
 }
 
-.rect-line{
-  background-color: #dc4223 !important;
+.axis .tick text {
+    font-size: 6px;
+    fill: #bebebe;
+}
+
+.axis path{
+    display: none;
+}
+
+.axis .tick line {
+    stroke-width: 1;
+    stroke: rgba(0, 0, 0, 0.2);
+}
+
+div.tip {   
+    position: absolute;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: #fff;
+    border: 1px solid;
+    border-radius: 5px;
+    pointer-events: none;
+    fill-opacity:  0.1;
+    min-width: 100px;
+    min-height: 100px;
 }
