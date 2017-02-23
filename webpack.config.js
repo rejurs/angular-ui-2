@@ -36,7 +36,8 @@ var webpackConfig = {
         ]
       },
       { test: /\.css$/, loaders: ['to-string-loader', 'css-loader'] },
-      { test: /\.html$/, loader: 'raw-loader' }
+      { test: /\.html$/, loader: 'raw-loader' },
+      { test: /\.json$/, loader: 'json-loader'}
     ]
   }
 
@@ -76,7 +77,8 @@ var defaultConfig = {
     process: true,
     Buffer: false,
     clearImmediate: false,
-    setImmediate: false
+    setImmediate: false,
+    net: 'empty'
   }
 };
 

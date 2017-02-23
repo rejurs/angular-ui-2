@@ -94,7 +94,7 @@
       {  
          "lat":"25.097866",
          "lng":"-80.436733",
-         "HubName":"KEY LARGO (FL)",
+         "HubName":"KEY LARGO 1 (FL)",
          "Division":"CENTRAL",
          "market":"FLORIDA REGION",
          "Total":"450540",
@@ -127,18 +127,18 @@
       {  
          "lat":"33.804443",
          "lng":"-84.044998",
-         "HubName":"MARATHON (FL)",
+         "HubName":"MARATHON 1 (FL)",
          "Division":"CENTRAL",
          "market":"FLORIDA REGION",
          "Total":"900000",
-         "Outside Headend":"36520",
-         "Within Headend":"86501",
+         "OutsideHeadend":"36520",
+         "WithinHeadend":"86501",
          "FTAFiberNodeissue":"50254"
       },
       {  
          "lat":"40.558332",
          "lng":"-79.786667",
-         "HubName":"KEY WEST (FL)",
+         "HubName":"KEY WEST 1 (FL)",
          "Division":"CENTRAL",
          "market":"FLORIDA REGION",
          "Total":"1034230",
@@ -171,7 +171,7 @@
       {  
          "lat":"37.113014",
          "lng":"-104.358887",
-         "HubName":"COLORADO (CO)",
+         "HubName":"COLORADO 1 (CO)",
          "Division":"WEST DIVISION",
          "market":"FLORIDA REGION",
          "Total":"1033040",
@@ -182,7 +182,7 @@
       {  
          "lat":"37.113014",
          "lng":"-104.358887",
-         "HubName":"COLORADO (CO)",
+         "HubName":"COLORADO 2 (CO)",
          "Division":"WEST DIVISION",
          "market":"FLORIDA REGION",
          "Total":"10334340",
