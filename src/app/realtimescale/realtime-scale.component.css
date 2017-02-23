@@ -1,10 +1,9 @@
 .fcs-realtime-geo-wrapper {
   width: 100%;
-  height: 100%;
 }
 
 .fcs-realtime-geo-scale {
-  height: 55px;
+  height: 80px;
   background: #fff;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
   margin-bottom: 1em;
@@ -12,30 +11,22 @@
   clear: both;
 }
 
-.geo-scale-minute {
-  width: 49%;
-  height: 50px;
-  float: left;
-  background-size: 100%;
-}
-
 .scale-background {
-    background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #d4d4d4), color-stop(50%, #ffffff), color-stop(100%, #d4d4d4));
-    background-image: -moz-linear-gradient(bottom, #d4d4d4, #ffffff, #d4d4d4);
-    background-image: -webkit-linear-gradient(bottom, #d4d4d4, #ffffff, #d4d4d4);
-    background-image: linear-gradient(to top, #d4d4d4, #ffffff, #d4d4d4);
-    border-top: 1px solid darkgray;
+    background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, #e6e6e6), color-stop(50%, #f7f7f7), color-stop(100%, #d4d4d4));
+    background-image: -moz-linear-gradient(bottom, #d4d4d4, #f7f7f7, #d4d4d4);
+    background-image: -webkit-linear-gradient(bottom, #d4d4d4, #f7f7f7, #d4d4d4);
+    background-image: linear-gradient(to top, #d4d4d4, #f7f7f7, #d4d4d4);
 }
 
 .geo-scale-separator {
-  width: 1%;
+  width: 2%;
   float: left;
 }
 
 .geo-scale-separator a {
   color: #000000;
   display: block;
-  height: 25px;
+  height: 27px;
   text-align: center;
   line-height: 21px;
   background-image: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4gPHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJncmFkIiBncmFkaWVudFVuaXRzPSJvYmplY3RCb3VuZGluZ0JveCIgeDE9IjAuMCIgeTE9IjAuNSIgeDI9IjEuMCIgeTI9IjAuNSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Q3ZDdkNyIvPjxzdG9wIG9mZnNldD0iNTAlIiBzdG9wLWNvbG9yPSIjZjBmMGYwIi8+PHN0b3Agb2Zmc2V0PSIxMDAlIiBzdG9wLWNvbG9yPSIjZDdkN2Q3Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmFkKSIgLz48L3N2Zz4g');
@@ -48,13 +39,51 @@
 }
 
 .geo-scale-separator a:first-child {
-  height: 24px;
-  border-bottom: 1px solid darkgray;
+  height: 27px;
+  /*border-bottom: 1px solid darkgray;*/
   border-top: none;
+}
+
+.geo-scale-minute {
+  width: 49%;
+  height: 55px;
+  float: left;
+  background-size: 100%;
+
+  /*overflow: hidden;*/
 }
 
 .geo-scale-seconds {
   width: 49%;
-  height: 50px;
+  height: 55px;
   float: left;
+
+  /*overflow: hidden;*/
+}
+
+.axis .tick text {
+    font-size: 6px;
+    fill: #bebebe;
+}
+
+.axis path{
+    display: none;
+}
+
+.axis .tick line {
+    stroke-width: 1;
+    stroke: rgba(0, 0, 0, 0.2);
+}
+
+div.tip {   
+    position: absolute;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: #fff;
+    border: 1px solid;
+    border-radius: 5px;
+    pointer-events: none;
+    fill-opacity:  0.1;
+    min-width: 100px;
+    min-height: 100px;
 }

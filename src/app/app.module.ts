@@ -20,6 +20,10 @@ import { GeoDataService } from './services/geoservice';
 import { RealtimeScaleComponent } from './realtimescale/realtime-scale.component';
 import { GeoMetaDataComponent } from './geometadata/geometadata.component';
 import { KeysPipe } from './utils/pipemap.util';
+import { OverallMetadataComponent } from './geometadata/overallmetadata/overallmetadata.component';
+import { CountErrorMetaComponent } from './geometadata/errorcountmetadata/counterrormeta.component';
+import { MarketMetaDataComponent } from './geometadata/marketmetadata/marketmetadata.component';
+import { DivisionMetaDataComponent } from './geometadata/divisionmetadata/divisionmetadata.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +37,11 @@ import { KeysPipe } from './utils/pipemap.util';
     GeoChartComponent,
     RealtimeScaleComponent,
     GeoMetaDataComponent,
-    KeysPipe
+    KeysPipe,
+    OverallMetadataComponent,
+    CountErrorMetaComponent,
+    MarketMetaDataComponent,
+    DivisionMetaDataComponent
   ],
   imports: [
     BrowserModule,

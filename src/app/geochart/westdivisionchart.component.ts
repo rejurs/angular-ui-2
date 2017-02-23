@@ -1,4 +1,4 @@
-import {Component, ElementRef, Input, OnChanges, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, ElementRef, Input, OnChanges, ViewEncapsulation, OnInit} from '@angular/core';
 import { D3Service, D3, Selection} from 'd3-ng2-service';
 import { GeoDataService } from '../services/geoservice';
 import {Observable} from 'rxjs/Rx';
@@ -7,13 +7,13 @@ import { HubNames } from '../geodata/hubnames.model';
 declare var d3: any;
 declare var topojson: any;
 @Component({
-  selector: 'geo-chart',
+  selector: 'west-div-chart',
   encapsulation: ViewEncapsulation.None,
   template: '',
   styleUrls: ['./geochart.component.css']
 })
 
-export class GeoChartComponent implements OnInit {
+export class WestDivisionComponent implements OnInit {
     private dg3: D3;
     private parentNativeElement: any;
     private geoData: Array<Object>;
@@ -40,9 +40,9 @@ export class GeoChartComponent implements OnInit {
     ngOnInit() {
         let that = this;
 
-        // setTimeout ( () => {
-        //     this.getHubDetails();
-        // }, 2000);
+        setTimeout ( () => {
+            this.getHubDetails();
+        }, 2000);
 
         this.geoService.socketData.subscribe( (value: HubNames[]) => {
             this.regenrateMap(value);
@@ -51,25 +51,11 @@ export class GeoChartComponent implements OnInit {
     }
 
     regenrateMap(market: HubNames[]) {
-        let id;
-        switch(this.divId) {
-            case 'geo-central-division': id="central-division";
-                break;
-            case 'geo-ne-division': id="ne-division";
-                break;
-            case 'geo-west-division': id="west-division";
-                break;
-            default: id="main-geo-chart";
-                break; 
-        }
-        d3.select("#" + id).remove();
+        d3.select("#west-division").remove();
+        d3.select(".tooltip").remove();
         this.hubnames = market;
         this.generateGeoView(this.hubnames);
     }
-
-    // ngOnChanges(data) {
-    //     console.log(data);
-    // }
 
     generateGeoView (geoData) {
         let that = this;
@@ -78,25 +64,9 @@ export class GeoChartComponent implements OnInit {
         //Setting Translate Width/Height for the default geo map
         let translateConfig;
         let scale, id;
-        switch(divId) {
-            case 'geo-central-division': translateConfig = [width - width/0.52, height - height/0.82];
-                scale=1200;
-                id="central-division";
-                break;
-            case 'geo-ne-division': translateConfig = [width - width/0.65, height - height/2.6];
-                scale=800;
-                id="ne-division";
-                break;
-            case 'geo-west-division': translateConfig = [width/2.3,  height/2.1];
-                scale=550;
-                id="west-division";
-                break;
-            default: translateConfig = [width / 3, height/2.5];
-                scale = 800;
-                id="main-geo-chart";
-                break; 
-        }
-
+        translateConfig = [width/2.3,  height/2.1];
+        scale=525;
+        id="west-division";
         var projection = d3.geoMercator()
         .scale(scale)
         .translate(translateConfig);
@@ -115,7 +85,7 @@ export class GeoChartComponent implements OnInit {
             
             var radius = d3.scaleSqrt()
                 .domain([0, 1e6])
-                .range([0, 50]);
+                .range([0, 15]);
 
             var svg = d3.select('#' + divId)
                     .append("div")
@@ -125,7 +95,7 @@ export class GeoChartComponent implements OnInit {
                     .attr("width", "100%")
                     .attr("height", "100%")
                     .attr("preserveAspectRatio", "xMinYMin meet")
-                    .attr("viewBox", "0 0 "+width+ " " + height)
+                    .attr("viewBox", "0 0 300 300")
                     .classed("svg-content-responsive", true);
 
             if(divId === "geo-chart") {
@@ -133,10 +103,10 @@ export class GeoChartComponent implements OnInit {
             }
 
             var plotData = [];
-            
+
             var div = d3.select("body").append("div")
                 .attr("class", "tooltip")
-                .style("display", "none");
+                .style("opacity", 0);
             
             svg.selectAll("path")
                 .data(states).enter()
@@ -151,7 +121,7 @@ export class GeoChartComponent implements OnInit {
                 .attr("d", path);
 
             geoData.sort(function(a, b) {
-                         return b.total - a.total; 
+                         return b.Total - a.Total; 
                     });
 
             geoData.forEach(bubbleData => {
@@ -170,16 +140,17 @@ export class GeoChartComponent implements OnInit {
                             <strong> Total : </strong> ` + bubbleData.total + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Outside Headend : </strong> ` + bubbleData.outsideHeadEnd + ` 
+                            <strong> Outside Headend : </strong> ` + bubbleData.outsideHeadend + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Within Headend : </strong> ` + bubbleData.withinHeadEnd + ` 
+                            <strong> Within Headend : </strong> ` + bubbleData.withinHeadend + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> FTA / FiberNodeIssue : </strong> ` + bubbleData.fiberNodeIssue + ` 
+                            <strong> FTA / FiberNodeIssue : </strong> ` + bubbleData.fiberNodeissue + ` 
                         </li>
                     </ul>
                 `;
+                    
                 if(bubbleData.lon && bubbleData.lat) {
                     bubbleData.coords = [(bubbleData.lon), (bubbleData.lat)];
                     svg.append("g")
@@ -195,13 +166,14 @@ export class GeoChartComponent implements OnInit {
                     })
                     .attr("class", function(d) {
                         let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
-                        id=="west-division" ? d.isNew = false : '';
                         return className;
                     })
+                    .attr("fill", "lightred")
+                    // .attr('class', 'hvr-pulse')
                     .on("mouseover", function(d) {
                         div.transition()
                             .duration(200)
-                            .style("display", "block");    
+                            .style("opacity", .9);
                         div.html(bubbleTooltip)
                             .style("left", (d3.event.pageX + 5) + "px")
                             .style("top", (d3.event.pageY + 20) + "px");
@@ -209,7 +181,7 @@ export class GeoChartComponent implements OnInit {
                     .on("mouseout", function(d) {
                         div.transition()
                             .duration(500)
-                            .style("display", "none");
+                            .style("opacity", 0);
                     });
                 }
             });

@@ -6,7 +6,7 @@ export class GeoDataModel {
     errorCodeCount : any;
     marketCount : any;
     constructor(geoData: any) {
-        this.hubs = geoData["Hub"];
+        this.hubs = geoData["hub"];
         this.overallCount = geoData["overallCount"];
         this.divisionCount = geoData["countByDivision"];
         this.errorCodeCount = geoData["countByErrorCode"];
