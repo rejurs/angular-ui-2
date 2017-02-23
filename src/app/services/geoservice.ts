@@ -24,13 +24,13 @@ export class GeoDataService{
             console.log("here the call....");
             return Observable.of(this.geoDataDetails);
         } else {
-            return this.http.get('./app/geodata/geodatamock.1.json')
+            return this.http.get('./app/geodata/geodatamock.json')
                 .map((res:Response) => {
                 return res.json()
             })
             .do((data => {
                 this.geoDataDetails = data;
-                Observable.of(this.hubDetails = data['Hub']);
+                Observable.of(this.hubDetails = data['hub']);
             }));
         }
     }
@@ -44,6 +44,7 @@ export class GeoDataService{
         })
         .do((data => {
             this.usCoordinates = data;
+            this.socketData.next(this.hubDetails);
         }));
     }
 
@@ -61,17 +62,17 @@ export class GeoDataService{
 
     generateSocketData() {
         /** Logic to add the data */
-        let hubs = ['KEY WEST (FL)', 'MARATHON (FL)', 'COLORADO 1 (CO)', 'COLORADO (CO)', 'CONNECTICUT (CT)', 'KEY WEST 1 (FL)', 'KEY LARGO 1 (FL)', 'MARATHON 1 (FL)', 'COLORADO 2 (CO)'];
+        let hubs = ['OREM (UT)', 'SOUTH (IN)', 'POTOMAC (MD)', 'JEFFERSON (PA)', 'RURAL VALLEY (PA)', 'Y2CARTERSVILLE (GA)', 'F3SFULTON (GA)', 'PLAINFIELD (NJ)', 'WARREN 1-2 (MI)','WINCHESTER CITY (TN)', 'HIALEAH WEST (FL)','ST JOSEPH (MI)', 'ABERDEEN (MD)', 'MANASSAS (VA)','WATERBURY (CT)','WEST YORK (PA)','FOREST HILL (VA)','SNYDER (AZ)','HAMMOND (IN)','KEY LARGO (FL)','CORVALLIS (OR)','WEST CHICAGO-POD-6 (IL)','COLUMBUS (PA)'];
 
         return Observable.of(setInterval( () => {
             var data = "";
             if(Math.random() > 0.85) {
                 data = hubs[Math.floor(Math.random()*hubs.length)];
                 this.hubDetails.forEach(element => {
-                if(element.HubName == data) {
-                    element.Total = String(Number(element.Total) + 1);
+                if(element.name == data) {
+                    element.total = String(Number(element.total) + 1);
                     element.isNew = true;
-                    element.uid = this.slugify(element.HubName);
+                    element.uid = this.slugify(element.name);
                 }
                 });
                 this.socketData.next(this.hubDetails);

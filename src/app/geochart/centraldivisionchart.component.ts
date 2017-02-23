@@ -57,10 +57,6 @@ export class CentralDivisionComponent implements OnInit {
             this.generateGeoView(this.hubnames);
     }
 
-    // ngOnChanges(data) {
-    //     console.log(data);
-    // }
-
     generateGeoView (geoData) {
         let that = this;
         var height=Number(this.height), width=Number(this.width), divId = this.divId;
@@ -68,7 +64,7 @@ export class CentralDivisionComponent implements OnInit {
         //Setting Translate Width/Height for the default geo map
         let translateConfig;
         let scale, id;
-        translateConfig = [width - width/0.56, height - height/0.85];
+        translateConfig = [width - width/0.52, height - height/0.82];
         scale=1200;
         id="central-division";
         var projection = d3.geoMercator()
@@ -96,10 +92,10 @@ export class CentralDivisionComponent implements OnInit {
                     .classed("svg-container", true)
                     .attr("id", id)
                     .append("svg")
-                    .attr("width", width)
-                    .attr("height", height)
+                    .attr("width", "100%")
+                    .attr("height", "100%")
                     .attr("preserveAspectRatio", "xMinYMin meet")
-                    .attr("viewBox", "0 0 "+width+ " " + height)
+                    .attr("viewBox", "0 0 300 300")
                     .classed("svg-content-responsive", true);
 
             if(divId === "geo-chart") {
@@ -125,64 +121,69 @@ export class CentralDivisionComponent implements OnInit {
                 .attr("d", path);
 
             geoData.sort(function(a, b) {
-                         return b.Total - a.Total; 
+                         return b.total - a.total; 
                     });
 
             geoData.forEach(bubbleData => {
                 var bubbleTooltip = `
                     <ul class="geoDataToolTip">
                         <li class="geoDataToolTipItem">
-                            <strong> Hub : </strong> ` + bubbleData.HubName + ` 
+                            <strong> Hub : </strong> ` + bubbleData.name + ` 
                         </li>
                         <li class="geoDataToolTipItem">
                             <strong> Region : </strong> ` + bubbleData.market + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Division : </strong> ` + bubbleData.Division + ` 
+                            <strong> Division : </strong> ` + bubbleData.division + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Total : </strong> ` + bubbleData.Total + ` 
+                            <strong> Total : </strong> ` + bubbleData.total + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Outside Headend : </strong> ` + bubbleData.OutsideHeadend + ` 
+                            <strong> Outside Headend : </strong> ` + bubbleData.uutsideHeadend + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Within Headend : </strong> ` + bubbleData.WithinHeadend + ` 
+                            <strong> Within Headend : </strong> ` + bubbleData.withinHeadend + ` 
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> FTA / FiberNodeIssue : </strong> ` + bubbleData.FTAFiberNodeissue + ` 
+                            <strong> FTA / FiberNodeIssue : </strong> ` + bubbleData.fiberNodeissue + ` 
                         </li>
                     </ul>
                 `;
                     
-                bubbleData.coords = [(bubbleData.lng), (bubbleData.lat)];
-                svg.append("g")
-                .attr("class", "bubble")
-                .selectAll("circle")
-                .data([bubbleData]).enter()
-                .append("circle")
-                .attr("cx", function (d) { return projection(d.coords)[0]; })
-                .attr("cy", function (d) { return projection(d.coords)[1];})
-                .attr("r", function(d) { return radius(d.Total); })
-                .attr("class", function(d) {
-                    let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
-                    return className;
-                })
-                .attr("fill", "lightred")
-                // .attr('class', 'hvr-pulse')
-                .on("mouseover", function(d) {
-                    div.transition()
-                        .duration(200)
-                        .style("opacity", .9);
-                    div.html(bubbleTooltip)
-                        .style("left", (d3.event.pageX + 5) + "px")
-                        .style("top", (d3.event.pageY + 20) + "px");
-                })
-                .on("mouseout", function(d) {
-                    div.transition()
-                        .duration(500)
-                        .style("opacity", 0);
-                });
+                if(bubbleData.lon && bubbleData.lat) {
+                    bubbleData.coords = [(bubbleData.lon), (bubbleData.lat)];
+                    svg.append("g")
+                    .attr("class", "bubble")
+                    .selectAll("circle")
+                    .data([bubbleData]).enter()
+                    .append("circle")
+                    .attr("cx", function (d) { return projection(d.coords)[0]; })
+                    .attr("cy", function (d) { return projection(d.coords)[1];})
+                    .attr("r", function(d) { return radius(d.total); })
+                    .attr("id", function(d) { 
+                        if(d.uid) return d.uid; 
+                    })
+                    .attr("class", function(d) {
+                        let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
+                        return className;
+                    })
+                    .attr("fill", "lightred")
+                    // .attr('class', 'hvr-pulse')
+                    .on("mouseover", function(d) {
+                        div.transition()
+                            .duration(200)
+                            .style("opacity", .9);
+                        div.html(bubbleTooltip)
+                            .style("left", (d3.event.pageX + 5) + "px")
+                            .style("top", (d3.event.pageY + 20) + "px");
+                    })
+                    .on("mouseout", function(d) {
+                        div.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+                }
             });
 
         

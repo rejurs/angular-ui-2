@@ -130,14 +130,8 @@ div.tooltip {
     transform-origin: 50% 50%;
 }
 .hvr-pulse:hover, .hvr-pulse:focus, .hvr-pulse:active {
-  -webkit-animation-name: hvr-pulse;
-  animation-name: hvr-pulse;
-  -webkit-animation-duration: 1s;
-  animation-duration: 1s;
-  -webkit-animation-timing-function: linear;
-  animation-timing-function: linear;
-  -webkit-animation-iteration-count: 3;
-  animation-iteration-count: 3;
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
   cursor: pointer;
 }
 

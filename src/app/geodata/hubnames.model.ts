@@ -1,13 +1,14 @@
 export class HubNames {
     lat: string;
-    lng: string;
+    lon: string;
     market: string;
-    Division: string;
-    FTAFiberNodeIssue: string;
-    OutsideHeadend: string;
-    Total: string;
-    WithinHeadend: string;
-    HubName: string;
+    division: string;
+    fiberNodeIssue: string;
+    outsideHeadEnd: string;
+    total: string;
+    withinHeadEnd: string;
+    name: string;
     isNew: boolean = false;
     uid: string;
+    unitId: string;
 }
