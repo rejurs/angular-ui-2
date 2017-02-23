@@ -1,58 +1,61 @@
 {
-	"overallCount": 91,
+	"overallCount": 420000,
 	"countByErrorCode": [{
 		"name": "1600112",
-		"count": 67
+		"count": 0
 	}, {
 		"name": "1600117",
-		"count": 21
+		"count": 0
 	}, {
 		"name": "1600118",
-		"count": 3
+		"count": 0
+	}, {
+		"name": "1600119",
+		"count": 0
 	}],
 	"countByDivision": [{
 		"name": "NORTHEAST",
-		"count": 36
+		"count": 0
 	}, {
 		"name": "WEST",
-		"count": 28
+		"count": 0
 	}, {
 		"name": "CENTRAL",
-		"count": 27
+		"count": 0
 	}],
 	"countByMarket": [{
 		"name": "BELTWAY",
-		"count": 25
+		"count": 0
 	}, {
 		"name": "HOUSTON MARKET",
-		"count": 17
+		"count": 0
 	}, {
 		"name": "HEARTLAND MARKET",
-		"count": 9
+		"count": 0
 	}, {
 		"name": "FLORIDA REGION",
-		"count": 8
+		"count": 0
 	}, {
 		"name": "BIG SOUTH REGION",
-		"count": 8
+		"count": 0
 	}, {
 		"name": "SEATTLE/TACOMA MARKET",
-		"count": 6
+		"count": 0
 	}, {
 		"name": "BOSTON MARKET",
-		"count": 5
+		"count": 0
 	}, {
 		"name": "CALIFORNIA MARKET",
-		"count": 5
+		"count": 0
 	}, {
 		"name": "FREEDOM",
-		"count": 4
+		"count": 0
 	}, {
 		"name": "GREATER CHICAGO MARKET",
-		"count": 2
+		"count": 0
 	}, {
 		"name": "KEYSTONE MARKET",
-		"count": 2
+		"count": 0
 	}],
 	"hub": [{
 		"name": "MONTVILLE (PA)",
@@ -61,7 +64,7 @@
 		"unitId": "acr02.montville.pa.pitt.comcast.net",
 		"lat": "40.016792",
 		"lon": "-76.337384",
-		"total": 231110,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -70,7 +73,7 @@
 		"division": "CENTRAL",
 		"market": "BIG SOUTH REGION",
 		"unitId": "cbr01.sevierville.tn.knox.comcast.net",
-		"total": 234250,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -79,7 +82,7 @@
 		"division": "CENTRAL",
 		"market": "BIG SOUTH REGION",
 		"unitId": "acr01.polymer.tn.chatta.comcast.net",
-		"total": 567560,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -88,7 +91,7 @@
 		"division": "CENTRAL",
 		"market": "BIG SOUTH REGION",
 		"unitId": "cbr01.harriman.tn.knox.comcast.net",
-		"total": 456740,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -99,7 +102,7 @@
 		"unitId": "acr01.fairmountave.pa.panjde.comcast.net",
 		"lat": "39.967201",
 		"lon": "-75.165923",
-		"total": 235120,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -108,7 +111,7 @@
 		"division": "CENTRAL",
 		"market": "BIG SOUTH REGION",
 		"unitId": "cdn01.duffield.va.knox.comcast.net",
-		"total": 234540,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -119,7 +122,7 @@
 		"unitId": "acr01.frenchtown.de.panjde.comcast.net",
 		"lat": "39.604628",
 		"lon": "-75.74713",
-		"total": 74560,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -130,7 +133,7 @@
 		"unitId": "acr01.fortloudon.pa.pitt.comcast.net",
 		"lat": "39.880404",
 		"lon": "-77.88249",
-		"total": 864320,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -141,7 +144,7 @@
 		"unitId": "acr01.mckeithen.fl.tallah.comcast.net",
 		"lat": "30.451103",
 		"lon": "-84.335324",
-		"total": 2627670,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -152,7 +155,7 @@
 		"unitId": "acr08.elmhurst.il.chicago.comcast.net",
 		"lat": "41.919893",
 		"lon": "-87.946047",
-		"total": 95870,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -163,7 +166,7 @@
 		"unitId": "cbr01.kane.pa.pitt.comcast.net",
 		"lat": "41.669662",
 		"lon": "-78.764506",
-		"total": 56830,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -174,7 +177,7 @@
 		"unitId": "cbr01.melvindale.mi.michigan.comcast.net",
 		"lat": "42.281113",
 		"lon": "-83.166946",
-		"total": 435450,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -183,7 +186,7 @@
 		"division": "CENTRAL",
 		"market": "BIG SOUTH REGION",
 		"unitId": "acr01.ebroadst.ga.savannah.comcast.net",
-		"total": 45350,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -194,7 +197,7 @@
 		"unitId": "cbr01.highway341.ga.jacksvil.comcast.net",
 		"lat": "31.272443",
 		"lon": "-81.550548",
-		"total": 345630,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -203,7 +206,7 @@
 		"division": "WEST",
 		"market": "HOUSTON MARKET",
 		"unitId": "ten04.pasadena.tx.houston.comcast.net",
-		"total": 65740,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -214,7 +217,7 @@
 		"unitId": "acr01.sboston.va.richmond.comcast.net",
 		"lat": "36.729981",
 		"lon": "-78.918489",
-		"total": 4567440,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -225,7 +228,7 @@
 		"unitId": "cbr01.monroeville.pa.pitt.comcast.net",
 		"lat": "40.426644",
 		"lon": "-79.755108",
-		"total": 578520,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -236,7 +239,7 @@
 		"unitId": "acr05.noblesville.in.indiana.comcast.net",
 		"lat": "40.031113",
 		"lon": "-86.003052",
-		"total": 970890,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -247,7 +250,7 @@
 		"unitId": "acr01.elizabethtwn.pa.pitt.comcast.net",
 		"lat": "40.133335",
 		"lon": "-76.616669",
-		"total": 567850,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -255,11 +258,10 @@
 		"name": "COLUMBUS (PA)",
 		"division": "NORTHEAST",
 		"market": "FREEDOM",
-		"unitId": "acr03.columbsblvd.pa.panj…GION",
 		"unitId": "acr02.sarasota.fl.westfl.comcast.net",
 		"lat": "27.337843",
 		"lon": "-82.466471",
-		"total": 356330,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -270,7 +272,7 @@
 		"unitId": "acr16.wchicago.il.chicago.comcast.net",
 		"lat": "41.865002",
 		"lon": "-88.203331",
-		"total": 345630,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -281,7 +283,7 @@
 		"unitId": "cbr06.corvallis.or.bverton.comcast.net",
 		"lat": "44.600555",
 		"lon": "-123.264725",
-		"total": 323450,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -292,7 +294,7 @@
 		"unitId": "cbr01.keylargo.fl.pompano.comcast.net",
 		"lat": "25.097866",
 		"lon": "-80.436733",
-		"total": 131230,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -303,7 +305,7 @@
 		"unitId": "acr01.hammond.in.chicago.comcast.net",
 		"lat": "41.59557",
 		"lon": "-87.50145",
-		"total":134130,
+		"total":10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -314,7 +316,7 @@
 		"unitId": "ten02.snyder.az.pima.comcast.net",
 		"lat": "32.30691",
 		"lon": "-110.845683",
-		"total": 34560,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -325,7 +327,7 @@
 		"unitId": "acr01.foresthillrd.va.richmond.comcast.net",
 		"lat": "37.536388",
 		"lon": "-77.534164",
-		"total": 456740,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -336,7 +338,7 @@
 		"unitId": "acr01.westyork.pa.pitt.comcast.net",
 		"lat": "39.945256",
 		"lon": "-76.795531",
-		"total": 87860,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -347,7 +349,7 @@
 		"unitId": "ten01.waterbury.ct.hartford.comcast.net",
 		"lat": "41.579166",
 		"lon": "-73.054443",
-		"total": 34560,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -358,7 +360,7 @@
 		"unitId": "acr01.manassas.va.bad.comcast.net",
 		"lat": "38.753545",
 		"lon": "-77.525756",
-		"total": 234520,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -369,7 +371,7 @@
 		"unitId": "acr01.aberdeen.md.bad.comcast.net",
 		"lat": "39.510872",
 		"lon": "-76.164812",
-		"total": 47840,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -380,7 +382,7 @@
 		"unitId": "acr02.stjoseph.mi.sbend.comcast.net",
 		"lat": "42",
 		"lon": "-86.40222",
-		"total": 234520,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -391,7 +393,7 @@
 		"unitId": "cbr02.hialeahwest.fl.pompano.comcast.net",
 		"lat": "25.894167",
 		"lon": "-80.336388",
-		"total": 234520,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -400,7 +402,7 @@
 		"division": "CENTRAL",
 		"market": "BIG SOUTH REGION",
 		"unitId": "acr01.winchestcity.tn.nash.comcast.net",
-		"total": 234520,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -411,7 +413,7 @@
 		"unitId": "cbr01.warren1.mi.michigan.comcast.net",
 		"lat": "42.503056",
 		"lon": "-83.047775",
-		"total": 456740,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -422,7 +424,7 @@
 		"unitId": "acr01.plainfield.nj.panjde.comcast.net",
 		"lat": "40.600664",
 		"lon": "-74.456166",
-		"total": 12340,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -431,7 +433,7 @@
 		"division": "CENTRAL",
 		"market": "BIG SOUTH REGION",
 		"unitId": "acr02.f3sfulton.ga.atlanta.comcast.net",
-		"total": 345630,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -440,7 +442,7 @@
 		"division": "CENTRAL",
 		"market": "BIG SOUTH REGION",
 		"unitId": "acr02.y2cartersvil.ga.atlanta.comcast.net",
-		"total": 674570,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -451,7 +453,7 @@
 		"unitId": "ten01.ruralvalley.pa.pitt.comcast.net",
 		"lat": "40.816066",
 		"lon": "-79.251797",
-		"total": 45670,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -462,7 +464,7 @@
 		"unitId": "acr01.jefferson.pa.pitt.comcast.net",
 		"lat": "39.820649",
 		"lon": "-76.844469",
-		"total": 45670,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -473,7 +475,7 @@
 		"unitId": "acr01.potomac.md.bad.comcast.net",
 		"lat": "39.040588",
 		"lon": "-77.251668",
-		"total": 34560,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -484,7 +486,7 @@
 		"unitId": "acr05.orem.ut.utah.comcast.net",
 		"lat": "40.263524",
 		"lon": "-111.680609",
-		"total": 345630,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0
@@ -495,7 +497,7 @@
 		"unitId": "acr01.south.in.indiana.comcast.net",
 		"lat": "41.008756",
 		"lon": "-85.172404",
-		"total": 23450,
+		"total": 10000,
 		"outsideHeadEnd": 0,
 		"withinHeadEnd": 0,
 		"fiberNodeIssue": 0

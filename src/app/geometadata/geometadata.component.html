@@ -3,25 +3,25 @@
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">LAST 24 HOURS ACTIVITIES</h3>
             <ul class="geo-row-data-items">
-                <li class="geo-row-data-item"><span class="geo-row-data-large">{{overallCount | number : '1.0-0'}}</span></li>
+                <overall-count></overall-count>
             </ul>
         </li>
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">TOP 5 MARKETS</h3>
             <ul class="geo-row-data-items">
-                <li class="geo-row-data-item" *ngFor='let key of markets | keys | slice:0:5; let i=index'><label>{{key.name}} : </label>{{key.count | number: '1.0-0' }}</li>
+                <market></market>
             </ul>
         </li>
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">COUNTS BY DIVISIONS</h3>
             <ul class="geo-row-data-items">
-                <li class="geo-row-data-item" *ngFor='let key of divisions | keys'><label>{{key.name}} : </label>{{key.count | number: '1.0-0' }}</li>
+                <division></division>
             </ul>
         </li>
         <li class="fcs-realtime-geo-metadata-row-item">
             <h3 class="fcs-realtime-title">COUNTS BY MISMATCH CONDITIONS</h3>
             <ul class="geo-row-data-items">
-                <li class="geo-row-data-item" *ngFor='let key of errorCodes | keys'><label>{{key.name}} : </label>{{key.count | number: '1.0-0' }}</li>
+                <error-count></error-count>
             </ul>
         </li>
     </ul>

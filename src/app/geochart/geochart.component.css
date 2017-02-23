@@ -68,7 +68,6 @@ div.tooltip {
     border: 1px solid;
     border-radius: 5px;
     pointer-events: none;
-    fill-opacity:  0.1;
     min-width: 100px;
     min-height: 100px;
 }
@@ -132,7 +131,36 @@ div.tooltip {
 .hvr-pulse:hover, .hvr-pulse:focus, .hvr-pulse:active {
   transform: scale(1.2);
   -webkit-transform: scale(1.2);
+  -webkit-animation-name: hvr-big;
+  animation-name: hvr-big;
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
   cursor: pointer;
+}
+
+@-webkit-keyframes hvr-big {
+    0% {
+        transform: scale(1);
+        -webkit-transform: scale(1)
+    }
+    100%{
+        transform: scale(1.2);
+        -webkit-transform: scale(1.2);
+    }
+}
+@keyframes hvr-big {
+    0% {
+        transform: scale(1);
+        -webkit-transform: scale(1)
+    }
+    100%{
+        transform: scale(1.2);
+        -webkit-transform: scale(1.2);
+    }
 }
 
 .newItem {

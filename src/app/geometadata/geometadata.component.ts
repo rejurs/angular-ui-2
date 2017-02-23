@@ -29,25 +29,8 @@ export class GeoMetaDataComponent {
             title: "TOP 5 MARKETS"
         }
     }];
-    overallCount: String;
     constructor(private geoService: GeoDataService) { // <-- pass the D3 Service into the constructor
         console.log("calling geo meta data service");
-    }
-
-    getHubDetails() {
-        this.geoService.getGeoViewData().subscribe( (geoData) => {
-            this.overallCount = geoData['overallCount'];
-            this.errorCodes = geoData['countByErrorCode'];
-            this.divisions = geoData['countByDivision'];
-            this.markets = this.sortMarkets(geoData['countByMarket']);
-        });
-    }
-
-    ngOnInit() {
-
-        setTimeout ( () => {
-            this.getHubDetails();
-        }, 2000);
     }
 
     formatObject(errorTempData) {
@@ -64,15 +47,4 @@ export class GeoMetaDataComponent {
         return keys;
     } // End formatObject
 
-    sortMarkets(marketData) {
-        let data = [];
-        marketData.sort(function(a, b) {
-            return b.count - a.count;
-        })
-        return marketData;
-    }
-
-    ngOnChanges(data) {
-        console.log(data);
-    }
 }

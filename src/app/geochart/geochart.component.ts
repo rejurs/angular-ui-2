@@ -115,7 +115,7 @@ export class GeoChartComponent implements OnInit {
             
             var radius = d3.scaleSqrt()
                 .domain([0, 1e6])
-                .range([0, 15]);
+                .range([0, 50]);
 
             var svg = d3.select('#' + divId)
                     .append("div")
