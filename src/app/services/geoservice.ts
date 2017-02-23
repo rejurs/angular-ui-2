@@ -10,6 +10,7 @@ import { OverallMetaModel } from '../geodata/overallmeta.model';
 import { MarketMetaDataModel } from '../geodata/marketmetadata.model';
 import { ErrorMetaDataModel } from '../geodata/errormetadata.model';
 import { DivisionMetaDataModel } from '../geodata/divisionmetadata.model';
+import { WebSocketService } from '../services/socketservice';
 
 @Injectable()
 export class GeoDataService {
@@ -29,8 +30,28 @@ export class GeoDataService {
     errorMetaData: Subject<ErrorMetaDataModel[]> = new Subject<ErrorMetaDataModel[]>();
     divisionMetaData: Subject<DivisionMetaDataModel[]> = new Subject<DivisionMetaDataModel[]>();
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private _socketservice: WebSocketService ) {
         console.log('Geo Service created...');
+    }
+
+    getHistoricalData() {
+        this._socketservice.historicalData.subscribe( (data) => {
+            this.geoDataDetails = data;
+            this.overallCountData = data['overallCount'];
+            this.errorMeta = data['countByErrorCode'];
+            this.marketMeta = data['countByMarket'];
+            this.divisionMeta = data['countByDivision'];
+            Observable.of(this.hubDetails = data['hub']);
+        });
+    }
+
+    /** To increase the KPI error code count */
+    errorCodeIncrement( code: string ) {
+        this.errorMeta.forEach(errorElem => {
+            if(errorElem.name === code) {
+                errorElem.count += 1;
+            }
+        });
     }
 
     getGeoData () {
@@ -53,7 +74,45 @@ export class GeoDataService {
         }
     }
     
-    ngOnInit() {}
+    ngOnInit() {
+        let that = this;
+        this._socketservice.realTimeData.subscribe( (data) => {
+            this.hubDetails.forEach(element => {
+                if(element.name == data['HubName']) {
+                    element.total = String(Number(element.total) + 1);
+                    element.isNew = true;
+                    element.uid = this.slugify(element.name);
+                    //Check to count outsideheadend, withinheadend, fibernodeissue and KPI error counts
+                    if(data.hasOwnProperty('1600112')) {
+                        element.outsideHeadEnd += 1;
+                        that.errorCodeIncrement('1600112');
+                    } else if(data.hasOwnProperty('1600117')) { 
+                        element.withinHeadEnd += 1;   // Sum of 1600117 + 1600119
+                        that.errorCodeIncrement('1600117');
+                    } else if(data.hasOwnProperty('1600118')) { 
+                        element.fiberNodeIssue += 1;  // Sum of 1600118 + 1600119
+                        element.outsideHeadEnd += 1;  // Sum of 1600118 + 1600112
+                        that.errorCodeIncrement('1600118');
+                    } else if(data.hasOwnProperty('1600119')) {
+                        element.fiberNodeIssue += 1;  // Sum of 1600118 + 1600119
+                        that.errorCodeIncrement('1600119');
+                    }
+
+                    //check to increment the market count
+                    that.incrementMarketCount(element.market);
+
+                    //check to increment the division count
+                    that.incrementDivisionCount(element.division);
+                }
+            });
+            this.socketData.next(this.hubDetails);
+            this.overallCountData += 1; 
+            this.overallCount.next( new OverallMetaModel( this.overallCountData ) ) ;
+            this.errorMetaData.next(this.errorMeta);
+            this.marketData.next(this.marketMeta);
+            this.divisionMetaData.next(this.divisionMeta);
+        });
+    }
 
     generateUsCoordinates () {
         return this.http.get('./app/uscoordinates.json')
@@ -165,7 +224,6 @@ export class GeoDataService {
                         element.total = String(Number(element.total) + 1);
                         element.isNew = true;
                         element.uid = this.slugify(element.name);
-                        element.time = new Date(); 
                         //Check to count outsideheadend, withinheadend, fibernodeissue and KPI error counts
                         if(data.hasOwnProperty('1600112')) {
                             element.outsideHeadEnd += 1;
@@ -197,15 +255,6 @@ export class GeoDataService {
                 this.divisionMetaData.next(this.divisionMeta);
             }
         }, 1000))
-    }
-
-    /** To increase the KPI error code count */
-    errorCodeIncrement( code: string ) {
-        this.errorMeta.forEach(errorElem => {
-            if(errorElem.name === code) {
-                errorElem.count += 1;
-            }
-        });
     }
 
     /** To increase the KPI Market count */

@@ -24,6 +24,7 @@ import { OverallMetadataComponent } from './geometadata/overallmetadata/overallm
 import { CountErrorMetaComponent } from './geometadata/errorcountmetadata/counterrormeta.component';
 import { MarketMetaDataComponent } from './geometadata/marketmetadata/marketmetadata.component';
 import { DivisionMetaDataComponent } from './geometadata/divisionmetadata/divisionmetadata.component';
+import { WebSocketService } from './services/socketservice';
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { DivisionMetaDataComponent } from './geometadata/divisionmetadata/divisi
   providers: [
     GithubService,
     D3Service,
-    GeoDataService
+    GeoDataService,
+    WebSocketService
   ],
   bootstrap: [ AppComponent ]
 })

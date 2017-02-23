@@ -5,8 +5,7 @@ import { WebSocketService } from './services/socketservice.ts';
 @Component({
   selector: 'app',
   styleUrls: ['./app.component.css'],
-  templateUrl: './app.component.html',
-  providers: [WebSocketService]
+  templateUrl: './app.component.html'
 })
 export class AppComponent {
 
@@ -33,17 +32,27 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    /** Uncomment this block of code for real data */
     this._websocketservice.subscribe();
 
+    /** Comment this block of code for real data */
     this._geoservice.getGeoData().subscribe( data => {
       console.log("Geo Data Fetched ! ");
     });
+
+    /** Uncomment this block of code for real data */
+    /*
+    this._geoservice.getHistoricalData().subscribe( data => {
+      console.log("Geo Data Fetched ! ");
+    });
+    */
 
     this._geoservice.generateUsCoordinates().subscribe( data => {
       console.log("Us Coordinates generated and ready to fetch !");
     });
 
-    this._geoservice.generateSocketData().subscribe( data => {
+    /** Comment this block of code for real data */
+    this._geoservice.generateSocketData().subscribe( data => {  
       console.log("Socket connection established...");
     });
     

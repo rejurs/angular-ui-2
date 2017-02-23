@@ -96,7 +96,7 @@ export class RealtimeScaleComponent {
      */
     generateData(hub: any) {
 
-        // hub.time = +new Date();
+        hub.time = +new Date();
 
         this.data.seconds.push(hub);
     }

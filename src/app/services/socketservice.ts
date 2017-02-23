@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 declare var require: any
@@ -8,16 +9,17 @@ declare var require: any
 var SockJS = require('sockjs-client');
 var Stomp = require('stompjs');
 
+@Injectable()
 export class WebSocketService {
 stompClient: any;
 uniqueid: any;
 activityId: any;
 text: any;
 messages: Array<String> = new Array<String>();
+realTimeData: Subject<any> = new Subject<any>();
+historicalData: Subject<any> = new Subject<any>();
 
-  
-  constructor() {
-  }
+  constructor() {}
 
    subscribe() {
         let that = this;
@@ -33,6 +35,7 @@ messages: Array<String> = new Array<String>();
 				if(JSON.parse(realtime.body)){
 					//realtime data
 					let obj = JSON.parse(realtime.body);
+                    that.realTimeData.next(obj);
                 }
             });
 
@@ -41,6 +44,7 @@ messages: Array<String> = new Array<String>();
                  if(JSON.parse(historical.body)){
 					//historical data
                     let obj = JSON.parse(historical.body);
+                    that.historicalData.next(obj);
                 }
             });
             that.reload();

@@ -40,10 +40,6 @@ export class GeoChartComponent implements OnInit {
     ngOnInit() {
         let that = this;
 
-        // setTimeout ( () => {
-        //     this.getHubDetails();
-        // }, 2000);
-
         this.geoService.socketData.subscribe( (value: HubNames[]) => {
             this.regenrateMap(value);
         });
@@ -63,13 +59,12 @@ export class GeoChartComponent implements OnInit {
                 break; 
         }
         d3.select("#" + id).remove();
+        if(id === "main-geo-chart") {
+            d3.selectAll(".tooltip").remove();
+        }
         this.hubnames = market;
         this.generateGeoView(this.hubnames);
     }
-
-    // ngOnChanges(data) {
-    //     console.log(data);
-    // }
 
     generateGeoView (geoData) {
         let that = this;
@@ -91,8 +86,8 @@ export class GeoChartComponent implements OnInit {
                 scale=550;
                 id="west-division";
                 break;
-            default: translateConfig = [width / 3, height/2.5];
-                scale = 800;
+            default: translateConfig = [width / 3, height/2.7];
+                scale = 775;
                 id="main-geo-chart";
                 break; 
         }
