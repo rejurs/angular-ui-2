@@ -148,25 +148,25 @@ export class GeoChartComponent implements OnInit {
                 var bubbleTooltip = `
                     <ul class="geoDataToolTip">
                         <li class="geoDataToolTipItem">
-                            <strong> Hub : </strong> ` + bubbleData.name + ` 
+                            <strong> Hub : </strong> ` + bubbleData.name + `
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Region : </strong> ` + bubbleData.market + ` 
+                            <strong> Region : </strong> ` + bubbleData.market + `
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Division : </strong> ` + bubbleData.division + ` 
+                            <strong> Division : </strong> ` + bubbleData.division + `
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Total : </strong> ` + bubbleData.total + ` 
+                            <strong> Total<sup>1</sup>: </strong><span class="float-right">` + bubbleData.total + `</span>
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Outside Headend : </strong> ` + bubbleData.outsideHeadEnd + ` 
+                            <strong> Outside Headend<sup>2</sup>: </strong><span class="float-right">` + bubbleData.outsideHeadEnd + `</span>
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> Within Headend : </strong> ` + bubbleData.withinHeadEnd + ` 
+                            <strong> Within Headend<sup>3</sup>: </strong><span class="float-right">` + bubbleData.withinHeadEnd + `</span>
                         </li>
                         <li class="geoDataToolTipItem">
-                            <strong> FTA / FiberNodeIssue : </strong> ` + bubbleData.fiberNodeIssue + ` 
+                            <strong> FTA / FiberNodeIssue<sup>4</sup>: </strong><span class="float-right">` + bubbleData.fiberNodeIssue + `</span>
                         </li>
                     </ul>
                 `;
@@ -264,5 +264,37 @@ export class GeoChartComponent implements OnInit {
             .attr("y", function(d) { return -2 * radius(d); })
             .attr("dy", "1.3em")
             .text(d3.format(".1s"));
+
+        legend.append('rect')
+             .attr('width', 260)
+             .attr('height', 0.2)
+             .attr('x', -180)
+             .attr('y', 50)
+             .style('fill', '#bfbfbf')
+             .style('stroke', '#bfbfbf');
+ 
+        // Code to add Static D3 Legend text to the Geo-Graph  
+        legend.append('text')
+             .attr('x', -50 )
+             .attr('y', 65 )
+             .text( '1. Sum of 1600112 + 1600117 + 1600118 + 1600119');
+ 
+        // Code to add Static D3 Legend text to the Geo-Graph  
+        legend.append('text')
+             .attr('x', -100)
+             .attr('y', 80)
+             .text('2. Sum of 1600112 + 1600118');
+ 
+        // Code to add Static D3 Legend text to the Geo-Graph    
+        legend.append('text')
+             .attr('x', -100)
+             .attr('y', 95)
+             .text('3. Sum of 1600117 + 1600119');
+            
+        // Code to add Static D3 Legend text to the Geo-Graph      
+        legend.append('text')
+             .attr('x', -100)
+             .attr('y', 110)
+             .text('4. Sum of 1600118 = 1600119');
     }
 }
