@@ -122,12 +122,6 @@ export class GeoChartComponent implements OnInit {
                     .attr("preserveAspectRatio", "xMinYMin meet")
                     .attr("viewBox", "0 0 "+width+ " " + height)
                     .classed("svg-content-responsive", true);
-
-            if(divId === "geo-chart") {
-                that.plotLegend(svg, width, height);
-            }
-
-            var plotData = [];
             
             var div = d3.select("body").append("div")
                 .attr("class", "tooltip")
@@ -149,6 +143,7 @@ export class GeoChartComponent implements OnInit {
                          return b.total - a.total; 
                     });
 
+            let legendLabelMax=geoData[0].total, legendLabelMin=0;
             geoData.forEach(bubbleData => {
                 var bubbleTooltip = `
                     <ul class="geoDataToolTip">
@@ -184,7 +179,9 @@ export class GeoChartComponent implements OnInit {
                     .append("circle")
                     .attr("cx", function (d) { return projection(d.coords)[0]; })
                     .attr("cy", function (d) { return projection(d.coords)[1];})
-                    .attr("r", function(d) { return radius(d.total); })
+                    .attr("r", function(d) {
+                        return radius(d.total); 
+                    })
                     .attr("id", function(d) { 
                         if(d.uid) return d.uid; 
                     })
@@ -196,36 +193,67 @@ export class GeoChartComponent implements OnInit {
                     .on("mouseover", function(d) {
                         div.transition()
                             .duration(200)
-                            .style("display", "block");    
+                            .style("display", "block");
+                        let left = (d3.event.pageX + 5);
+                        let top = (d3.event.pageY + 20);
+                        
+                        // To fix the issue of tooltip showing beyond container
+                        if(d3.event.pageX > 1200) {
+                            left = (d3.event.pageX -150);
+                        }
+                        if(d3.event.pageY > 500) {
+                            top = (d3.event.pageY - 155);
+                        }
+
+                        //Setting the position of tooltip
                         div.html(bubbleTooltip)
-                            .style("left", (d3.event.pageX + 5) + "px")
-                            .style("top", (d3.event.pageY + 20) + "px");
+                            .style("left", left + "px")
+                            .style("top", top + "px");
                     })
                     .on("mouseout", function(d) {
                         div.transition()
                             .duration(500)
                             .style("display", "none");
                     });
+                    legendLabelMin += 1;
                 }
             });
-
+            legendLabelMin = geoData[legendLabelMin].total;
         
-            d3.select(self.frameElement)
-                .style("height", height + "px")
-                .style("width", width + "px");
+            // d3.select(self.frameElement)
+            //     .style("height", "100%")
+            //     .style("width", "100%");
+
+            if(divId === "geo-chart") {
+                that.plotLegend(svg, width, height, legendLabelMax, legendLabelMin);
+            }
         });
     }
 
-    plotLegend (svg, width, height) {
+    plotLegend (svg, width, height, legendMax, legendMin) {
+
+        let domainRange, dataRange;
+
+        if(legendMax >= 1000000) {
+            domainRange = [0,1e6];
+            dataRange = [1e6, 5e6, 1e7]
+        } else if( legendMax >= 1000 && legendMax < 1000000 ){
+            domainRange = [0, 1000];
+            dataRange = [10000, 5000 , 1000]
+        } else {
+            domainRange = [0, 100];
+            dataRange = [1000, 500 , 100];
+        }
+
         var radius = d3.scaleSqrt()
-                .domain([0, 1e6])
+                .domain(domainRange)
                 .range([0, 15]);
 
         var legend = svg.append("g")
                 .attr("class", "legend")
-                .attr("transform", "translate(" + (width - 50) + "," + (height / 1.9) + ")")
+                .attr("transform", "translate(" + (width - 100) + "," + (height / 1.9) + ")")
                 .selectAll("g")
-                .data([1e6, 5e6, 1e7])
+                .data(dataRange)
                 .enter().append("g");
 
         legend.append("circle")
