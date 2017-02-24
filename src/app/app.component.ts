@@ -42,8 +42,12 @@ export class AppComponent {
 
     /** Uncomment this block of code for real data */
     /*
-    this._geoservice.getHistoricalData().subscribe( data => {
-      console.log("Geo Data Fetched ! ");
+    this._geoservice.getHistoricalData().subscribe( (data) => {
+        if(data) {
+            this._geoservice.generateUsCoordinates().subscribe( data => {
+              console.log("Us Coordinates generated and ready to fetch !");
+            });
+        }
     });
     */
 
