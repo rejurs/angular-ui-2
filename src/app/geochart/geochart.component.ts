@@ -97,8 +97,8 @@ export class GeoChartComponent implements OnInit {
         .translate(translateConfig);
 
         var radius = d3.scaleSqrt()
-            .domain([0, 1e6])
-            .range([0, 15]);
+                .domain([100, 10000])
+                .range([15, 50]);
 
         var path = d3.geoPath().projection(projection);
         this.geoService.getUsCoordinates().subscribe( (data) => {
@@ -109,8 +109,8 @@ export class GeoChartComponent implements OnInit {
                 .center([-106, 37.5]);
             
             var radius = d3.scaleSqrt()
-                .domain([0, 1e6])
-                .range([0, 50]);
+                .domain([100, 10000])
+                .range([15, 50]);
 
             var svg = d3.select('#' + divId)
                     .append("div")
@@ -218,6 +218,7 @@ export class GeoChartComponent implements OnInit {
                     legendLabelMin += 1;
                 }
             });
+
             legendLabelMin = geoData[legendLabelMin].total;
         
             // d3.select(self.frameElement)
@@ -236,18 +237,18 @@ export class GeoChartComponent implements OnInit {
 
         if(legendMax >= 1000000) {
             domainRange = [0,1e6];
-            dataRange = [1e6, 5e6, 1e7]
+            dataRange = [1e6, 5e6, 1e7];
         } else if( legendMax >= 1000 && legendMax < 1000000 ){
-            domainRange = [0, 1000];
-            dataRange = [10000, 5000 , 1000]
+            domainRange = [100, 10000];
+            dataRange = [2000, 500 , legendMin];
         } else {
-            domainRange = [0, 100];
-            dataRange = [1000, 500 , 100];
+            domainRange = [100, 10000];
+            dataRange = [2000, 500 , legendMin];
         }
 
         var radius = d3.scaleSqrt()
                 .domain(domainRange)
-                .range([0, 15]);
+                .range([15, 50]);
 
         var legend = svg.append("g")
                 .attr("class", "legend")
@@ -262,7 +263,7 @@ export class GeoChartComponent implements OnInit {
 
         legend.append("text")
             .attr("y", function(d) { return -2 * radius(d); })
-            .attr("dy", "1.3em")
+            .attr("dy", "1.2em")
             .text(d3.format(".1s"));
 
         legend.append('rect')
