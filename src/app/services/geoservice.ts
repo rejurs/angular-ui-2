@@ -35,13 +35,17 @@ export class GeoDataService {
     }
 
     getHistoricalData() {
-        this._socketservice.historicalData.subscribe( (data) => {
-            this.geoDataDetails = data;
-            this.overallCountData = data['overallCount'];
-            this.errorMeta = data['countByErrorCode'];
-            this.marketMeta = data['countByMarket'];
-            this.divisionMeta = data['countByDivision'];
-            Observable.of(this.hubDetails = data['hub']);
+        let that = this;
+        return Observable.create(function (observer) {
+            that._socketservice.historicalData.subscribe( (data) => {
+                that.geoDataDetails = data;
+                that.overallCountData = data['overallCount'];
+                that.errorMeta = data['countByErrorCode'];
+                that.marketMeta = data['countByMarket'];
+                that.divisionMeta = data['countByDivision'];
+                Observable.of(that.hubDetails = data['hub']);
+                observer.next(1);
+            });
         });
     }
 
