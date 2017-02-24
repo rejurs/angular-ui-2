@@ -14,16 +14,14 @@ export class MarketMetaDataComponent {
 
     ngOnInit() {
         this._geoservice.marketData.subscribe( (markets) => {
-            this.markets = this.sortMarkets(markets);
+            this.sortMarkets(markets);
         })
     }
 
     sortMarkets(marketData) {
-        let data = [];
         marketData.sort(function(a, b) {
             return b.count - a.count;
-        })
-        return marketData;
+        });
+        this.markets = marketData;
     }
-
 }

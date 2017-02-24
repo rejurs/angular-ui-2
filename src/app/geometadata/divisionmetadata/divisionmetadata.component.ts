@@ -15,7 +15,14 @@ export class DivisionMetaDataComponent {
 
     ngOnInit() {
         this._geoservice.divisionMetaData.subscribe( ( divisions ) => {
-            this.divisions = divisions;
+            this.sortDivisions(divisions);
         });
+    }
+
+    sortDivisions(divisionData) {
+        divisionData.sort(function(a, b) {
+            return b.count - a.count;
+        });
+        this.divisions = divisionData;
     }
 }
