@@ -79,49 +79,50 @@ export class GeoDataService {
         }
     }
 
-    ngOnInit() {
+    getRealTimeData() {
         let that = this;
-        this._socketservice.realTimeData.subscribe((data) => {
+        return Observable.create(function (observer) {
+            that._socketservice.realTimeData.subscribe((data) => {
 
-            data.forEach(item => {
+                data.forEach(item => {
+                    that.hubDetails.forEach(element => {
+                        if (element.name == item['HubName']) {
+                            element.total = element.total + 1;
+                            element.isNew = true;
+                            element.uid = that.slugify(element.name);
+                            //Check to count outsideheadend, withinheadend, fibernodeissue and KPI error counts
+                            if (item.hasOwnProperty('1600112')) {
+                                element.outsideHeadEnd += 1;
+                                that.errorCodeIncrement('1600112');
+                            } else if (item.hasOwnProperty('1600117')) {
+                                element.withinHeadEnd += 1;   // Sum of 1600117 + 1600119
+                                that.errorCodeIncrement('1600117');
+                            } else if (item.hasOwnProperty('1600118')) {
+                                element.fiberNodeIssue += 1;  // Sum of 1600118 + 1600119
+                                element.outsideHeadEnd += 1;  // Sum of 1600118 + 1600112
+                                that.errorCodeIncrement('1600118');
+                            } else if (item.hasOwnProperty('1600119')) {
+                                element.fiberNodeIssue += 1;  // Sum of 1600118 + 1600119
+                                that.errorCodeIncrement('1600119');
+                            }
 
-                this.hubDetails.forEach(element => {
-                    if (element.name == item['HubName']) {
-                        element.total = String(Number(element.total) + 1);
-                        element.isNew = true;
-                        element.uid = this.slugify(element.name);
-                        //Check to count outsideheadend, withinheadend, fibernodeissue and KPI error counts
-                        if (item.hasOwnProperty('1600112')) {
-                            element.outsideHeadEnd += 1;
-                            that.errorCodeIncrement('1600112');
-                        } else if (item.hasOwnProperty('1600117')) {
-                            element.withinHeadEnd += 1;   // Sum of 1600117 + 1600119
-                            that.errorCodeIncrement('1600117');
-                        } else if (item.hasOwnProperty('1600118')) {
-                            element.fiberNodeIssue += 1;  // Sum of 1600118 + 1600119
-                            element.outsideHeadEnd += 1;  // Sum of 1600118 + 1600112
-                            that.errorCodeIncrement('1600118');
-                        } else if (item.hasOwnProperty('1600119')) {
-                            element.fiberNodeIssue += 1;  // Sum of 1600118 + 1600119
-                            that.errorCodeIncrement('1600119');
+                            //check to increment the market count
+                            that.incrementMarketCount(element.market);
+
+                            //check to increment the division count
+                            that.incrementDivisionCount(element.division);
                         }
-
-                        //check to increment the market count
-                        that.incrementMarketCount(element.market);
-
-                        //check to increment the division count
-                        that.incrementDivisionCount(element.division);
-                    }
+                    });
                 });
-            });
 
-            this.socketData.next(this.hubDetails);
-            this.overallCountData += 1;
-            this.overallCount.next(new OverallMetaModel(this.overallCountData));
-            this.errorMetaData.next(this.errorMeta);
-            this.marketData.next(this.marketMeta);
-            this.divisionMetaData.next(this.divisionMeta);
-            this.realTimeSocketData.next(data);
+                that.socketData.next(that.hubDetails);
+                that.overallCountData += 1;
+                that.overallCount.next(new OverallMetaModel(that.overallCountData));
+                that.errorMetaData.next(that.errorMeta);
+                that.marketData.next(that.marketMeta);
+                that.divisionMetaData.next(that.divisionMeta);
+                observer.next(data);
+            });
         });
     }
 
@@ -240,7 +241,7 @@ export class GeoDataService {
 
                     this.hubDetails.forEach(element => {
                         if (element.name == item['HubName']) {
-                            element.total = String(Number(element.total) + 1);
+                            element.total = element.total + 1;
                             element.isNew = true;
                             element.uid = this.slugify(element.name);
                             //Check to count outsideheadend, withinheadend, fibernodeissue and KPI error counts
