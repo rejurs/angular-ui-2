@@ -60,7 +60,7 @@ h1 {
     left: 0;
 }
 
-div.tooltip {   
+div.geotooltip {   
     position: absolute;
     padding: 2px;
     font: 12px sans-serif;
