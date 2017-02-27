@@ -49,16 +49,12 @@
   height: 55px;
   float: left;
   background-size: 100%;
-
-  /*overflow: hidden;*/
 }
 
 .geo-scale-seconds {
   width: 49%;
   height: 55px;
   float: left;
-
-  /*overflow: hidden;*/
 }
 
 .scale-container {
@@ -68,6 +64,7 @@
 	padding-bottom: 100%; 
 	vertical-align: middle; 
 	overflow: hidden; 
+    height: 85px;
 }
 
 .scale-content-responsive {

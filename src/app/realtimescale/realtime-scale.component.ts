@@ -44,17 +44,17 @@ export class RealtimeScaleComponent {
     secScaleProps: Scale = {
         type        : 'seconds',
         width       : 350,
-        height      : 31,
+        height      : 32,
         barWidth    : 4,
-        barHeight   : 31
+        barHeight   : 32
     };
 
     minScaleProps: Scale = {
         type        : 'minute',
         width       : 350,
-        height      : 31,
+        height      : 32,
         barWidth    : 4,
-        barHeight   : 31
+        barHeight   : 32
     };
 
     /**
@@ -144,8 +144,8 @@ export class RealtimeScaleComponent {
             /**
              * Update minutues data
              */
-            let e = _.find(this.data.minute, {'key': k});
-            let i = _.indexOf(this.data.minute, e);
+            let e: any = _.find(this.data.minute, {'key': k});
+            let i: any = _.indexOf(this.data.minute, e);
             
             e['total'] =  e['total'] + item.total;
 
@@ -188,6 +188,10 @@ export class RealtimeScaleComponent {
 
         // let that = this;
 
+        /**
+         * Build the labels
+         * onto the x axis
+         */
         let labels: Array<any>;
 
         if (scaleProps.type == 'seconds') {
@@ -215,12 +219,11 @@ export class RealtimeScaleComponent {
             ];
         }
 
-        let xBand: any = d3.scaleBand().rangeRound([-45, scaleProps.width+45]);
+        let xBand: any = d3.scaleBand()
+                            .rangeRound([-45, scaleProps.width + 45])
+                            .domain(labels.map(function(d) { return d.label; }));
+        
         let xAxis: any = d3.axisBottom(xBand).ticks(labels.length);
-
-        xBand.domain(labels.map(function(d) {
-            return d.label;
-        }));
 
         scale.append('g')
             .attr('class', 'x axis')
@@ -232,13 +235,13 @@ export class RealtimeScaleComponent {
          * start: current time - 60 sec
          * end: current time
          */
-        let multiplier = (scaleProps.type == 'seconds') ? 1 : 60;
-        let end = +new Date();
-        let start = end - (multiplier * 60 * 1000);
+        let multiplier: number  = (scaleProps.type == 'seconds') ? 1 : 60;
+        let end: number         = +new Date();
+        let start: number       = end - (multiplier * 60 * 1000);
 
-        let x = d3.scaleTime()
-            .domain([start, end])
-            .range([0, scaleProps.width]);
+        let x: any = d3.scaleTime()
+                        .domain([start, end])
+                        .range([0, scaleProps.width]);
         
         /**
          * Plotting the initial points
@@ -266,17 +269,17 @@ export class RealtimeScaleComponent {
 
         // let that = this;
 
-        let multiplier  = scaleProps.type == 'seconds' ? 1 : 60;
-        let end         = +new Date();
-        let start       = end - (multiplier * 60 * 1000);
+        let multiplier: number  = scaleProps.type == 'seconds' ? 1 : 60;
+        let end: number         = +new Date();
+        let start: number       = end - (multiplier * 60 * 1000);
 
-        let x = d3.scaleTime()
-            .domain([start, end])
-            .range([0, scaleProps.width]);
-
+        let x: any = d3.scaleTime()
+                        .domain([start, end])
+                        .range([0, scaleProps.width]);
+        
         x.domain([start, end]);
 
-        let bars = scale.selectAll('rect').data(items);
+        let bars: any = scale.selectAll('rect').data(items);
 
         bars.exit().remove();
 
@@ -373,12 +376,12 @@ export class RealtimeScaleComponent {
          * Subscribe
          * to the realtime data
          */
-        // this.geoDataService.socketData.subscribe((value: HubNames[]) => {
-
-        //     value.forEach(element => {
-        //         element.isNew ? this.generateData(element) : '';
-        //     });
-        // });
+        this.geoDataService.socketData.subscribe((value: HubNames[]) => {
+            
+            value.forEach(element => {
+                element.isNew ? this.generateData(element) : '';
+            });
+        });
 
         /**
          * Holds the full list of
@@ -449,8 +452,8 @@ export class RealtimeScaleComponent {
          * Shifting the bar
          * in every seconds
          */
-        let i = 0;
-        let that = this;
+        let i: number = 0;
+        let that: any = this;
 
         setInterval(function () {
 
@@ -462,7 +465,7 @@ export class RealtimeScaleComponent {
                  * This need to be from
                  * the socket
                  */
-                that.generateData({name: 'SecPoint '+i, total: 1});
+                // that.generateData({name: 'SecPoint '+i, total: 1});
             }
 
             /**
