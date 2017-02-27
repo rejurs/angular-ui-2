@@ -74,12 +74,16 @@
 	left: 0;
 }
 
+.geo-scale-minute .rect {
+    cursor: pointer;
+}
+
 .axis .tick text {
     font-size: 6px;
     fill: #bebebe;
 }
 
-.axis path{
+.axis path {
     display: none;
 }
 
@@ -96,7 +100,7 @@ div.tip {
     border: 1px solid;
     border-radius: 5px;
     pointer-events: none;
-    fill-opacity:  0.1;
+    display: none;
     min-width: 100px;
     min-height: 100px;
 }

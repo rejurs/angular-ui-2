@@ -28,12 +28,13 @@ declare var d3: any;
 
 export class RealtimeScaleComponent {
 
-    minuteState: string;
+    minuteState : string;
     secondsState: string;
 
     /**
      * Holds the full list of
      * points to be plotted
+     * in the scale
      */
     data: any;
 
@@ -61,8 +62,8 @@ export class RealtimeScaleComponent {
      * Scale objects
      * seconds & minute
      */
-    secondsScale: any;
-    minuteScale: any;
+    secondsScale    : any;
+    minuteScale     : any;
     
     constructor(private geoDataService: GeoDataService) { }
 
@@ -96,13 +97,11 @@ export class RealtimeScaleComponent {
      * Generate data
      * for realtime scale
      */
-    generateData(hub: any) : void {
+    generateData(item: any) : void {
 
-        if (_.isUndefined(hub)) { return; }
-
-        hub.time = +new Date();
-
-        this.processData(hub);
+        if (_.isUndefined(item)) { return; }
+        
+        this.processData(item);
     }
 
     /**
@@ -124,8 +123,7 @@ export class RealtimeScaleComponent {
          */
         this.data.seconds.push(item);
 
-        // console.log(this.data.minute);
-        
+
         if (_.findIndex(this.data.minute, {'key': k}) == -1) {
 
             /**
@@ -137,7 +135,7 @@ export class RealtimeScaleComponent {
 
             this.data.minute.push(item);
 
-            console.log('new', k, item.time);
+            // console.log('new', k, item.time);
 
         } else {
 
@@ -147,12 +145,36 @@ export class RealtimeScaleComponent {
             let e: any = _.find(this.data.minute, {'key': k});
             let i: any = _.indexOf(this.data.minute, e);
             
-            e['total'] =  e['total'] + item.total;
+            e = this.updateCounts(e, item);
 
             this.data.minute.splice(i, 1, e);
 
-            console.log('update', k);
+            // console.log('update', k, this.data.minute);
         }
+    }
+
+    /**
+     * Update the overall counts
+     * in each category
+     * 1600112 | 1600117 | 1600118 | 1600119
+     */
+    updateCounts(e: any, item: any) : any {
+
+        /**
+         * List of available error codes
+         */
+        let keys: number[] = [1600112, 1600117, 1600118, 1600119];
+
+        for (let k of keys) {
+
+            if (_.has(e, k)) {
+                e[k] = _.has(item, k) ? parseInt(e[k] + item[k]) : parseInt(e[k]);
+            } else {
+                e[k] = 0;
+            }
+        }
+
+        return e;
     }
 
     /**
@@ -198,7 +220,7 @@ export class RealtimeScaleComponent {
 
             labels = [
 
-                {label: '............ -60 sec'},
+                {label: '............ -60 sec'},    // theppu pani
                 {label: '-45 sec'},
                 {label: '-30 sec'},
                 {label: '-15 sec'},
@@ -220,7 +242,7 @@ export class RealtimeScaleComponent {
         }
 
         let xBand: any = d3.scaleBand()
-                            .rangeRound([-45, scaleProps.width + 45])
+                            .rangeRound([-45, scaleProps.width + 45])   // theppu pani
                             .domain(labels.map(function(d) { return d.label; }));
         
         let xAxis: any = d3.axisBottom(xBand).ticks(labels.length);
@@ -257,7 +279,12 @@ export class RealtimeScaleComponent {
             .attr('width', scaleProps.barWidth)
             .attr('height', scaleProps.barHeight);
 
-        // this.setActions(bars);
+        /**
+         * Attach events to bars
+         */
+        if (scaleProps.type == 'minute') {
+            this.setActions(scale);
+        }
     }
 
     /**
@@ -266,8 +293,6 @@ export class RealtimeScaleComponent {
      * in every seconds/minute
      */
     tick(scale: any, scaleProps: Scale, items: Array<any>) : void {
-
-        // let that = this;
 
         let multiplier: number  = scaleProps.type == 'seconds' ? 1 : 60;
         let end: number         = +new Date();
@@ -290,12 +315,40 @@ export class RealtimeScaleComponent {
             .attr('fill', '#dc4223')
             .attr('width', scaleProps.barWidth)
             .attr('height', scaleProps.barHeight);
+        
+        /**
+         * Attach events to bars
+         */
+        if (scaleProps.type == 'minute') {
+            this.setActions(scale);
+        }
 
         bars.transition()
             .duration(1000)
             .attr('x', function (d, i) { return x(d.time); });
-        
-        // this.setActions(bars);
+    }
+
+    /**
+     * Generate tooltip data
+     */
+    getTooltipData(item: any) : string {
+
+         return `
+            <ul class="geoDataToolTip">
+                <li class="geoDataToolTipItem">
+                    <strong>  1600112 : </strong> ` + (item[1600112] | 0) + ` 
+                </li>
+                <li class="geoDataToolTipItem">
+                    <strong>  1600117 : </strong> ` + (item[1600117] | 0) + ` 
+                </li>
+                <li class="geoDataToolTipItem">
+                    <strong>  1600118 : </strong> ` + (item[1600118] | 0) + ` 
+                </li>
+                <li class="geoDataToolTipItem">
+                    <strong>  1600119 : </strong> ` + (item[1600119] | 0) + ` 
+                </li>
+            </ul>
+        `;
     }
 
     /**
@@ -303,19 +356,21 @@ export class RealtimeScaleComponent {
      * mouseover | mouseout
      * for individual bars
      */
-    setActions(bars: any) : void {
+    setActions(scale: any) : void {
 
-        bars.on('mouseover', function (item) {
-                
-            d3.select('#' + item.uid).classed('newItem', true);
+        let that: any = this;
+
+        scale.selectAll('rect').on('mouseover', function (item) {
+            
+            // d3.select('#' + item.uid).classed('newItem', true);
             
             let tip: any = d3.select('.tip');
             
             tip.transition()
                 .duration(200)
-                .style('opacity', .9);
+                .style('display', 'block');
             
-            tip.html(this.getTooltipData(item))
+            tip.html(that.getTooltipData(item))
                 .style('left', (d3.event.pageX + 5) + 'px')
                 .style('top', (d3.event.pageY + 20) + 'px');
 
@@ -326,41 +381,9 @@ export class RealtimeScaleComponent {
             
             tip.transition()
                 .duration(200)
-                .style('opacity', 0);
+                .style('display', 'none');
         });
     }
-
-    /**
-     * Generate tooltip data
-     */
-    // getTooltipData(item: any) : string {
-
-    //      return `
-    //         <ul class="geoDataToolTip">
-    //             <li class="geoDataToolTipItem">
-    //                 <strong> Hub : </strong> ` + item.name + ` 
-    //             </li>
-    //             <li class="geoDataToolTipItem">
-    //                 <strong> Region : </strong> ` + item.market + ` 
-    //             </li>
-    //             <li class="geoDataToolTipItem">
-    //                 <strong> Division : </strong> ` + item.division + ` 
-    //             </li>
-    //             <li class="geoDataToolTipItem">
-    //                 <strong> Total : </strong> ` + item.total + ` 
-    //             </li>
-    //             <li class="geoDataToolTipItem">
-    //                 <strong> Outside Headend : </strong> ` + item.outsideHeadEnd + ` 
-    //             </li>
-    //             <li class="geoDataToolTipItem">
-    //                 <strong> Within Headend : </strong> ` + item.withinHeadEnd + ` 
-    //             </li>
-    //             <li class="geoDataToolTipItem">
-    //                 <strong> FTA / FiberNodeIssue : </strong> ` + item.fiberNodeIssue + ` 
-    //             </li>
-    //         </ul>
-    //     `;
-    // }
 
     /**
      * Initialize
@@ -368,21 +391,19 @@ export class RealtimeScaleComponent {
      */
     ngOnInit() {
 
-        // d3.select('body').append('div')
-        //     .attr('class', 'tip')
-        //     .style('opacity', 0);
+        d3.select('body').append('div').attr('class', 'tip');
 
         /**
          * Subscribe
          * to the realtime data
          */
-        this.geoDataService.socketData.subscribe((value: HubNames[]) => {
-            
+        this.geoDataService.realTimeSocketData.subscribe((value: any[]) => {
+
             value.forEach(element => {
-                element.isNew ? this.generateData(element) : '';
+                this.generateData(element);
             });
         });
-
+        
         /**
          * Holds the full list of
          * points to be plotted
@@ -391,40 +412,9 @@ export class RealtimeScaleComponent {
             seconds: [],
             minute: []
         };
-
-        /**
-         * Initial set of data for
-         * first 60 seconds/1 hour
-         * should come from the server
-         */
-        // for (let i = 0; i < 60; i++) {
-
-        //     if (Math.random() > 0.8) {
-
-        //         let date = +new Date();
-        //         date -= (i * 1000);
-
-        //         this.data.seconds.push({
-        //             time: date,
-        //             name: 'SecPoint '+i,
-        //         });
-        //     }
-        // }
-
-        // for (let i = 0; i < 60; i++) {
-
-        //     if (Math.random() > 0.8) {
-
-        //         let date = +new Date();
-        //         date -= (i * 1000 * 60);
-
-        //         this.data.minute.push({
-        //             time: date,
-        //             name: 'MinPoint '+i
-        //         });
-        //     }
-        // }
         
+        // this.buildInitialDummyData();
+
         /**
          * Build seconds scale
          */
@@ -459,14 +449,7 @@ export class RealtimeScaleComponent {
 
             i++;
             
-            if (Math.random() > 0.9) {
-
-                /**
-                 * This need to be from
-                 * the socket
-                 */
-                // that.generateData({name: 'SecPoint '+i, total: 1});
-            }
+            // that.buildSocketDummyData(i);
 
             /**
              * Remove the first entry
@@ -494,17 +477,71 @@ export class RealtimeScaleComponent {
 
                 i = 0;
 
-                console.log('minute');
+                // console.log('minute');
             }
 
         }, 1000);
 
     }
+
+    /**
+     * Generate dummy data
+     * for realtime scale
+     */
+    buildSocketDummyData(i: number) : void {
+
+        if (Math.random() > 0.9) {
+
+            let keys: number[] = [1600112, 1600117, 1600118, 1600119];
+
+            let item: Object = {
+                name    : 'SecPoint ' + i,
+                time    : +new Date()
+            };
+
+            item[_.sample(keys)] =  _.random(5);
+
+            this.generateData(item);
+        }
+    }
+
+    /**
+     * Generate dummy data
+     * for initial scale
+     */
+    buildInitialDummyData() : void {
+
+        /**
+         * Initial set of data for
+         * first 60 seconds/1 hour
+         * should come from the server
+         */
+        // for (let i = 0; i < 60; i++) {
+
+        //     if (Math.random() > 0.9) {
+
+        //         let date = +new Date();
+        //         date -= (i * 1000);
+
+        //         this.data.seconds.push({
+        //             time: date,
+        //             name: 'SecPoint '+i,
+        //         });
+        //     }
+        // }
+
+        // for (let i = 0; i < 60; i++) {
+
+        //     if (Math.random() > 0.9) {
+
+        //         let date = +new Date();
+        //         date -= (i * 1000 * 60);
+
+        //         this.data.minute.push({
+        //             time: date,
+        //             name: 'MinPoint '+i
+        //         });
+        //     }
+        // }
+    }
 }
-
-
-/*
-collapsed
-expanded
-normal
-*/
