@@ -60,7 +60,7 @@ export class GeoChartComponent implements OnInit {
         }
         d3.select("#" + id).remove();
         if(id === "main-geo-chart") {
-            d3.selectAll(".tooltip").remove();
+            d3.selectAll(".geotooltip").remove();
         }
         this.hubnames = market;
         this.generateGeoView(this.hubnames);
@@ -124,7 +124,7 @@ export class GeoChartComponent implements OnInit {
                     .classed("svg-content-responsive", true);
             
             var div = d3.select("body").append("div")
-                .attr("class", "tooltip")
+                .attr("class", "geotooltip")
                 .style("display", "none");
             
             svg.selectAll("path")
@@ -235,10 +235,7 @@ export class GeoChartComponent implements OnInit {
 
         let domainRange, dataRange;
 
-        if(legendMax >= 1000000) {
-            domainRange = [0,1e6];
-            dataRange = [1e6, 5e6, 1e7];
-        } else if( legendMax >= 1000 && legendMax < 1000000 ){
+        if( legendMax >= 1000 && legendMax < 1000000 ){
             domainRange = [100, 10000];
             dataRange = [2000, 500 , legendMin];
         } else {
