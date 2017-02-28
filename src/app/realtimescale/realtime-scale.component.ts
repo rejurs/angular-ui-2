@@ -263,6 +263,8 @@ export class RealtimeScaleComponent {
                                     return d.label; 
                                 }));
             
+            // paddingOuter
+
             let xAxis: any = d3.axisBottom(xBand).ticks(labels.length);
 
             chart.append('g')
@@ -362,17 +364,17 @@ export class RealtimeScaleComponent {
     getTooltipData(item: any) : string {
 
          return `
-            <ul class="geoDataToolTip">
-                <li class="geoDataToolTipItem">
+            <ul class='geoDataToolTip'>
+                <li class='geoDataToolTipItem'>
                     <strong>  1600112 : </strong> ` + (item[1600112] | 0) + ` 
                 </li>
-                <li class="geoDataToolTipItem">
+                <li class='geoDataToolTipItem'>
                     <strong>  1600117 : </strong> ` + (item[1600117] | 0) + ` 
                 </li>
-                <li class="geoDataToolTipItem">
+                <li class='geoDataToolTipItem'>
                     <strong>  1600118 : </strong> ` + (item[1600118] | 0) + ` 
                 </li>
-                <li class="geoDataToolTipItem">
+                <li class='geoDataToolTipItem'>
                     <strong>  1600119 : </strong> ` + (item[1600119] | 0) + ` 
                 </li>
             </ul>
