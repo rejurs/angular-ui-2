@@ -122,6 +122,7 @@ export class GeoDataService {
                 that.errorMetaData.next(that.errorMeta);
                 that.marketData.next(that.marketMeta);
                 that.divisionMetaData.next(that.divisionMeta);
+                that.realTimeSocketData.next(data);
                 observer.next(data);
             });
         });
