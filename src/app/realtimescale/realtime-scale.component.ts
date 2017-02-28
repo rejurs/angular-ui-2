@@ -192,7 +192,7 @@ export class RealtimeScaleComponent {
     /**
      * Initialize the scale
      * build the responsive svg
-     * and push to to the container
+     * and push to the container
      */
     initScale(container: string, scaleProps: Scale) : any {
 
@@ -204,6 +204,7 @@ export class RealtimeScaleComponent {
                         .attr('width', scaleProps.width)
                         .attr('height', scaleProps.height);
         
+        // create axis
         this.initAxis(chart, scaleProps);
 
         return chart;
@@ -219,31 +220,21 @@ export class RealtimeScaleComponent {
          * Build the labels
          * onto the x axis
          */
-        let labels: Array<any>;
+        let labels  : Array<number>;    // full list of labels
+        let show    :  Array<number>;   // list of labels to be displayed
+        let extra    : string;           // extra string to be displayed anong with the label
 
         if (scaleProps.type == 'seconds') {
 
-            labels = [
-
-                {label: '-60 sec'},
-                {label: '-45 sec'},
-                {label: '-30 sec'},
-                {label: '-15 sec'},
-                {label: '0 sec'}
-            ];
+            labels  = _.range(-60, 0);
+            show    = [-60, -45, -30, -15, 0];
+            extra   = ' sec';
 
         } else {
 
-            labels = [
-
-                {label: '-60 min'},
-                {label: '-50 min'},
-                {label: '-40 min'},
-                {label: '-30 min'},
-                {label: '-20 min'},
-                {label: '-10 min'},
-                {label: '0 min'}
-            ];
+            labels  = _.range(-60, 0);
+            show    = [-60, -45, -30, -15, 0];
+            extra   = ' min';
         }
 
         chart.selectAll('.axis').remove();
@@ -258,15 +249,19 @@ export class RealtimeScaleComponent {
 
             let graphWidth: any = document.getElementById(eid).offsetWidth;
 
-            let xBand: any = d3.scaleBand().range([0, graphWidth])
-                                .domain(labels.map(function(d) { 
-                                    return d.label; 
-                                }));
+            let xBand: any = d3.scaleBand()
+                                .range([0, graphWidth])
+                                .domain(labels);
             
-            // paddingOuter
+            let xAxis: any = d3.axisBottom(xBand)
+                                .ticks(labels.length)
+                                .tickFormat(function(d) {
+                                    
+                                    let x: string = _.includes([-60, 0], d) ? '' : extra;
 
-            let xAxis: any = d3.axisBottom(xBand).ticks(labels.length);
-
+                                    return _.includes(show, d) ? (d + x) : null;
+                                });
+            
             chart.append('g')
                 .attr('class', 'x axis')
                 .attr('transform', 'translate(0, 55)')
