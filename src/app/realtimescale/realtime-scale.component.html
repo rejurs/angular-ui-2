@@ -2,8 +2,8 @@
     <div class="fcs-realtime-geo-scale">
         <div id="min" class="geo-scale-minute scale-background" [@openClose]="minuteState"></div>
         <div class="geo-scale-separator">
-            <a href="#" (click)="slideRight($event)"><i class="fa fa-angle-right"></i></a>
-            <a href="#" (click)="slideLeft($event)"><i class="fa fa-angle-left"></i></a>
+            <a href="#" (click)="slideRight($event)" class="arrow"><i>></i></a>
+            <a href="#" (click)="slideLeft($event)" class="arrow"><i><</i></a>
         </div>
         <div id="sec" class="geo-scale-seconds scale-background" [@openClose]="secondsState"></div>
     </div>

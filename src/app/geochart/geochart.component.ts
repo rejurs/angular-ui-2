@@ -81,8 +81,8 @@ export class GeoChartComponent implements OnInit {
                 scale=1200;
                 id="central-division";
                 break;
-            case 'geo-ne-division': translateConfig = [width - width/0.65, height - height/2.6];
-                scale=750;
+            case 'geo-ne-division': translateConfig = [width - width/0.50, height - height/3.2];
+                scale=890;
                 id="ne-division";
                 break;
             case 'geo-west-division': translateConfig = [width/2.2,  height/2.1];
@@ -94,6 +94,7 @@ export class GeoChartComponent implements OnInit {
                 id="main-geo-chart";
                 break; 
         }
+		
 
         var projection = d3.geoMercator()
         .scale(scale)

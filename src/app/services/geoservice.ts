@@ -11,7 +11,7 @@ import { MarketMetaDataModel } from '../geodata/marketmetadata.model';
 import { ErrorMetaDataModel } from '../geodata/errormetadata.model';
 import { DivisionMetaDataModel } from '../geodata/divisionmetadata.model';
 import { WebSocketService } from '../services/socketservice';
-import * from _ as 'lodash';
+import * as _ from 'lodash';
 
 @Injectable()
 export class GeoDataService {
@@ -122,6 +122,7 @@ export class GeoDataService {
                 that.errorMetaData.next(that.errorMeta);
                 that.marketData.next(that.marketMeta);
                 that.divisionMetaData.next(that.divisionMeta);
+                that.realTimeSocketData.next(data);
                 observer.next(data);
             });
         });
