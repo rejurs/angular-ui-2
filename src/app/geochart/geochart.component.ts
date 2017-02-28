@@ -4,8 +4,11 @@ import { GeoDataService } from '../services/geoservice';
 import {Observable} from 'rxjs/Rx';
 import { HubNames } from '../geodata/hubnames.model';
 
+declare var require: any;
 declare var d3: any;
-declare var topojson: any;
+
+var topojson = require('topojson');
+
 @Component({
   selector: 'geo-chart',
   encapsulation: ViewEncapsulation.None,
@@ -79,10 +82,10 @@ export class GeoChartComponent implements OnInit {
                 id="central-division";
                 break;
             case 'geo-ne-division': translateConfig = [width - width/0.65, height - height/2.6];
-                scale=800;
+                scale=750;
                 id="ne-division";
                 break;
-            case 'geo-west-division': translateConfig = [width/2.3,  height/2.1];
+            case 'geo-west-division': translateConfig = [width/2.2,  height/2.1];
                 scale=550;
                 id="west-division";
                 break;
@@ -170,7 +173,7 @@ export class GeoChartComponent implements OnInit {
                         </li>
                     </ul>
                 `;
-                if(bubbleData.lon && bubbleData.lat) {
+                if(bubbleData.lon && bubbleData.lat && bubbleData.total > 0) {
                     bubbleData.coords = [(bubbleData.lon), (bubbleData.lat)];
                     svg.append("g")
                     .attr("class", "bubble")
@@ -267,32 +270,33 @@ export class GeoChartComponent implements OnInit {
              .attr('width', 260)
              .attr('height', 0.2)
              .attr('x', -180)
-             .attr('y', 50)
+             .attr('y', 30)
              .style('fill', '#bfbfbf')
              .style('stroke', '#bfbfbf');
- 
+
         // Code to add Static D3 Legend text to the Geo-Graph  
         legend.append('text')
              .attr('x', -50 )
-             .attr('y', 65 )
+             .attr('y', 45 )
              .text( '1. Sum of 1600112 + 1600117 + 1600118 + 1600119');
- 
+
         // Code to add Static D3 Legend text to the Geo-Graph  
         legend.append('text')
              .attr('x', -100)
-             .attr('y', 80)
+             .attr('y', 60)
              .text('2. Sum of 1600112 + 1600118');
- 
+
         // Code to add Static D3 Legend text to the Geo-Graph    
         legend.append('text')
              .attr('x', -100)
-             .attr('y', 95)
+             .attr('y', 75)
              .text('3. Sum of 1600117 + 1600119');
             
         // Code to add Static D3 Legend text to the Geo-Graph      
         legend.append('text')
              .attr('x', -100)
-             .attr('y', 110)
-             .text('4. Sum of 1600118 = 1600119');
+             .attr('y', 90)
+             .text('4. Sum of 1600118 + 1600119');
     }
+
 }

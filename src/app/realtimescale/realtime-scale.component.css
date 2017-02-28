@@ -78,7 +78,7 @@
     cursor: pointer;
 }
 
-.axis .tick text {
+/*.axis .tick text {
     font-size: 6px;
     fill: #bebebe;
 }
@@ -90,7 +90,7 @@
 .axis .tick line {
     stroke-width: 1;
     stroke: rgba(0, 0, 0, 0.2);
-}
+}*/
 
 div.tip {   
     position: absolute;
