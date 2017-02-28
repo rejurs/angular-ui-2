@@ -235,11 +235,15 @@ export class RealtimeScaleComponent {
          * Build the axis
          * and dynamic labels
          */
-        let xScale: any = d3.scaleBand()
+        let graphWidth: any = chart.attr('width');
+console.log(graphWidth);
+        let xBand: any = d3.scaleBand()
                             .domain(labels.map(function(d) { return d.label; }))
                             .range([0, 600]);   // theppu pani
         
-        let xAxis: any = d3.axisBottom(xScale).ticks(labels.length);
+        // xBand.paddingOuter(0); 
+
+        let xAxis: any = d3.axisBottom(xBand).ticks(labels.length);
 
         chart.append('g')
             .attr('class', 'x axis')
@@ -520,32 +524,9 @@ export class RealtimeScaleComponent {
          * first 60 seconds/1 hour
          * should come from the server
          */
-        // for (let i = 0; i < 60; i++) {
+        for (let i = 0; i < 60; i++) {
 
-        //     if (Math.random() > 0.9) {
-
-        //         let date = +new Date();
-        //         date -= (i * 1000);
-
-        //         this.data.seconds.push({
-        //             time: date,
-        //             name: 'SecPoint '+i,
-        //         });
-        //     }
-        // }
-
-        // for (let i = 0; i < 60; i++) {
-
-        //     if (Math.random() > 0.9) {
-
-        //         let date = +new Date();
-        //         date -= (i * 1000 * 60);
-
-        //         this.data.minute.push({
-        //             time: date,
-        //             name: 'MinPoint '+i
-        //         });
-        //     }
-        // }
+            this.buildSocketDummyData(i);        
+        }
     }
 }
