@@ -78,8 +78,8 @@
     cursor: pointer;
 }
 
-/*.axis .tick text {
-    font-size: 6px;
+.axis .tick text {
+    font-size: 10px;
     fill: #bebebe;
 }
 
@@ -90,7 +90,7 @@
 .axis .tick line {
     stroke-width: 1;
     stroke: rgba(0, 0, 0, 0.2);
-}*/
+}
 
 div.tip {   
     position: absolute;
@@ -103,4 +103,11 @@ div.tip {
     display: none;
     min-width: 100px;
     min-height: 100px;
+}
+
+.arrow {
+    font: 14px sans-serif;
+    font-weight: 300;
+    color: grey;
+    text-decoration: none;
 }

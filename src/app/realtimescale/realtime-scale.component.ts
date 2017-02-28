@@ -45,7 +45,7 @@ export class RealtimeScaleComponent {
     secScaleProps: Scale = {
         type        : 'seconds',
         width       : '100%',
-        height      : '55px',
+        height      : '75px',
         barWidth    : '4px',
         barHeight   : '55px'
     };
@@ -53,7 +53,7 @@ export class RealtimeScaleComponent {
     minScaleProps: Scale = {
         type        : 'minute',
         width       : '100%',
-        height      : '55px',
+        height      : '75px',
         barWidth    : '4px',
         barHeight   : '55px'
     };
@@ -67,30 +67,42 @@ export class RealtimeScaleComponent {
     
     constructor(private geoDataService: GeoDataService) { }
 
+    /**
+     * Slide right
+     */
     slideRight(event) {
 
         event.preventDefault();
 
-        if (this.minuteState == "normal" || undefined == this.minuteState) {
+        if (this.minuteState == 'normal' || undefined == this.minuteState) {
             this.minuteState    = 'expanded';
             this.secondsState   = 'collapsed';
-        } else if (this.minuteState == "collapsed") {
+        } else if (this.minuteState == 'collapsed') {
             this.minuteState    = 'normal';
             this.secondsState   = 'normal';
         }
+
+        this.initAxis(this.secondsScale, this.secScaleProps);
+        this.initAxis(this.minuteScale, this.minScaleProps);
     }
 
+    /**
+     * Slide left
+     */
     slideLeft(event) {
 
         event.preventDefault();
 
-        if (this.minuteState == "normal" || undefined == this.minuteState) {
+        if (this.minuteState == 'normal' || undefined == this.minuteState) {
             this.minuteState    = 'collapsed';
             this.secondsState   = 'expanded';
-        } else if (this.minuteState == "expanded") {
+        } else if (this.minuteState == 'expanded') {
             this.minuteState    = 'normal';
             this.secondsState   = 'normal';
         }
+
+        this.initAxis(this.secondsScale, this.secScaleProps);
+        this.initAxis(this.minuteScale, this.minScaleProps);
     }
 
     /**
@@ -180,7 +192,7 @@ export class RealtimeScaleComponent {
     /**
      * Initialize the scale
      * build the responsive svg
-     * and push to to the container
+     * and push to the container
      */
     initScale(container: string, scaleProps: Scale) : any {
 
@@ -188,71 +200,76 @@ export class RealtimeScaleComponent {
          * Building the chart
          */
         let chart = d3.select(container)
-            // .append('div')
-            //container class to make it responsive
-            // .classed('scale-container', true)
-            .append('svg:svg')
-            .attr('width', scaleProps.width)
-            .attr('height', scaleProps.height)
-            //responsive SVG needs these 2 attributes and no width and height attr
-            // .attr('preserveAspectRatio', 'xMinYMin meet')
-            // .attr('viewBox', '0 0 ' + scaleProps.width + ' ' + 50) // scaleProps.height
-            //class to make it responsive
-            // .classed('scale-content-responsive', true);
+                        .append('svg:svg')
+                        .attr('width', scaleProps.width)
+                        .attr('height', scaleProps.height);
         
+        // create axis
+        this.initAxis(chart, scaleProps);
+
+        return chart;
+    }
+
+    /**
+     * Build and attach
+     * the x-axis and it's labels
+     */
+    initAxis(chart: any, scaleProps: Scale) : void {
+
         /**
          * Build the labels
          * onto the x axis
          */
-        let labels: Array<any>;
+        let labels  : Array<number>;    // full list of labels
+        let show    :  Array<number>;   // list of labels to be displayed
+        let extra    : string;           // extra string to be displayed anong with the label
 
         if (scaleProps.type == 'seconds') {
 
-            labels = [
-
-                {label: '-60 sec'},
-                {label: '-45 sec'},
-                {label: '-30 sec'},
-                {label: '-15 sec'},
-                {label: '0 sec'}
-            ];
+            labels  = _.range(-60, 0);
+            show    = [-60, -45, -30, -15, 0];
+            extra   = ' sec';
 
         } else {
 
-            labels = [
-
-                {label: '-60 min'},
-                {label: '-50 min'},
-                {label: '-40 min'},
-                {label: '-30 min'},
-                {label: '-20 min'},
-                {label: '-10 min'},
-                {label: '0 min'}
-            ];
+            labels  = _.range(-60, 0);
+            show    = [-60, -45, -30, -15, 0];
+            extra   = ' min';
         }
 
-        /**
-         * Build the axis
-         * and dynamic labels
-         */
-        let graphWidth: any = chart.attr('width');
-console.log(graphWidth);
-        let xBand: any = d3.scaleBand()
-                            .domain(labels.map(function(d) { return d.label; }))
-                            .range([0, 600]);   // theppu pani
-        
-        // xBand.paddingOuter(0); 
+        chart.selectAll('.axis').remove();
 
-        let xAxis: any = d3.axisBottom(xBand).ticks(labels.length);
+        setTimeout(function () {
 
-        chart.append('g')
-            .attr('class', 'x axis')
-            .attr('transform', 'translate(0, 55)')
-            .call(xAxis);
-        
-        return chart;
+            /**
+             * Build the axis
+             * and dynamic labels
+             */
+            let eid: string = (scaleProps.type == 'seconds') ? 'sec' : 'min';
+
+            let graphWidth: any = document.getElementById(eid).offsetWidth;
+
+            let xBand: any = d3.scaleBand()
+                                .range([0, graphWidth])
+                                .domain(labels);
+            
+            let xAxis: any = d3.axisBottom(xBand)
+                                .ticks(labels.length)
+                                .tickFormat(function(d) {
+                                    
+                                    let x: string = _.includes([-60, 0], d) ? '' : extra;
+
+                                    return _.includes(show, d) ? (d + x) : null;
+                                });
+            
+            chart.append('g')
+                .attr('class', 'x axis')
+                .attr('transform', 'translate(0, 55)')
+                .call(xAxis);
+            
+        }, 1000);
     }
-
+ 
     /**
      * Render scale initial data
      * and events
@@ -342,17 +359,17 @@ console.log(graphWidth);
     getTooltipData(item: any) : string {
 
          return `
-            <ul class="geoDataToolTip">
-                <li class="geoDataToolTipItem">
+            <ul class='geoDataToolTip'>
+                <li class='geoDataToolTipItem'>
                     <strong>  1600112 : </strong> ` + (item[1600112] | 0) + ` 
                 </li>
-                <li class="geoDataToolTipItem">
+                <li class='geoDataToolTipItem'>
                     <strong>  1600117 : </strong> ` + (item[1600117] | 0) + ` 
                 </li>
-                <li class="geoDataToolTipItem">
+                <li class='geoDataToolTipItem'>
                     <strong>  1600118 : </strong> ` + (item[1600118] | 0) + ` 
                 </li>
-                <li class="geoDataToolTipItem">
+                <li class='geoDataToolTipItem'>
                     <strong>  1600119 : </strong> ` + (item[1600119] | 0) + ` 
                 </li>
             </ul>
@@ -405,12 +422,12 @@ console.log(graphWidth);
          * Subscribe
          * to the realtime data
          */
-        // this.geoDataService.realTimeSocketData.subscribe((value: any[]) => {
+        this.geoDataService.realTimeSocketData.subscribe((value: any[]) => {
 
-        //     value.forEach(element => {
-        //         this.generateData(element);
-        //     });
-        // });
+            value.forEach(element => {
+                this.generateData(element);
+            });
+        });
         
         /**
          * Holds the full list of
@@ -457,7 +474,7 @@ console.log(graphWidth);
 
             i++;
             
-            that.buildSocketDummyData(i);
+            // that.buildSocketDummyData(i);
 
             /**
              * Remove the first entry
@@ -489,7 +506,16 @@ console.log(graphWidth);
             }
 
         }, 1000);
+        
+        /**
+         * Redraw xAxis
+         * on window resize
+         */
+        window.addEventListener('resize', function () {
 
+            that.initAxis(that.secondsScale, that.secScaleProps);
+            that.initAxis(that.minuteScale, that.minScaleProps);
+        });
     }
 
     /**
