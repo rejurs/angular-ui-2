@@ -37,10 +37,11 @@
 }
 .mesh {
     fill: none;
-    stroke: lightgrey;
+    stroke: #f0f0f0;
     stroke-width: 2px;
     stroke-linejoin: round;
 }
+
 h1 {
     font-family: sans-serif;
 }

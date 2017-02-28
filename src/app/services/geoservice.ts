@@ -11,6 +11,7 @@ import { MarketMetaDataModel } from '../geodata/marketmetadata.model';
 import { ErrorMetaDataModel } from '../geodata/errormetadata.model';
 import { DivisionMetaDataModel } from '../geodata/divisionmetadata.model';
 import { WebSocketService } from '../services/socketservice';
+import * from _ as 'lodash';
 
 @Injectable()
 export class GeoDataService {
@@ -283,15 +284,16 @@ export class GeoDataService {
     /** To increase the KPI Market count */
     incrementMarketCount(marketName: string) {
         this.marketMeta.forEach(marketItem => {
-            if (marketItem.name === marketName) {
+            if (marketItem.name === _.capitalize(marketName)) {
                 marketItem.count += 1;
             }
         });
     }
 
+    /** To increase the KPI Division count */
     incrementDivisionCount(divsionName: string) {
         this.divisionMeta.forEach(divisionItem => {
-            if (divisionItem.name === divsionName) {
+            if (divisionItem.name === _.capitalize(divsionName)) {
                 divisionItem.count += 1;
             }
         });
