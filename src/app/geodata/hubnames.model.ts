@@ -3,10 +3,10 @@ export class HubNames {
     lon: string;
     market: string;
     division: string;
-    fiberNodeIssue: string;
-    outsideHeadEnd: string;
-    total: string;
-    withinHeadEnd: string;
+    fiberNodeIssue: number;
+    outsideHeadEnd: number;
+    total: number;
+    withinHeadEnd: number;
     name: string;
     isNew: boolean = false;
     uid: string;
