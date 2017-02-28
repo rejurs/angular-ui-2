@@ -173,7 +173,7 @@ export class GeoChartComponent implements OnInit {
                         </li>
                     </ul>
                 `;
-                if(bubbleData.lon && bubbleData.lat) {
+                if(bubbleData.lon && bubbleData.lat && bubbleData.total > 0) {
                     bubbleData.coords = [(bubbleData.lon), (bubbleData.lat)];
                     svg.append("g")
                     .attr("class", "bubble")
