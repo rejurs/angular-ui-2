@@ -1,8 +1,8 @@
 export interface Scale {
 
     type        : string;
-    width       : number;
-    height      : number;
-    barWidth    : number;
-    barHeight   : number;
+    width       : string;
+    height      : string;
+    barWidth    : string;
+    barHeight   : string;
 }

@@ -44,18 +44,18 @@ export class RealtimeScaleComponent {
      */
     secScaleProps: Scale = {
         type        : 'seconds',
-        width       : 350,
-        height      : 32,
-        barWidth    : 4,
-        barHeight   : 32
+        width       : '100%',
+        height      : '55px',
+        barWidth    : '4px',
+        barHeight   : '55px'
     };
 
     minScaleProps: Scale = {
         type        : 'minute',
-        width       : 350,
-        height      : 32,
-        barWidth    : 4,
-        barHeight   : 32
+        width       : '100%',
+        height      : '55px',
+        barWidth    : '4px',
+        barHeight   : '55px'
     };
 
     /**
@@ -188,28 +188,18 @@ export class RealtimeScaleComponent {
          * Building the chart
          */
         let chart = d3.select(container)
-            .append('div')
+            // .append('div')
             //container class to make it responsive
-            .classed('scale-container', true)
+            // .classed('scale-container', true)
             .append('svg:svg')
+            .attr('width', scaleProps.width)
+            .attr('height', scaleProps.height)
             //responsive SVG needs these 2 attributes and no width and height attr
-            .attr('preserveAspectRatio', 'xMinYMin meet')
-            .attr('viewBox', '0 0 ' + scaleProps.width + ' ' + 50) // scaleProps.height
+            // .attr('preserveAspectRatio', 'xMinYMin meet')
+            // .attr('viewBox', '0 0 ' + scaleProps.width + ' ' + 50) // scaleProps.height
             //class to make it responsive
-            .classed('scale-content-responsive', true);
-
-        return chart;
-    }
-
-    /**
-     * Render scale initial data
-     * and events
-     * if it's available
-     */
-    renderScaleData(scale: any, scaleProps: Scale, items: Array<any>) : void {
-
-        // let that = this;
-
+            // .classed('scale-content-responsive', true);
+        
         /**
          * Build the labels
          * onto the x axis
@@ -220,7 +210,7 @@ export class RealtimeScaleComponent {
 
             labels = [
 
-                {label: '............ -60 sec'},    // theppu pani
+                {label: '-60 sec'},
                 {label: '-45 sec'},
                 {label: '-30 sec'},
                 {label: '-15 sec'},
@@ -241,16 +231,30 @@ export class RealtimeScaleComponent {
             ];
         }
 
-        let xBand: any = d3.scaleBand()
-                            .rangeRound([-45, scaleProps.width + 45])   // theppu pani
-                            .domain(labels.map(function(d) { return d.label; }));
+        /**
+         * Build the axis
+         * and dynamic labels
+         */
+        let xScale: any = d3.scaleBand()
+                            .domain(labels.map(function(d) { return d.label; }))
+                            .range([0, 600]);   // theppu pani
         
-        let xAxis: any = d3.axisBottom(xBand).ticks(labels.length);
+        let xAxis: any = d3.axisBottom(xScale).ticks(labels.length);
 
-        scale.append('g')
+        chart.append('g')
             .attr('class', 'x axis')
-            .attr('transform', 'translate(0,' + scaleProps.height + ')')
+            .attr('transform', 'translate(0, 55)')
             .call(xAxis);
+        
+        return chart;
+    }
+
+    /**
+     * Render scale initial data
+     * and events
+     * if it's available
+     */
+    renderScaleData(scale: any, scaleProps: Scale, items: Array<any>) : void {
         
         /**
          * Building up the initial scale
@@ -263,7 +267,7 @@ export class RealtimeScaleComponent {
 
         let x: any = d3.scaleTime()
                         .domain([start, end])
-                        .range([0, scaleProps.width]);
+                        .range([0, scaleProps.width]); 
         
         /**
          * Plotting the initial points
@@ -302,7 +306,7 @@ export class RealtimeScaleComponent {
                         .domain([start, end])
                         .range([0, scaleProps.width]);
         
-        x.domain([start, end]);
+        // x.domain([start, end]);
 
         let bars: any = scale.selectAll('rect').data(items);
 
@@ -397,12 +401,12 @@ export class RealtimeScaleComponent {
          * Subscribe
          * to the realtime data
          */
-        this.geoDataService.realTimeSocketData.subscribe((value: any[]) => {
+        // this.geoDataService.realTimeSocketData.subscribe((value: any[]) => {
 
-            value.forEach(element => {
-                this.generateData(element);
-            });
-        });
+        //     value.forEach(element => {
+        //         this.generateData(element);
+        //     });
+        // });
         
         /**
          * Holds the full list of
@@ -449,7 +453,7 @@ export class RealtimeScaleComponent {
 
             i++;
             
-            // that.buildSocketDummyData(i);
+            that.buildSocketDummyData(i);
 
             /**
              * Remove the first entry
