@@ -4,8 +4,11 @@ import { GeoDataService } from '../services/geoservice';
 import {Observable} from 'rxjs/Rx';
 import { HubNames } from '../geodata/hubnames.model';
 
+declare var require: any;
 declare var d3: any;
-declare var topojson: any;
+
+var topojson = require('topojson');
+
 @Component({
   selector: 'geo-chart',
   encapsulation: ViewEncapsulation.None,
@@ -79,7 +82,7 @@ export class GeoChartComponent implements OnInit {
                 id="central-division";
                 break;
             case 'geo-ne-division': translateConfig = [width - width/0.65, height - height/2.6];
-                scale=800;
+                scale=750;
                 id="ne-division";
                 break;
             case 'geo-west-division': translateConfig = [width/2.3,  height/2.1];
