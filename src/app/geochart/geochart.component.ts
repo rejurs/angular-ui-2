@@ -1,11 +1,11 @@
-import {Component, ElementRef, Input, OnChanges, OnInit, ViewEncapsulation} from '@angular/core';
-import { D3Service, D3, Selection} from 'd3-ng2-service';
-import { GeoDataService } from '../services/geoservice';
+import { Component, OnInit, ViewEncapsulation, Input } from '@angular/core';
+import { GeoDataService } from '../services/geoservice.ts';
 import {Observable} from 'rxjs/Rx';
+import { Subject }    from 'rxjs/Subject';
 import { HubNames } from '../geodata/hubnames.model';
 
-declare var require: any;
 declare var d3: any;
+declare var require: any;
 
 var topojson = require('topojson');
 
@@ -15,227 +15,317 @@ var topojson = require('topojson');
   template: '',
   styleUrls: ['./geochart.component.css']
 })
+export class GeoChartComponent {
 
-export class GeoChartComponent implements OnInit {
-    private dg3: D3;
-    private parentNativeElement: any;
-    private geoData: Array<Object>;
-    private hubnames: HubNames[];
-    private newVal: HubNames[];
-
-    @Input() hubdata:any
     @Input() height: number
     @Input() width: number
     @Input() divId: string
-    
-    constructor(element: ElementRef, d3Service: D3Service, private geoService: GeoDataService) { // <-- pass the D3 Service into the constructor
-        this.dg3 = d3Service.getD3(); // <-- obtain the d3 object from the D3 Service
-        this.parentNativeElement = element.nativeElement;
-    }
 
-    getHubDetails() {
-        this.geoService.getHubData().subscribe( (data) => {
-            this.hubnames = data;
-            this.generateGeoView(this.hubnames);
-        });
+    mainData: Subject<HubNames[]> = new Subject<HubNames[]>();
+    projection: any
+    radius: any
+    svg: any
+    div: any //For the tooltip on the bubble
+    initialLoad: boolean
+    elemConfig: any //For the element scale and translation configurtion
+
+    constructor (private _geoservice: GeoDataService) {
+        this.initialLoad = true; // To load the historical data
     }
 
     ngOnInit() {
+        this.generateMap();
+
         let that = this;
 
-        this.geoService.socketData.subscribe( (value: HubNames[]) => {
-            this.regenrateMap(value);
-        });
-
-    }
-
-    regenrateMap(market: HubNames[]) {
-        let id;
-        switch(this.divId) {
-            case 'geo-central-division': id="central-division";
-                break;
-            case 'geo-ne-division': id="ne-division";
-                break;
-            case 'geo-west-division': id="west-division";
-                break;
-            default: id="main-geo-chart";
-                break; 
-        }
-        d3.select("#" + id).remove();
-        if(id === "main-geo-chart") {
-            d3.selectAll(".geotooltip").remove();
-        }
-        this.hubnames = market;
-        this.generateGeoView(this.hubnames);
-    }
-
-    generateGeoView (geoData) {
-        let that = this;
-        var height=Number(this.height), width=Number(this.width), divId = this.divId;
-
-        //Setting Translate Width/Height for the default geo map
-        let translateConfig;
-        let scale, id;
-        switch(divId) {
-            case 'geo-central-division': translateConfig = [width - width/0.52, height - height/0.82];
-                scale=1200;
-                id="central-division";
-                break;
-            case 'geo-ne-division': translateConfig = [width - width/0.50, height - height/3.2];
-                scale=890;
-                id="ne-division";
-                break;
-            case 'geo-west-division': translateConfig = [width/2.2,  height/2.1];
-                scale=550;
-                id="west-division";
-                break;
-            default: translateConfig = [width / 3, height/2.7];
-                scale = 775;
-                id="main-geo-chart";
-                break; 
-        }
-		
-
-        var projection = d3.geoMercator()
-        .scale(scale)
-        .translate(translateConfig);
-
-        var radius = d3.scaleSqrt()
-                .domain([100, 10000])
-                .range([15, 50]);
-
-        var path = d3.geoPath().projection(projection);
-        this.geoService.getUsCoordinates().subscribe( (data) => {
-            var states = topojson.feature(data, data.objects.states).features
-
-            projection
-                .scale(scale)
-                .center([-106, 37.5]);
-            
-            var radius = d3.scaleSqrt()
-                .domain([100, 10000])
-                .range([15, 50]);
-
-            var svg = d3.select('#' + divId)
-                    .append("div")
-                    .classed("svg-container", true)
-                    .attr("id", id)
-                    .append("svg")
-                    .attr("width", "100%")
-                    .attr("height", "100%")
-                    .attr("preserveAspectRatio", "xMinYMin meet")
-                    .attr("viewBox", "0 0 "+width+ " " + height)
-                    .classed("svg-content-responsive", true);
-            
-            var div = d3.select("body").append("div")
-                .attr("class", "geotooltip")
-                .style("display", "none");
-            
-            svg.selectAll("path")
-                .data(states).enter()
-                .append("path")
-                .attr("class", "border border--state land")
-                .attr("d", path);
-            if(divId)
-            svg.append("path")
-                .datum(topojson.mesh(data, data.objects.states, function(a, b) { return a !== b; }))
-                .attr("class", "mesh")
-                .attr("transform", "translate(" + (width - 50) + "," + (height - 20) + ")") 
-                .attr("d", path);
-
-            geoData.sort(function(a, b) {
-                         return b.total - a.total; 
+        this._geoservice.socketData.subscribe( (value: HubNames[]) => {
+            if(value) {
+                value.sort(function(a, b) {
+                    return b.total - a.total;
+                });
+                if(that.initialLoad) {
+                    value.forEach( ( hubItem ) => {
+                        hubItem.uid = that.slugify(hubItem.name); 
+                        this.plotBubbles(hubItem);
                     });
-
-            let legendLabelMax=geoData[0].total, legendLabelMin=0;
-            geoData.forEach(bubbleData => {
-                var bubbleTooltip = `
-                    <ul class="geoDataToolTip">
-                        <li class="geoDataToolTipItem">
-                            <strong> Hub : </strong> ` + bubbleData.name + `
-                        </li>
-                        <li class="geoDataToolTipItem">
-                            <strong> Region : </strong> ` + bubbleData.market + `
-                        </li>
-                        <li class="geoDataToolTipItem">
-                            <strong> Division : </strong> ` + bubbleData.division + `
-                        </li>
-                        <li class="geoDataToolTipItem">
-                            <strong> Total<sup>1</sup>: </strong><span class="float-right">` + bubbleData.total + `</span>
-                        </li>
-                        <li class="geoDataToolTipItem">
-                            <strong> Outside Headend<sup>2</sup>: </strong><span class="float-right">` + bubbleData.outsideHeadEnd + `</span>
-                        </li>
-                        <li class="geoDataToolTipItem">
-                            <strong> Within Headend<sup>3</sup>: </strong><span class="float-right">` + bubbleData.withinHeadEnd + `</span>
-                        </li>
-                        <li class="geoDataToolTipItem">
-                            <strong> FTA / FiberNodeIssue<sup>4</sup>: </strong><span class="float-right">` + bubbleData.fiberNodeIssue + `</span>
-                        </li>
-                    </ul>
-                `;
-                if(bubbleData.lon && bubbleData.lat && bubbleData.total > 0) {
-                    bubbleData.coords = [(bubbleData.lon), (bubbleData.lat)];
-                    svg.append("g")
-                    .attr("class", "bubble")
-                    .selectAll("circle")
-                    .data([bubbleData]).enter()
-                    .append("circle")
-                    .attr("cx", function (d) { return projection(d.coords)[0]; })
-                    .attr("cy", function (d) { return projection(d.coords)[1];})
-                    .attr("r", function(d) {
-                        return radius(d.total); 
-                    })
-                    .attr("id", function(d) { 
-                        if(d.uid) return d.uid; 
-                    })
-                    .attr("class", function(d) {
-                        let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
-                        id=="west-division" ? d.isNew = false : '';
-                        return className;
-                    })
-                    .on("mouseover", function(d) {
-                        div.transition()
-                            .duration(200)
-                            .style("display", "block");
-                        let left = (d3.event.pageX + 5);
-                        let top = (d3.event.pageY + 20);
-                        
-                        // To fix the issue of tooltip showing beyond container
-                        if(d3.event.pageX > 1200) {
-                            left = (d3.event.pageX -150);
-                        }
-                        if(d3.event.pageY > 500) {
-                            top = (d3.event.pageY - 155);
-                        }
-
-                        //Setting the position of tooltip
-                        div.html(bubbleTooltip)
-                            .style("left", left + "px")
-                            .style("top", top + "px");
-                    })
-                    .on("mouseout", function(d) {
-                        div.transition()
-                            .duration(500)
-                            .style("display", "none");
-                    });
-                    legendLabelMin += 1;
+                    that.initialLoad = false;
+                } else{
+                    if (this.svg) {
+                        value.forEach(element => {
+                            if(element.isNew) {
+                                let elemId = element.uid;
+                                this.svg.select("g#"+elemId).remove();
+                                this.plotBubbles(element);
+                            }
+                        });
+                    }
                 }
-            });
-
-            legendLabelMin = geoData[legendLabelMin].total;
-        
-            // d3.select(self.frameElement)
-            //     .style("height", "100%")
-            //     .style("width", "100%");
-
-            if(divId === "geo-chart") {
-                that.plotLegend(svg, width, height, legendLabelMax, legendLabelMin);
             }
         });
     }
 
-    plotLegend (svg, width, height, legendMax, legendMin) {
+    slugify(arg: string) {
+        return arg.toString().toLowerCase()
+            .replace(/\s+/g, '-')           // Replace spaces with -
+            .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+            .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+            .replace(/^-+/, '')             // Trim - from start of text
+            .replace(/-+$/, '');            // Trim - from end of text
+    }
+
+    getElementDetails (divId: string, height, width) {
+        let scale, translateConfig, id;
+        switch(divId) {
+            case 'geo-central-division': translateConfig = [width/2 * -0.4, height/2 * -0.9];
+                scale=1500;
+                id="central-division";
+                break;
+            case 'geo-ne-division': translateConfig = [width/2 * -0.4, height/1.7];
+                scale=900;
+                id="ne-division";
+                break;
+            case 'geo-west-division': translateConfig = [width/1.4, height/1.8];
+                scale=750;
+                id="west-division";
+                break;
+            default: translateConfig = [width / 2.3, height / 2];
+                scale = 1000;
+                id="main-geo-chart";
+                break; 
+        }
+
+        let elementDetails = {
+            id: id,
+            scale: scale,
+            translateConfig: translateConfig
+        };
+
+        return elementDetails;
+    }
+
+    generateMap() {
+        let that  = this;
+        
+        var width = this.width,
+            height = this.height,
+            id = this.divId,
+            active = d3.select(null);
+        
+        this.elemConfig = this.getElementDetails(this.divId, this.height, this.width);
+
+        let radius = d3.scaleSqrt()
+            .domain([100, 10000])
+            .range([15, 50]);
+
+        let projection = d3.geoAlbersUsa() // updated for d3 v4
+            .scale(this.elemConfig.scale)
+            .translate(this.elemConfig.translateConfig);
+        
+        let zoom = d3.zoom()
+            .scaleExtent([1, 8])
+            .on("zoom", zoomed);
+
+        let path = d3.geoPath() // updated for d3 v4
+            .projection(projection);
+
+        let svg = d3.select("#"+id)
+            .append("div")
+            .classed("svg-container", true).append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("id", this.elemConfig.id)
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 "+width+ " " + height)
+            .classed("svg-content-responsive", true)
+            .on("click", stopped, true);
+
+        svg.append("rect")
+            .attr("class", "background")
+            .attr("width", width)
+            .attr("height", height)
+            .on("click", reset);
+
+        var g = svg.append("g");
+
+        // svg
+        //     .call(zoom)
+        //     .on("mousedown.zoom", null)
+        //     .on("mousewheel.zoom", null); // delete this line to disable free zooming
+            // .call(zoom.event); // not in d3 v4
+
+        d3.json("./app/uscoordinates.json", function(error, us) {
+        if (error) throw error;
+
+        g.selectAll("path")
+            .data(topojson.feature(us, us.objects.states).features)
+            .enter().append("path")
+            .attr("d", path)
+            .attr("class", "feature")
+            .on("click", clicked);
+
+        g.append("path")
+            .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+            .attr("class", "mesh")
+            .attr("transform", "translate(" + (width - 50) + "," + (height - 20) + ")") 
+            .attr("d", path);
+        });
+
+        this.div = d3.select("body").append("div")
+            .attr("class", "geotooltips")
+            .style("display", "none");
+
+        function clicked(d) {
+            if (active.node() === this) return reset();
+            active.classed("active", false);
+            active = d3.select(this).classed("active", true);
+            if( that.elemConfig.id === "main-geo-chart" )
+            d3.select(".legend").style("display", "none");
+            var bounds = path.bounds(d),
+                dx = bounds[1][0] - bounds[0][0],
+                dy = bounds[1][1] - bounds[0][1],
+                x = (bounds[0][0] + bounds[1][0]) / 2,
+                y = (bounds[0][1] + bounds[1][1]) / 2,
+                scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height))),
+                translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+            that.elemConfig.translateConfig = translate;
+            that.elemConfig.scale = scale;
+
+            svg.transition()
+                .duration(750)
+                .call( zoom.transform, d3.zoomIdentity.translate(translate[0],translate[1]).scale(scale) ); // updated for d3 v4
+        }
+
+        function reset() {
+            active.classed("active", false);
+            active = d3.select(null);
+            svg.transition()
+                .duration(750)
+                .call( zoom.transform, d3.zoomIdentity ); // updated for d3 v4\
+
+            that.elemConfig = that.getElementDetails(id, height, width);
+            d3.select(".legend").style("display", "block");
+        }
+
+        function zoomed() {
+            g.style("stroke-width", 1.5 / d3.event.transform.k + "px");
+            g.attr("transform", d3.event.transform); // updated for d3 v4
+            d3.select("#"+id).selectAll(".bubble")
+                .attr("transform", d3.event.transform);
+        }
+
+        // If the drag behavior prevents the default click,
+        // also stop propagation so we don’t click-to-zoom.
+        function stopped() {
+            if (d3.event.defaultPrevented) d3.event.stopPropagation();
+        }
+
+        this.svg = svg;
+        if( this.elemConfig.id === "main-geo-chart" )
+        this.plotLegend(width, height, 2000, 0);
+    }
+
+    plotBubbles (bubbleData) {
+        let that = this;
+        let width = 960,
+            height = 500;
+        
+        let projection = d3.geoAlbersUsa() // updated for d3 v4
+            .scale(this.elemConfig.scale)
+            .translate(this.elemConfig.translateConfig);
+        
+        let radius = d3.scaleSqrt()
+            .domain([100, 10000])
+            .range([15, 50]);
+
+        let bubbleTooltip = that.getTooltipInfo(bubbleData);
+
+        if(bubbleData.lon && bubbleData.lat && bubbleData.total > 0) {
+            bubbleData.coords = [(bubbleData.lon), (bubbleData.lat)];
+            this.svg.append("g")
+            .attr("class", "bubble")
+            .attr("id", bubbleData.uid)
+            .selectAll("circle")
+            .data([bubbleData]).enter()
+            .append("circle")
+            .attr("cx", function (d) {
+                 return projection(d.coords)[0]; 
+            })
+            .attr("cy", function (d) { 
+                return projection(d.coords)[1];
+            })
+            .attr("r", function(d) {
+                return radius(d.total); 
+            })
+            .attr("id", function(d) {
+                if(d.uid) return d.uid+'-'+that.elemConfig.id; 
+            })
+            .attr("class", function(d) {
+                let className = d.isNew ? 'hvr-pulse newItem' : 'hvr-pulse';
+                that.elemConfig.id=="west-division" ? d.isNew = false : '';
+                setTimeout(function() {
+                     d3.selectAll("#"+d.uid+'-'+that.elemConfig.id).attr("class", "hvr-pulse");
+                }, 3000);
+                return className;
+            })
+            .on("mouseover", function(d) {
+                that.div.transition()
+                    .duration(200)
+                    .style("display", "block");
+                let left = (d3.event.pageX + 5);
+                let top = (d3.event.pageY + 20);
+                
+                // To fix the issue of tooltip showing beyond container
+                if(d3.event.pageX > 1200) {
+                    left = (d3.event.pageX -150);
+                }
+                if(d3.event.pageY > 500) {
+                    top = (d3.event.pageY - 155);
+                }
+
+                //Setting the position of tooltip
+                that.div.html(bubbleTooltip)
+                    .style("left", left + "px")
+                    .style("top", top + "px");
+            })
+            .on("mouseout", function(d) {
+                that.div.transition()
+                    .duration(500)
+                    .style("display", "none");
+            });
+            // legendLabelMin += 1;
+        }
+    }
+
+    getTooltipInfo(bubbleData) {
+        return `
+            <ul class="geoDataToolTip">
+                <li class="geoDataToolTipItem">
+                    <strong> Hub : </strong> ` + bubbleData.name + `
+                </li>
+                <li class="geoDataToolTipItem">
+                    <strong> Region : </strong> ` + bubbleData.market + `
+                </li>
+                <li class="geoDataToolTipItem">
+                    <strong> Division : </strong> ` + bubbleData.division + `
+                </li>
+                <li class="geoDataToolTipItem">
+                    <strong> Total<sup>1</sup>: </strong><span class="float-right">` + bubbleData.total + `</span>
+                </li>
+                <li class="geoDataToolTipItem">
+                    <strong> Outside Headend<sup>2</sup>: </strong><span class="float-right">` + bubbleData.outsideHeadEnd + `</span>
+                </li>
+                <li class="geoDataToolTipItem">
+                    <strong> Within Headend<sup>3</sup>: </strong><span class="float-right">` + bubbleData.withinHeadEnd + `</span>
+                </li>
+                <li class="geoDataToolTipItem">
+                    <strong> FTA / FiberNodeIssue<sup>4</sup>: </strong><span class="float-right">` + bubbleData.fiberNodeIssue + `</span>
+                </li>
+            </ul>
+        `;
+    }
+
+    plotLegend (width, height, legendMax, legendMin) {
 
         let domainRange, dataRange;
 
@@ -251,7 +341,7 @@ export class GeoChartComponent implements OnInit {
                 .domain(domainRange)
                 .range([15, 50]);
 
-        var legend = svg.append("g")
+        var legend = this.svg.append("g")
                 .attr("class", "legend")
                 .attr("transform", "translate(" + (width - 100) + "," + (height / 1.9) + ")")
                 .selectAll("g")
@@ -270,34 +360,34 @@ export class GeoChartComponent implements OnInit {
         legend.append('rect')
              .attr('width', 260)
              .attr('height', 0.2)
-             .attr('x', -180)
+             .attr('x', -150)
              .attr('y', 30)
              .style('fill', '#bfbfbf')
              .style('stroke', '#bfbfbf');
 
         // Code to add Static D3 Legend text to the Geo-Graph  
         legend.append('text')
-             .attr('x', -50 )
+             .attr('x', -30 )
              .attr('y', 45 )
              .text( '1. Sum of 1600112 + 1600117 + 1600118 + 1600119');
 
         // Code to add Static D3 Legend text to the Geo-Graph  
         legend.append('text')
-             .attr('x', -100)
+             .attr('x', -80)
              .attr('y', 60)
              .text('2. Sum of 1600112 + 1600118');
 
         // Code to add Static D3 Legend text to the Geo-Graph    
         legend.append('text')
-             .attr('x', -100)
+             .attr('x', -80)
              .attr('y', 75)
              .text('3. Sum of 1600117 + 1600119');
             
         // Code to add Static D3 Legend text to the Geo-Graph      
         legend.append('text')
-             .attr('x', -100)
+             .attr('x', -80)
              .attr('y', 90)
              .text('4. Sum of 1600118 + 1600119');
     }
-
 }
+

@@ -1,40 +1,19 @@
-.land {
-    fill: #bebebe;
-}
-
-.border {
-    stroke: #fff;
-    stroke-linejoin: round;
-    stroke-linecap: round;
-}
-
-.bubble {
-    fill: #dc4223;
-    fill-opacity: .65;
-    stroke: #FFFFFF;
-    stroke-width: 1px;
-}
-
-.bubble :hover {
-    stroke: #000000;
-}
-
-.legend circle {
-    fill: none;
-    stroke: #ccc;
-}
-
-.legend text {
-    fill: #777;
-    font: 10px sans-serif;
-    text-anchor: middle;
+.background {
+  fill: none;
+  pointer-events: all;
 }
 
 .feature {
-    stroke: grey;
-    stroke-width: 1px;
-    stroke-linejoin: round;
+  fill: #bebebe !important;
+  stroke: #fff !important;
+  stroke-width: 2px !important;
+  cursor: pointer !important;
 }
+
+.feature.active {
+  fill: gray;
+}
+
 .mesh {
     fill: none;
     stroke: #f0f0f0;
@@ -42,26 +21,7 @@
     stroke-linejoin: round;
 }
 
-h1 {
-    font-family: sans-serif;
-}
-
-.svg-container {
-    display: inline-block;
-    position: relative;
-    width: 100%;
-    padding-bottom: 100%; /* aspect ratio */
-    vertical-align: top;
-    overflow: hidden;
-}
-.svg-content-responsive {
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-div.geotooltip {   
+div.geotooltips {   
     position: absolute;
     padding: 2px;
     font: 12px sans-serif;
@@ -83,7 +43,6 @@ div.geotooltip {
 .geoDataToolTipItem{
     list-style-type: none;
 }
-
 
 @-webkit-keyframes hvr-pulse {
     0% {
@@ -176,6 +135,82 @@ div.geotooltip {
   cursor: pointer;
 }
 
-.float-right {
-    float: right;
+.newItem:hover, .newItem:focus, .newItem:active {
+  transform: scale(1.2);
+  -webkit-transform: scale(1.2);
+  -webkit-animation-name: hvr-big;
+  animation-name: hvr-big;
+  -webkit-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-timing-function: linear;
+  animation-timing-function: linear;
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
+  cursor: pointer;
+}
+
+.zoom-in-button {
+  fill: #bfbfbf;
+  stroke: #0a0a0a;
+  stroke-width: 2px;
+  cursor: pointer;
+}
+
+.zoom-in-text {
+  cursor: pointer;
+}
+
+.bubble {
+    fill: #dc4223;
+    fill-opacity: .65;
+    stroke: #FFFFFF;
+    stroke-width: 1px;
+}
+
+.bubble :hover {
+    stroke: #000000;
+}
+
+.legend circle {
+    fill: none;
+    stroke: #ccc;
+    -webkit-animation-name: legend-appear;
+    animation-name: legend-appear;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+}
+
+.legend text {
+    fill: #777;
+    font: 10px sans-serif;
+    text-anchor: middle;
+    -webkit-animation-name: legend-appear;
+    animation-name: legend-appear;
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    -webkit-animation-iteration-count: 1;
+    animation-iteration-count: 1;
+}
+
+@-webkit-keyframes legend-appear {
+    0% {
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+@keyframes legend-appear {
+    0% {
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
 }

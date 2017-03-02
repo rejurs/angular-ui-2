@@ -18,8 +18,8 @@ export class AppComponent {
   constructor(private _geoservice: GeoDataService, private _websocketservice: WebSocketService) {
 
     this.mainGeoChart = {
-      height: 600,
-      width:  950,
+      height: 500,
+      width:  960,
       divId: "geo-chart"
     };
     this.divisionChart = {
