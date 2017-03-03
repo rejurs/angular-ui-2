@@ -10,6 +10,8 @@ import * as _ from 'lodash';
 })
 export class DivisionMetaDataComponent {
 
+    @Input() area
+
     divisions: DivisionMetaDataModel[]
 
     constructor (private _geoservice : GeoDataService) {}
@@ -26,6 +28,33 @@ export class DivisionMetaDataComponent {
             b.name = _.capitalize(b.name);
             return b.count - a.count;
         });
-        this.divisions = divisionData;
+
+        let divisionItems = [];
+        
+        switch(this.area) {
+            case 'geo-central-division' :
+                divisionItems.push({
+                    name: "Total Counts",
+                    count: divisionData[0].count
+                });
+                break;
+            case 'geo-ne-division' :
+                divisionItems.push({
+                    name: "Total Counts",
+                    count: divisionData[1].count
+                }); 
+                break;
+            case 'geo-west-division' :
+                divisionItems.push({
+                    name: "Total Counts",
+                    count: divisionData[2].count
+                }); 
+                break;
+            case 'kpi' :
+                divisionItems = divisionData; 
+                break;
+        }
+
+        this.divisions = divisionItems;
     }
 }

@@ -106,10 +106,13 @@ export class GeoChartComponent {
     generateMap() {
         let that  = this;
         
+        let zoomClick = 1;
+
         var width = this.width,
             height = this.height,
             id = this.divId,
-            active = d3.select(null);
+            active = d3.select(null),
+            center = [width / 2, height / 2];
         
         this.elemConfig = this.getElementDetails(this.divId, this.height, this.width);
 
@@ -147,10 +150,11 @@ export class GeoChartComponent {
 
         var g = svg.append("g");
 
-        // svg
-        //     .call(zoom)
-        //     .on("mousedown.zoom", null)
-        //     .on("mousewheel.zoom", null); // delete this line to disable free zooming
+        svg
+            .call(zoom)
+            .on("mousedown.zoom", null)
+            .on("mousewheel.zoom", null)
+            .on("dblclick.zoom", null); 
             // .call(zoom.event); // not in d3 v4
 
         d3.json("./app/uscoordinates.json", function(error, us) {
@@ -160,14 +164,70 @@ export class GeoChartComponent {
             .data(topojson.feature(us, us.objects.states).features)
             .enter().append("path")
             .attr("d", path)
-            .attr("class", "feature")
-            .on("click", clicked);
+            .attr("class", "feature");
+            // .on("click", clicked);
 
         g.append("path")
             .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
             .attr("class", "mesh")
             .attr("transform", "translate(" + (width - 50) + "," + (height - 20) + ")") 
             .attr("d", path);
+        });
+
+        let zoomButtons = svg.selectAll(".button")
+            .data(['zoom_in', 'zoom_out'])
+            .enter()
+            .append("g")
+            .attr("class", "button")
+            .attr("id", function(d){return d+that.elemConfig.id})
+            .attr("transform", "translate(" + (width - 100) + "," + (height / 2.5) + ")");
+
+        zoomButtons.append("rect")
+            .attr("x", "10")
+            .attr("y", function(d,i){
+                return 10 + 50*i
+            })
+            .attr("width", 25)
+            .attr("height", 25);
+
+        zoomButtons.append("text")
+            .attr("x", function(d, i) {
+                return "19";
+            })
+            .attr("y", function(d,i){
+                return 23 + 48*i
+            })
+            .attr("dy", ".35em")
+            .text( function (d, i) {
+                return i ? "-" : "+";
+            });
+
+        /** Zoom In Button Click event */
+        d3.selectAll("#zoom_in"+that.elemConfig.id).on("click", function(d) {
+            if( that.elemConfig.id === "main-geo-chart" )
+                d3.select(".legend").style("display", "none");
+            zoom.scaleBy(svg, 2);
+            svg.call(zoom)
+                .on("dblclick.zoom", null);
+            if(zoomClick < 4) {
+                zoomClick++;
+            }
+        });
+
+        d3.selectAll("#zoom_out"+that.elemConfig.id).on("click", function(d) {
+            // if( that.elemConfig.id === "main-geo-chart" )
+            //     d3.select(".legend").style("display", "block");
+            zoom.scaleBy(svg, 0.5);
+            svg
+            .call(zoom)
+            .on("mousedown.zoom", null)
+            .on("mousewheel.zoom", null)
+            .on("dblclick.zoom", null); 
+            if(zoomClick > 2) {
+                zoomClick--;
+            } else {
+                reset();
+            }
         });
 
         this.div = d3.select("body").append("div")
@@ -177,9 +237,7 @@ export class GeoChartComponent {
         function clicked(d) {
             if (active.node() === this) return reset();
             active.classed("active", false);
-            active = d3.select(this).classed("active", true);
-            if( that.elemConfig.id === "main-geo-chart" )
-            d3.select(".legend").style("display", "none");
+            active = d3.select(svg).classed("active", true);
             var bounds = path.bounds(d),
                 dx = bounds[1][0] - bounds[0][0],
                 dy = bounds[1][1] - bounds[0][1],
@@ -203,7 +261,7 @@ export class GeoChartComponent {
                 .duration(750)
                 .call( zoom.transform, d3.zoomIdentity ); // updated for d3 v4\
 
-            that.elemConfig = that.getElementDetails(id, height, width);
+            // that.elemConfig = that.getElementDetails(id, height, width);
             d3.select(".legend").style("display", "block");
         }
 
@@ -343,7 +401,7 @@ export class GeoChartComponent {
 
         var legend = this.svg.append("g")
                 .attr("class", "legend")
-                .attr("transform", "translate(" + (width - 100) + "," + (height / 1.9) + ")")
+                .attr("transform", "translate(" + (width - 175) + "," + (height / 1.9) + ")")
                 .selectAll("g")
                 .data(dataRange)
                 .enter().append("g");
@@ -360,32 +418,32 @@ export class GeoChartComponent {
         legend.append('rect')
              .attr('width', 260)
              .attr('height', 0.2)
-             .attr('x', -150)
+             .attr('x', -90)
              .attr('y', 30)
              .style('fill', '#bfbfbf')
              .style('stroke', '#bfbfbf');
 
         // Code to add Static D3 Legend text to the Geo-Graph  
         legend.append('text')
-             .attr('x', -30 )
+             .attr('x', 45 )
              .attr('y', 45 )
              .text( '1. Sum of 1600112 + 1600117 + 1600118 + 1600119');
 
         // Code to add Static D3 Legend text to the Geo-Graph  
         legend.append('text')
-             .attr('x', -80)
+             .attr('x', -10)
              .attr('y', 60)
              .text('2. Sum of 1600112 + 1600118');
 
         // Code to add Static D3 Legend text to the Geo-Graph    
         legend.append('text')
-             .attr('x', -80)
+             .attr('x', -10)
              .attr('y', 75)
              .text('3. Sum of 1600117 + 1600119');
             
         // Code to add Static D3 Legend text to the Geo-Graph      
         legend.append('text')
-             .attr('x', -80)
+             .attr('x', -10)
              .attr('y', 90)
              .text('4. Sum of 1600118 + 1600119');
     }

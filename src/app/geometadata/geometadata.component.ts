@@ -29,6 +29,9 @@ export class GeoMetaDataComponent {
             title: "TOP 5 MARKETS"
         }
     }];
+    
+    kpi = "kpi"
+
     constructor(private geoService: GeoDataService) { // <-- pass the D3 Service into the constructor
         console.log("calling geo meta data service");
     }
