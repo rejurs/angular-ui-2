@@ -218,11 +218,6 @@ export class GeoChartComponent {
             // if( that.elemConfig.id === "main-geo-chart" )
             //     d3.select(".legend").style("display", "block");
             zoom.scaleBy(svg, 0.5);
-            svg
-            .call(zoom)
-            .on("mousedown.zoom", null)
-            .on("mousewheel.zoom", null)
-            .on("dblclick.zoom", null); 
             if(zoomClick > 2) {
                 zoomClick--;
             } else {
@@ -260,7 +255,11 @@ export class GeoChartComponent {
             svg.transition()
                 .duration(750)
                 .call( zoom.transform, d3.zoomIdentity ); // updated for d3 v4\
-
+            svg
+            .call(zoom)
+            .on("mousedown.zoom", null)
+            .on("mousewheel.zoom", null)
+            .on("dblclick.zoom", null); 
             // that.elemConfig = that.getElementDetails(id, height, width);
             d3.select(".legend").style("display", "block");
         }
