@@ -125,7 +125,7 @@ export class GeoChartComponent {
             .translate(this.elemConfig.translateConfig);
         
         let zoom = d3.zoom()
-            .scaleExtent([1, 8])
+            .scaleExtent([1, 4])
             .on("zoom", zoomed);
 
         let path = d3.geoPath() // updated for d3 v4
@@ -174,18 +174,31 @@ export class GeoChartComponent {
             .attr("d", path);
         });
 
+        let legendPlace: any;
+        if(this.elemConfig.id == "main-geo-chart") {
+            legendPlace = {
+                x: (width-200),
+                y: (height/1.8)
+            }
+        } else {
+            legendPlace = {
+                x: (width-50),
+                y: (height/1.8)
+            }
+        }
+
         let zoomButtons = svg.selectAll(".button")
             .data(['zoom_in', 'zoom_out'])
             .enter()
             .append("g")
             .attr("class", "button")
             .attr("id", function(d){return d+that.elemConfig.id})
-            .attr("transform", "translate(" + (width - 100) + "," + (height / 2.5) + ")");
+            .attr("transform", "translate(" + legendPlace.x + "," + legendPlace.y + ")");
 
         zoomButtons.append("rect")
             .attr("x", "10")
             .attr("y", function(d,i){
-                return 10 + 50*i
+                return 10 + 30*i
             })
             .attr("width", 25)
             .attr("height", 25);
@@ -195,7 +208,7 @@ export class GeoChartComponent {
                 return "19";
             })
             .attr("y", function(d,i){
-                return 23 + 48*i
+                return 23 + 28*i
             })
             .attr("dy", ".35em")
             .text( function (d, i) {
@@ -204,12 +217,13 @@ export class GeoChartComponent {
 
         /** Zoom In Button Click event */
         d3.selectAll("#zoom_in"+that.elemConfig.id).on("click", function(d) {
-            if( that.elemConfig.id === "main-geo-chart" )
-                d3.select(".legend").style("display", "none");
-            zoom.scaleBy(svg, 2);
+            if( that.elemConfig.id === "main-geo-chart" ) {
+                d3.selectAll(".legend").style("display", "none");
+            }
+            zoom.scaleBy(svg, 1.5);
             svg.call(zoom)
                 .on("dblclick.zoom", null);
-            if(zoomClick < 4) {
+            if(zoomClick < 3) {
                 zoomClick++;
             }
         });
@@ -221,6 +235,7 @@ export class GeoChartComponent {
             if(zoomClick > 2) {
                 zoomClick--;
             } else {
+                zoomClick = 1;
                 reset();
             }
         });
@@ -260,8 +275,7 @@ export class GeoChartComponent {
             .on("mousedown.zoom", null)
             .on("mousewheel.zoom", null)
             .on("dblclick.zoom", null); 
-            // that.elemConfig = that.getElementDetails(id, height, width);
-            d3.select(".legend").style("display", "block");
+            d3.selectAll(".legend").style("display", "block");
         }
 
         function zoomed() {
@@ -414,7 +428,11 @@ export class GeoChartComponent {
             .attr("dy", "1.2em")
             .text(d3.format(".1s"));
 
-        legend.append('rect')
+        var textLegend = this.svg.append("g")
+                    .attr("class", "legend")
+                    .attr("transform", "translate(" + (width-175) +"," + (height-100) + ")");
+
+        textLegend.append('rect')
              .attr('width', 260)
              .attr('height', 0.2)
              .attr('x', -90)
@@ -423,25 +441,25 @@ export class GeoChartComponent {
              .style('stroke', '#bfbfbf');
 
         // Code to add Static D3 Legend text to the Geo-Graph  
-        legend.append('text')
-             .attr('x', 45 )
+        textLegend.append('text')
+             .attr('x', 40 )
              .attr('y', 45 )
              .text( '1. Sum of 1600112 + 1600117 + 1600118 + 1600119');
 
         // Code to add Static D3 Legend text to the Geo-Graph  
-        legend.append('text')
+        textLegend.append('text')
              .attr('x', -10)
              .attr('y', 60)
              .text('2. Sum of 1600112 + 1600118');
 
         // Code to add Static D3 Legend text to the Geo-Graph    
-        legend.append('text')
+        textLegend.append('text')
              .attr('x', -10)
              .attr('y', 75)
              .text('3. Sum of 1600117 + 1600119');
             
         // Code to add Static D3 Legend text to the Geo-Graph      
-        legend.append('text')
+        textLegend.append('text')
              .attr('x', -10)
              .attr('y', 90)
              .text('4. Sum of 1600118 + 1600119');
