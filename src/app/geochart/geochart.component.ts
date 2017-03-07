@@ -157,9 +157,8 @@ export class GeoChartComponent {
             .on("dblclick.zoom", null); 
             // .call(zoom.event); // not in d3 v4
 
-        d3.json("./app/assets/uscoordinates.json", function(error, us) {
-        if (error) throw error;
-
+        this._geoservice.generateUsCoordinates().subscribe(us => {
+ 
         g.selectAll("path")
             .data(topojson.feature(us, us.objects.states).features)
             .enter().append("path")
