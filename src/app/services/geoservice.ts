@@ -65,7 +65,7 @@ export class GeoDataService {
             console.log("here the call....");
             return Observable.of(this.geoDataDetails);
         } else {
-            return this.http.get('./app/geodata/geodatamock.json')
+            return this.http.get('./app/assets/geodatamock.json')
                 .map((res: Response) => {
                     return res.json()
                 })
@@ -129,7 +129,7 @@ export class GeoDataService {
     }
 
     generateUsCoordinates() {
-        return this.http.get('./app/uscoordinates.json')
+        return this.http.get('./app/assets/uscoordinates.json')
             .map((res: Response) => {
                 return res.json();
             })
