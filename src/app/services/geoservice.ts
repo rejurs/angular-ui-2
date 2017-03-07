@@ -65,7 +65,7 @@ export class GeoDataService {
             console.log("here the call....");
             return Observable.of(this.geoDataDetails);
         } else {
-            return this.http.get('./app/assets/geodatamock.json')
+            return this.http.get('./app/assets/data.json')
                 .map((res: Response) => {
                     return res.json()
                 })
