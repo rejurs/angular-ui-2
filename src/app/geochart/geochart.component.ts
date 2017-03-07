@@ -157,7 +157,7 @@ export class GeoChartComponent {
             .on("dblclick.zoom", null); 
             // .call(zoom.event); // not in d3 v4
 
-        d3.json("./app/uscoordinates.json", function(error, us) {
+        d3.json("./app/assets/uscoordinates.json", function(error, us) {
         if (error) throw error;
 
         g.selectAll("path")
