@@ -1,9 +1,15 @@
 <div class="fcs-realtime-geo-wrapper">
+        <!-- Geo Menu goes here -->
+        <geo-toolbar></geo-toolbar>
         <realtime-scale></realtime-scale>
         <div class="fcs-realtime-geo-view-wrapper">
             <geo-meta-data></geo-meta-data>
             <!--<geo-chart class="fcs-realtime-geo-chart" id="geo-chart" [height]="mainGeoChart.height" [width]="mainGeoChart.width" [divId]="mainGeoChart.divId" [hubdata]="hubDetails"></geo-chart>-->
             <geo-chart class="fcs-realtime-geo-chart" id="geo-chart" [height]="mainGeoChart.height" [width]="mainGeoChart.width" [divId]="mainGeoChart.divId"></geo-chart>
+            <div>
+            <p class="legends"><br><hr><b>Total:</b> Sum of all Mismatch conditions<br><b>Outside Headend:</b> Sum of (Single CMTS comparison - CMTS Mismatch, Headend Mismatch and Multiple CMTS comparison - CMTS Mismatch, Headend Mismatch<br><b>Within Headend:</b> Sum of (Single CMTS comparison - CMTS Mismatch, Headend<br><b>FTA Searched due to Account and/or FiberNode issues:</b> Sum of Multiple CMTS comparison (CMTS Mismatch, Headend Mismatch and CMTS Mismatch, Headend Match)
+            </p>   
+            </div>      
         </div>
         <div class="fcs-division-geo-view-wrapper">
             <ul class="fcs-division-items">
@@ -31,4 +37,3 @@
             </ul>
         </div>
     </div>
-

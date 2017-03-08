@@ -56,7 +56,7 @@
 .fcs-realtime-geo-view-wrapper {
     background: #f0f0f0;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-    height: 530px;
+    height: 680px;
     margin-bottom: 1em;
     padding: .5em;
     position: relative;
@@ -135,4 +135,14 @@
     padding-bottom: .5em;
     margin-bottom: .5em;
     font-family: sans-serif;
+}
+
+.legends{
+    position: relative;
+    font: 10px sans-serif;
+    text-anchor: right;
+    margin-top: 39%;
+    float: right;
+    text-align: left;
+    color: #777;
 }
