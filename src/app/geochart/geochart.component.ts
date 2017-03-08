@@ -427,41 +427,6 @@ export class GeoChartComponent {
             .attr("dy", "1.2em")
             .text(d3.format(".1s"));
 
-        var textLegend = this.svg.append("g")
-                    .attr("class", "legend")
-                    .attr("transform", "translate(" + (width-175) +"," + (height-100) + ")");
-
-        textLegend.append('rect')
-             .attr('width', 260)
-             .attr('height', 0.2)
-             .attr('x', -90)
-             .attr('y', 30)
-             .style('fill', '#bfbfbf')
-             .style('stroke', '#bfbfbf');
-
-        // Code to add Static D3 Legend text to the Geo-Graph  
-        textLegend.append('text')
-             .attr('x', 40 )
-             .attr('y', 45 )
-             .text( '1. Sum of 1600112 + 1600117 + 1600118 + 1600119');
-
-        // Code to add Static D3 Legend text to the Geo-Graph  
-        textLegend.append('text')
-             .attr('x', -10)
-             .attr('y', 60)
-             .text('2. Sum of 1600112 + 1600118');
-
-        // Code to add Static D3 Legend text to the Geo-Graph    
-        textLegend.append('text')
-             .attr('x', -10)
-             .attr('y', 75)
-             .text('3. Sum of 1600117 + 1600119');
-            
-        // Code to add Static D3 Legend text to the Geo-Graph      
-        textLegend.append('text')
-             .attr('x', -10)
-             .attr('y', 90)
-             .text('4. Sum of 1600118 + 1600119');
     }
 }
 
