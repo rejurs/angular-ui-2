@@ -1,5 +1,6 @@
 .fcs-realtime-geo-metadata-wrapper {
   min-width: 200px;
+  max-width: 200px;
   position: absolute;
   top: .5em;
   left: .5em;
