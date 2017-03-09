@@ -1,10 +1,17 @@
 <div class="fcs-realtime-geo-wrapper">
     <div class="fcs-realtime-geo-scale">
-        <div id="min" class="geo-scale-minute scale-background" [@openClose]="minuteState"></div>
+        <div id="history" class="geo-scale-history scale-background" [@openClose]="historyState">
+            <div class="geo-scale-history-filter">
+                <select [ngModel]="activeHScale" (ngModelChange)="onScaleChange($event)">
+                    <option [value]="sType" *ngFor="let sType of hScaleTypes">{{getSType(sType)}}</option>
+                </select>
+            </div>
+            <div class="geo-scale-history-c"></div>
+        </div>
         <div class="geo-scale-separator">
             <a href="#" (click)="slideRight($event)" class="arrow"><i>></i></a>
             <a href="#" (click)="slideLeft($event)" class="arrow"><i><</i></a>
         </div>
-        <div id="sec" class="geo-scale-seconds scale-background" [@openClose]="secondsState"></div>
+        <div id="live" class="geo-scale-live scale-background" [@openClose]="liveState"></div>
     </div>
 </div>
