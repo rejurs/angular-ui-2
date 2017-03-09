@@ -25,8 +25,7 @@ declare var d3: any;
             transition('normal => expanded', [animate(500, style({ width: '98%' })), animate(500)]),
             transition('expanded => normal', [animate(500, style({ width: '49%' })), animate(500)])
         ])
-    ],
-    providers: [Socket]
+    ]
 })
 
 export class RealtimeScaleComponent implements OnInit {
@@ -92,7 +91,7 @@ export class RealtimeScaleComponent implements OnInit {
      * Constructor
      * initialize Socket service
      */
-    constructor(private geoDataService: GeoDataService, private socket: Socket) {
+    constructor(private geoDataService: GeoDataService) {
 
         /**
          * Holds the full list of
@@ -616,15 +615,6 @@ export class RealtimeScaleComponent implements OnInit {
         let that: any = this;
 
         d3.select('body').append('div').attr('class', 'tip');
-
-        // this.socket.connect();
-
-        // this.socket.socketData.subscribe((items: any[]) => {
-
-        //     items.forEach(item => {
-        //         that.processData(item);
-        //     });
-        // });
 
         /**
          * Subscribe
