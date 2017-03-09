@@ -137,12 +137,3 @@
     font-family: sans-serif;
 }
 
-.legends{
-    position: relative;
-    font: 10px sans-serif;
-    text-anchor: right;
-    margin-top: 39%;
-    float: right;
-    text-align: left;
-    color: #777;
-}
