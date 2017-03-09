@@ -23,11 +23,13 @@ export class DivisionMetaDataComponent {
     }
 
     sortDivisions(divisionData) {
-        divisionData.sort(function(a, b) {
-            a.name = _.capitalize(a.name);
-            b.name = _.capitalize(b.name);
-            return _.get(b, 'count', 0) - _.get(a, 'count', 0);
-        });
+        if(divisionData && divisionData.length){
+            divisionData.sort(function(a, b) {
+                a.name = _.capitalize(a.name);
+                b.name = _.capitalize(b.name);
+                return _.get(b, 'count', 0) - _.get(a, 'count', 0);
+            });
+        }
 
         let divisionItems = [];
         
