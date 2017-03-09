@@ -135,7 +135,7 @@ export class GeoChartComponent {
             .append("div")
             .classed("svg-container", true).append("svg")
             .attr("width", width)
-            .attr("height", height)
+            .attr("height", height + 100)
             .attr("id", this.elemConfig.id)
             .attr("preserveAspectRatio", "xMinYMin meet")
             .attr("viewBox", "0 0 "+width+ " " + height)
@@ -426,7 +426,38 @@ export class GeoChartComponent {
             .attr("y", function(d) { return -2 * radius(d); })
             .attr("dy", "1.2em")
             .text(d3.format(".1s"));
+        
+        legend.append('rect')
+             .attr('width', 890)
+             .attr('height', 0.2)
+             .attr('x', -900)
+             .attr('y', 230)
+             .style('fill', '#bfbfbf')
+             .style('stroke', '#bfbfbf');
 
+        // Code to add Static D3 Legend text to the Geo-Graph  
+        legend.append('text')
+             .attr('x', -700 )
+             .attr('y', 245 )
+             .text( 'Total: Sum of all Mismatch conditions');
+
+        // Code to add Static D3 Legend text to the Geo-Graph  
+        legend.append('text')
+             .attr('x', -410)
+             .attr('y', 260)
+             .text('Outside Headend: Sum of (Single CMTS comparison - CMTS Mismatch, Headend Mismatch and Multiple CMTS comparison - CMTS Mismatch, Headend Mismatch)');
+
+        // Code to add Static D3 Legend text to the Geo-Graph    
+        legend.append('text')
+             .attr('x', -430)
+             .attr('y', 275)
+             .text('Within Headend: Sum of (Single CMTS comparison - CMTS Mismatch, Headend Match and Multiple CMTS comparison  - CMTS Mismatch, Headend Match)');
+            
+        // Code to add Static D3 Legend text to the Geo-Graph      
+        legend.append('text')
+             .attr('x', -398)
+             .attr('y', 290)
+             .text('FTA Searched due to Account and/or FiberNode issues: Sum of Multiple CMTS comparison (CMTS Mismatch, Headend Mismatch and CMTS Mismatch, Headend Match)');
     }
 }
 
