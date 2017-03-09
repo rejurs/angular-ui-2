@@ -15,10 +15,10 @@ export class CountErrorMetaComponent {
 
     constructor (private _geoservice : GeoDataService) {
 
-        this.codeNames['1600112'] = '1600112 - Single CMTS comparison - CMTS Mismatch, Headend Mismatch';
-        this.codeNames['1600117'] = '1600117 - Single CMTS comparison - CMTS Mismatch, Headend Match';
-        this.codeNames['1600118'] = '1600118 - Multiple CMTS comparison - CMTS Mismatch, Headend Mismatch';
-        this.codeNames['1600119'] = '1600119 - Multiple CMTS comparison  - CMTS Mismatch, Headend Match';
+        this.codeNames['1600112'] = 'Single CMTS comparison - CMTS Mismatch, Headend Mismatch';
+        this.codeNames['1600117'] = 'Single CMTS comparison - CMTS Mismatch, Headend Match';
+        this.codeNames['1600118'] = 'Multiple CMTS comparison - CMTS Mismatch, Headend Mismatch';
+        this.codeNames['1600119'] = 'Multiple CMTS comparison - CMTS Mismatch, Headend Match';
     }
 
     ngOnInit() {
