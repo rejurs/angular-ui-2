@@ -19,12 +19,15 @@ export class MarketMetaDataComponent {
         })
     }
 
-    sortMarkets(marketData) {
-        marketData.sort(function(a, b) {
-            a.name = _.capitalize(a.name);
-            b.name = _.capitalize(b.name);
-            return b.count - a.count;
-        });
-        this.markets = marketData;
+sortMarkets(marketData) {
+        if(marketData && marketData.length){
+            marketData.sort(function(a, b) {
+                a.name = _.capitalize(a.name);
+                b.name = _.capitalize(b.name);
+                return b.count - a.count;
+            });
+            this.markets = marketData;
+        }
     }
 }
+
