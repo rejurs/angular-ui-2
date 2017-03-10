@@ -3,8 +3,6 @@ import { ScaleProps } from './realtime-scale.interface';
 import { GeoDataService } from '../services/geoservice';
 import { HubNames } from '../geodata/hubnames.model.ts';
 
-import { Socket } from './realtime-scale.service';
-
 import * as _ from 'lodash';
 
 declare var d3: any;
@@ -93,13 +91,15 @@ export class RealtimeScaleComponent implements OnInit {
      */
     constructor(private geoDataService: GeoDataService) {
 
+        let that = this;
+
         /**
          * Holds the full list of
          * points to be plotted
          */
         this.data = {
             live: [],
-            history: []
+            history: {}
         };
 
         let store: any = JSON.parse(localStorage.getItem('store'));
@@ -109,8 +109,6 @@ export class RealtimeScaleComponent implements OnInit {
          * from localStorage
          */
         this.data.live = _.get(store, 'live', []);
-        
-        let that = this;
 
         /**
          * Build the 24 different
@@ -138,15 +136,15 @@ export class RealtimeScaleComponent implements OnInit {
              * Get history data
              * from localStorage
              */
-            that.data.history[scaleType] = _.get(store, 'history[' + scaleType + ']', []);
+            let items = _.get(store, 'history[' + scaleType + ']', []);
+            
+            that.data.history[scaleType] = items;
         });
 
         /**
          * Save the data to local storage
          */
         localStorage.setItem('store', JSON.stringify(this.data));
-
-        // console.log(store);
     }
 
     /**
@@ -308,7 +306,7 @@ export class RealtimeScaleComponent implements OnInit {
              * key & time
              */
             let coeff       = 1000 * 60 * this.hScaleProps[scaleType].group;
-            x.time          = new Date(Math.round(new Date(x.time).getTime() / coeff) * coeff)
+            x.time          = +new Date(Math.round(new Date(x.time).getTime() / coeff) * coeff)
             x[scaleType]    = key;
 
             this.data.history[scaleType].push(x);
