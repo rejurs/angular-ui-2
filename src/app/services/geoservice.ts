@@ -282,11 +282,12 @@ export class GeoDataService {
         }, 1000))
     }
 
-    /** To increase the KPI Market count */
+   /** To increase the KPI Market count */
     incrementMarketCount(marketName: string) {
         this.marketMeta.forEach(marketItem => {
-            if (marketItem.name === _.capitalize(marketName)) {
+            if (marketItem.name.toUpperCase() === marketName.toUpperCase()) {
                 marketItem.count += 1;
+                marketItem.name = _.capitalize(marketItem.name);
             }
         });
     }
@@ -294,11 +295,12 @@ export class GeoDataService {
     /** To increase the KPI Division count */
     incrementDivisionCount(divsionName: string) {
         this.divisionMeta.forEach(divisionItem => {
-            if (divisionItem.name === _.capitalize(divsionName)) {
+            if (divisionItem.name.toUpperCase() === divsionName.toUpperCase()) {
                 divisionItem.count += 1;
+                divisionItem.name = _.capitalize(divisionItem.name);
             }
         });
-    }
+    }   
 
     slugify(arg: string) {
         return arg.toString().toLowerCase()

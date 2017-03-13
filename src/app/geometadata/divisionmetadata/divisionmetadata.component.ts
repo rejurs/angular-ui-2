@@ -24,11 +24,17 @@ export class DivisionMetaDataComponent {
 
     sortDivisions(divisionData) {
         if(divisionData && divisionData.length){
-            divisionData.sort(function(a, b) {
-                a.name = _.capitalize(a.name);
-                b.name = _.capitalize(b.name);
-                return _.get(b, 'count', 0) - _.get(a, 'count', 0);
-            });
+            if(divisionData.length === 1) {
+                divisionData.forEach(function(d) {
+                    d.name = _.capitalize(d.name);
+                });
+            } else {
+                divisionData.sort(function(a, b) {
+                    a.name = _.capitalize(a.name);
+                    b.name = _.capitalize(b.name);
+                    return _.get(b, 'count', 0) - _.get(a, 'count', 0);
+                });
+            }
         }
 
         let divisionItems = [];
