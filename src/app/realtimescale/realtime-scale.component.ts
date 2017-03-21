@@ -1,18 +1,17 @@
-import {Component, OnInit, ViewEncapsulation, animate, state, style, transition, trigger} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, animate, state, style, transition, trigger } from '@angular/core';
 import { ScaleProps } from './realtime-scale.interface';
 import { GeoDataService } from '../services/geoservice';
-import { HubNames } from '../geodata/hubnames.model.ts';
 
 import * as _ from 'lodash';
 
 declare var d3: any;
 
 @Component({
-    selector: 'realtime-scale',
-    styleUrls: ['./realtime-scale.component.css'],
-    templateUrl: './realtime-scale.component.html',
-    encapsulation: ViewEncapsulation.None,
-    animations: [trigger(
+    selector        : 'realtime-scale',
+    styleUrls       : ['./realtime-scale.component.css'],
+    templateUrl     : './realtime-scale.component.html',
+    encapsulation   : ViewEncapsulation.None,
+    animations      : [trigger(
         'openClose',
         [
             state('collapsed, void', style({ width: 0 })),
@@ -26,6 +25,11 @@ declare var d3: any;
     ]
 })
 
+/**
+ * RealtimeScale Component
+ * 
+ * handle all scale related actions
+ */
 export class RealtimeScaleComponent implements OnInit {
 
     /**
@@ -33,21 +37,21 @@ export class RealtimeScaleComponent implements OnInit {
      * live & history
      * for expand/collapse actions 
      */
-    liveState       : string;
-    historyState    : string;
+    private liveState: string;
+    private historyState: string;
 
     /**
      * Scale objects
      * live & history
      */
-    liveScale       : any;
-    historyScale    : any;
+    private liveScale: any;
+    private historyScale: any;
 
     /**
      * Scale properties
      * seconds / live
      */
-    lScaleProps: ScaleProps = {
+    private lScaleProps: ScaleProps = {
 
         type        : 'live',
         width       : '100%',
@@ -65,33 +69,34 @@ export class RealtimeScaleComponent implements OnInit {
      * this key will be used for
      * all mapping/assoc process
      */
-    hScaleTypes: any[] = _.map(_.range(1, 25), function (item) { return item + '_hrs'; });
+    private hScaleTypes: any[] = _.map(_.range(1, 25), (item) => { return item + '_hrs'; });
 
     /**
      * Properties for all 24
      * different types of history scales
      */
-    hScaleProps: any[] = [];
+    private hScaleProps: any[] = [];
     
     /**
      * Active history scale type
      */
-    activeHScale: string = '1_hrs';
+    private activeHScale: string = '1_hrs';
 
     /**
      * Holds the full list of
      * points to be plotted
      * in the scale
      */
-    data: any;
+    private data: any;
 
     /**
      * Constructor
-     * initialize Socket service
+     * initialize/inject services
+     * 
+     * @param private _geoDataService [service]
+     * @return void
      */
-    constructor(private geoDataService: GeoDataService) {
-
-        let that = this;
+    constructor(private _geoDataService: GeoDataService) {
 
         /**
          * Holds the full list of
@@ -114,12 +119,12 @@ export class RealtimeScaleComponent implements OnInit {
          * Build the 24 different
          * scale properties
          */
-        _.forEach(this.hScaleTypes, function(scaleType){
+        _.forEach(this.hScaleTypes, (scaleType) => {
 
             let g = _.parseInt(scaleType);  // grouping of minutes
             let b = _.round((g * 60) / 4);  // block of labels in scale
 
-            that.hScaleProps[scaleType] = that.getProps({
+            this.hScaleProps[scaleType] = this.getProps({
 
                 type        : 'history',
                 width       : '100%',
@@ -129,7 +134,7 @@ export class RealtimeScaleComponent implements OnInit {
                 group       : g,
                 labels      : _.range(-(g * 60), 0),
                 show        : [-(b * 4), -(b * 3), -(b * 2), -(b), 0],
-                showAs      : ['', that.getHM(b * 3), that.getHM(b * 2), that.getHM(b * 1), '']
+                showAs      : ['', this.getHM(b * 3), this.getHM(b * 2), this.getHM(b * 1), '']
             });
             
             /**
@@ -138,7 +143,7 @@ export class RealtimeScaleComponent implements OnInit {
              */
             let items = _.get(store, 'history[' + scaleType + ']', []);
             
-            that.data.history[scaleType] = items;
+            this.data.history[scaleType] = items;
         });
 
         /**
@@ -148,8 +153,91 @@ export class RealtimeScaleComponent implements OnInit {
     }
 
     /**
-     * Get hours/minutes
-     * split-up
+     * Initialize
+     * scale component
+     * 
+     * @param null
+     * @return void
+     */
+    ngOnInit() {
+
+        d3.select('body').append('div').attr('class', 'tip');
+
+        /**
+         * Subscribe
+         * to the realtime data
+         */
+        this._geoDataService.realTimeSocketData.subscribe((value: any[]) => {
+
+            value.forEach((element: any) => {
+                this.processData(element);
+            });
+        });
+        
+        /**
+         * Build live scale
+         */
+        this.liveScale = this.initScale('.geo-scale-live', this.lScaleProps);
+
+        /**
+         * Render live scale
+         * initial data
+         */
+        this.renderScaleData(this.liveScale, this.lScaleProps, this.data.live);
+
+        /**
+         * Build history scale
+         */
+        this.historyScale = this.initScale('.geo-scale-history-c', this.hScaleProps[this.activeHScale]);
+
+        /**
+         * Render history scale
+         * initial data
+         */
+        this.renderScaleData(this.historyScale, this.hScaleProps[this.activeHScale], this.data.history[this.activeHScale]);
+
+        /**
+         * Shifting the bar
+         * in every seconds
+         */
+        let i: number = 0;
+
+        setInterval(() => {
+
+            i++;
+            
+            this.tick(this.liveScale, this.lScaleProps, this.data.live);
+
+            /**
+             * Make the history scale move
+             * based on the active scale type
+             */
+            if (i >= (60 * this.hScaleProps[this.activeHScale].group)) {
+
+                this.tick(this.historyScale, this.hScaleProps[this.activeHScale], this.data.history[this.activeHScale]);
+
+                i = 0;
+            }
+
+        }, 1000);
+        
+        /**
+         * Redraw xAxis
+         * on window resize
+         */
+        window.addEventListener('resize', () => {
+
+            this.initAxis(this.liveScale, this.lScaleProps);
+            this.initAxis(this.historyScale, this.hScaleProps[this.activeHScale]);
+        });
+    }
+
+    /**
+     * Get hours/minutes split-up
+     * 
+     * @param number x
+     * 
+     * @return string
      */
     getHM(x: number) : string {
 
@@ -161,6 +249,9 @@ export class RealtimeScaleComponent implements OnInit {
 
     /**
      * Get scale property
+     * 
+     * @param object props
+     * @return object prop
      */
     getProps(props: any) : ScaleProps {
 
@@ -181,9 +272,12 @@ export class RealtimeScaleComponent implements OnInit {
     }
 
     /**
-     * Slide right
+     * Slide right the scale
+     * 
+     * @param event event
+     * @return void
      */
-    slideRight(event) {
+    slideRight(event: any) : void {
 
         event.preventDefault();
 
@@ -200,9 +294,12 @@ export class RealtimeScaleComponent implements OnInit {
     }
 
     /**
-     * Slide left
+     * Slide left the scale
+     * 
+     * @param event event
+     * @return void
      */
-    slideLeft(event) {
+    slideLeft(event: any) : void {
 
         event.preventDefault();
 
@@ -222,6 +319,10 @@ export class RealtimeScaleComponent implements OnInit {
      * Get the nearest
      * round value of minute
      * with respect to the given interval
+     * 
+     * @param number min
+     * @param number interval
+     * @return number
      */
     roundTo (min: number, interval: number) : number {
         
@@ -231,6 +332,9 @@ export class RealtimeScaleComponent implements OnInit {
     /**
      * Process the data
      * and assign it to live & history
+     * 
+     * @param object item
+     * @return void
      */
     processData(item: any) : void {
 
@@ -262,15 +366,13 @@ export class RealtimeScaleComponent implements OnInit {
             this.renderScaleData(this.liveScale, this.lScaleProps, this.data.live);
         }
 
-        let that = this;
-
         /**
          * Set history data for
          * all scale types [1-24 hrs]
          */
-        _.forEach(this.hScaleTypes, function (scaleType) {
+        _.forEach(this.hScaleTypes, (scaleType) => {
 
-            that.setHistoryData(scaleType, item); 
+            this.setHistoryData(scaleType, item); 
         });
 
         /**
@@ -281,6 +383,10 @@ export class RealtimeScaleComponent implements OnInit {
 
     /**
      * Set history data
+     * 
+     * @param string scaleType
+     * @param object item
+     * @return void
      */
     setHistoryData(scaleType: string, item: any) : void {
 
@@ -354,6 +460,10 @@ export class RealtimeScaleComponent implements OnInit {
      * Update the overall counts
      * in each category
      * 1600112 | 1600117 | 1600118 | 1600119
+     * 
+     * @param object e
+     * @param object item
+     * @return object e
      */
     updateCounts(e: any, item: any) : any {
 
@@ -378,6 +488,10 @@ export class RealtimeScaleComponent implements OnInit {
      * Initialize the scale
      * build the responsive svg
      * and push to the container
+     * 
+     * @param string container
+     * @param ScaleProps sProps
+     * @return object chart
      */
     initScale(container: string, sProps: ScaleProps) : any {
 
@@ -403,6 +517,10 @@ export class RealtimeScaleComponent implements OnInit {
     /**
      * Build and attach
      * the x-axis and it's labels
+     * 
+     * @param object chart
+     * @param ScaleProps sProps
+     * @return void
      */
     initAxis(chart: any, sProps: ScaleProps) : void {
 
@@ -412,7 +530,7 @@ export class RealtimeScaleComponent implements OnInit {
          * Build the axis
          * and dynamic labels
          */
-        setTimeout(function () {
+        setTimeout(() => {
 
             let graphWidth: any = document.getElementById(sProps.type).offsetWidth;
 
@@ -422,7 +540,7 @@ export class RealtimeScaleComponent implements OnInit {
             
             let xAxis: any = d3.axisBottom(xBand)
                                 .ticks(sProps.labels.length)
-                                .tickFormat(function(d) {
+                                .tickFormat((d) => {
                                     
                                     return _.includes(sProps.show, d) ? (sProps.showAs[_.indexOf(sProps.show, d)]) : null;
                                 });
@@ -439,6 +557,11 @@ export class RealtimeScaleComponent implements OnInit {
      * Render scale initial data
      * and events
      * if it's available
+     * 
+     * @param object scale
+     * @param ScaleProps sProps
+     * @param array items
+     * @return void
      */
     renderScaleData(scale: any, sProps: ScaleProps, items: Array<any>) : void {
         
@@ -462,7 +585,7 @@ export class RealtimeScaleComponent implements OnInit {
         scale.selectAll('rect')
             .data(items)
             .enter().append('svg:rect')
-            .attr('x', function (d, i) { return x(d.time); })
+            .attr('x', (d, i) => { return x(d.time); })
             .attr('y', 0)
             .attr('class', 'rect')
             .attr('fill', '#dc4223')
@@ -482,8 +605,15 @@ export class RealtimeScaleComponent implements OnInit {
      * Plotting the new points
      * (rectangular bars) into the svg
      * in every seconds/minute
+     * 
+     * @param object scale
+     * @param ScaleProps sProps
+     * @param array items
+     * @return void
      */
     tick(scale: any, sProps: ScaleProps, items: Array<any>) : void {
+
+        if (document.hidden) return;
 
         let end: number     = +new Date();
         let diff: number    = (sProps.type == 'live') ? (sProps.group * 60 * 1000) : (sProps.group * 60 * 60 * 1000)
@@ -498,7 +628,7 @@ export class RealtimeScaleComponent implements OnInit {
         bars.exit().remove();
 
         bars.enter().append('rect')
-            .attr('x', function (d, i) { return x(d.time); })
+            .attr('x', (d, i) => { return x(d.time); })
             .attr('y', 0)
             .attr('class', 'rect')
             .attr('fill', '#dc4223')
@@ -507,7 +637,7 @@ export class RealtimeScaleComponent implements OnInit {
         
         bars.transition()
             .duration(1000)
-            .attr('x', function (d, i) { return x(d.time); });
+            .attr('x', (d, i) => { return x(d.time); });
         
         /**
          * Attach events to bars
@@ -522,12 +652,13 @@ export class RealtimeScaleComponent implements OnInit {
      * Set actions
      * mouseover | mouseout
      * for individual bars
+     * 
+     * @param object scale
+     * @return void
      */
     setActions(scale: any) : void {
 
-        let that: any = this;
-
-        scale.selectAll('rect').on('mouseover', function (item) {
+        scale.selectAll('rect').on('mouseover', (item) => {
             
             // d3.select('#' + item.uid).classed('newItem', true);
             
@@ -537,11 +668,11 @@ export class RealtimeScaleComponent implements OnInit {
                 .duration(200)
                 .style('display', 'block');
             
-            tip.html(that.getTooltipData(item))
+            tip.html(this.getTooltipData(item))
                 .style('left', (d3.event.pageX + 5) + 'px')
                 .style('top', (d3.event.pageY + 20) + 'px');
 
-        }).on('mouseout', function (item) {
+        }).on('mouseout', (item) => {
             
             let tip: any = d3.select('.tip');
             
@@ -553,23 +684,33 @@ export class RealtimeScaleComponent implements OnInit {
 
     /**
      * Generate tooltip data
+     * 
+     * @param object item
+     * @return string
      */
     getTooltipData(item: any) : string {
 
-         return `
-            <p> ` + new Date(item.time).toLocaleString('en-US', {timeZone: 'UTC'}) + ` (UTC)</p>
-            <ul class='geoDataToolTip'>
+        let codeNames: any[] = [];
+
+        codeNames['1600112'] = 'Single CMTS comparison - CMTS Mismatch, Headend Mismatch';
+        codeNames['1600117'] = 'Single CMTS comparison - CMTS Mismatch, Headend Match';
+        codeNames['1600118'] = 'Multiple CMTS comparison - CMTS Mismatch, Headend Mismatch';
+        codeNames['1600119'] = 'Multiple CMTS comparison - CMTS Mismatch, Headend Match';
+        
+        return `
+            <p class="timeh"> ${ new Date(item.time).toLocaleString('en-US', {timeZone: 'UTC'}) } (UTC)</p>
+            <ul class="geoDataToolTip">
                 <li class='geoDataToolTipItem'>
-                    <strong>  1600112 : </strong> ` + (item[1600112] | 0) + ` 
+                    <strong>${codeNames['1600112']} : </strong> ${(item[1600112] | 0)} 
                 </li>
-                <li class='geoDataToolTipItem'>
-                    <strong>  1600117 : </strong> ` + (item[1600117] | 0) + ` 
+                <li class="geoDataToolTipItem">
+                    <strong>${codeNames['1600117']} : </strong> ${(item[1600117] | 0)} 
                 </li>
-                <li class='geoDataToolTipItem'>
-                    <strong>  1600118 : </strong> ` + (item[1600118] | 0) + ` 
+                <li class="geoDataToolTipItem">
+                    <strong>${codeNames['1600118']} : </strong> ${(item[1600118] | 0)} 
                 </li>
-                <li class='geoDataToolTipItem'>
-                    <strong>  1600119 : </strong> ` + (item[1600119] | 0) + ` 
+                <li class="geoDataToolTipItem">
+                    <strong>${codeNames['1600119']} : </strong> ${(item[1600119] | 0)} 
                 </li>
             </ul>
         `;
@@ -578,9 +719,15 @@ export class RealtimeScaleComponent implements OnInit {
     /**
      * Update the history scale
      * rerender the values
+     * 
+     * @param string scaleType
+     * @return void
      */
-    onScaleChange(scaleType: any) {
+    onScaleChange(scaleType: string) : void {
 
+        /**
+         * Set the active scale
+         */
         this.activeHScale = scaleType;
 
         /**
@@ -598,88 +745,12 @@ export class RealtimeScaleComponent implements OnInit {
     /**
      * Get the printable version
      * of history scale type
+     * 
+     * @param string sType
+     * @return string
      */
     getSType(sType: string) : string {
         
         return _.replace(sType, '_hrs', ' h');
-    }
-
-    /**
-     * Initialize
-     * scale component
-     */
-    ngOnInit() {
-
-        let that: any = this;
-
-        d3.select('body').append('div').attr('class', 'tip');
-
-        /**
-         * Subscribe
-         * to the realtime data
-         */
-        this.geoDataService.realTimeSocketData.subscribe((value: any[]) => {
-
-            value.forEach(element => {
-                this.processData(element);
-            });
-        });
-        
-        /**
-         * Build live scale
-         */
-        this.liveScale = this.initScale('.geo-scale-live', this.lScaleProps);
-
-        /**
-         * Render live scale
-         * initial data
-         */
-        this.renderScaleData(this.liveScale, this.lScaleProps, this.data.live);
-
-        /**
-         * Build history scale
-         */
-        this.historyScale = this.initScale('.geo-scale-history-c', this.hScaleProps[this.activeHScale]);
-
-        /**
-         * Render history scale
-         * initial data
-         */
-        this.renderScaleData(this.historyScale, this.hScaleProps[this.activeHScale], this.data.history[this.activeHScale]);
-
-        /**
-         * Shifting the bar
-         * in every seconds
-         */
-        let i: number = 0;
-
-        setInterval(function () {
-
-            i++;
-            
-            that.tick(that.liveScale, that.lScaleProps, that.data.live);
-
-            /**
-             * Make the history scale move
-             * based on the active scale type
-             */
-            if (i >= (60 * that.hScaleProps[that.activeHScale].group)) {
-
-                that.tick(that.historyScale, that.hScaleProps[that.activeHScale], that.data.history[that.activeHScale]);
-
-                i = 0;
-            }
-
-        }, 1000);
-        
-        /**
-         * Redraw xAxis
-         * on window resize
-         */
-        window.addEventListener('resize', function () {
-
-            that.initAxis(that.liveScale, that.lScaleProps);
-            that.initAxis(that.historyScale, that.hScaleProps[that.activeHScale]);
-        });
     }
 }
