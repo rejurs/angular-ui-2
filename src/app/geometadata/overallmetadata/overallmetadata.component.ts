@@ -8,6 +8,7 @@ import { OverallMetaModel } from '../../geodata/overallmeta.model';
     templateUrl: './overallmetadata.component.html',
     styleUrls: ['./overallmetadata.component.css']
 })
+
 export class OverallMetadataComponent {
 
     overallCount: number = 0;
@@ -15,6 +16,7 @@ export class OverallMetadataComponent {
     constructor(private _geoservice: GeoDataService) {}
 
     ngOnInit() {
+
         this._geoservice.overallCount.subscribe( (overall) => {
             this.overallCount = overall.overallCount;
         });

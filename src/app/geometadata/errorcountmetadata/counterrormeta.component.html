@@ -1,3 +1,6 @@
-<li class="geo-row-data-item" *ngFor='let key of errorCodes | keys'><label>{{getName(key.name)}} : {{key.count | number: 0 }}</label></li>
-
-        
+<!--<li class="geo-row-data-item" *ngFor='let key of errorCodes | keys'>
+    <label>{{getName(key.name)}} : {{key.count | number: 0 }}</label>
+</li>-->
+<li class="geo-row-data-item" *ngFor='let mismatch of mismatches'>
+    <label>{{mismatch.name}} : {{mismatch.count | number: 0}}</label>
+</li>

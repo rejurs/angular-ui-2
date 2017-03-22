@@ -102,10 +102,10 @@ div.tip {
     pointer-events: none;
     display: none;
     min-width: 100px;
-    min-height: 100px;
+    min-height: 20px;
 }
 .timeh {
-    padding-left: 5px;
+    padding: 5px;
     font-size: 12px;
 }
 .arrow {

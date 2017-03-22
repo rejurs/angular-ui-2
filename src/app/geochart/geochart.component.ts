@@ -371,25 +371,25 @@ export class GeoChartComponent {
         return `
             <ul class="geoDataToolTip">
                 <li class="geoDataToolTipItem">
-                    <strong> Hub : </strong> ` + bubbleData.name + `
+                    <strong> Hub : </strong>${bubbleData.name}
                 </li>
                 <li class="geoDataToolTipItem">
-                    <strong> Region : </strong> ` + bubbleData.market + `
+                    <strong> Region : </strong>${bubbleData.market}
                 </li>
                 <li class="geoDataToolTipItem">
-                    <strong> Division : </strong> ` + bubbleData.division + `
+                    <strong> Division : </strong>${bubbleData.division}
                 </li>
                 <li class="geoDataToolTipItem">
-                    <strong> Total<sup>1</sup>: </strong><span class="float-right">` + bubbleData.total + `</span>
+                    <strong> Total: </strong><span class="float-right">${bubbleData.total}</span>
                 </li>
                 <li class="geoDataToolTipItem">
-                    <strong> Outside Headend<sup>2</sup>: </strong><span class="float-right">` + bubbleData.outsideHeadEnd + `</span>
+                    <strong> Outside Headend: </strong><span class="float-right">${bubbleData.outsideHeadEnd}</span>
                 </li>
                 <li class="geoDataToolTipItem">
-                    <strong> Within Headend<sup>3</sup>: </strong><span class="float-right">` + bubbleData.withinHeadEnd + `</span>
+                    <strong> Within Headend: </strong><span class="float-right">${bubbleData.withinHeadEnd}</span>
                 </li>
                 <li class="geoDataToolTipItem">
-                    <strong> FTA / FiberNodeIssue<sup>4</sup>: </strong><span class="float-right">` + bubbleData.fiberNodeIssue + `</span>
+                    <strong> FTA / FiberNodeIssue: </strong><span class="float-right">${bubbleData.fiberNodeIssue}</span>
                 </li>
             </ul>
         `;
@@ -427,37 +427,34 @@ export class GeoChartComponent {
             .attr("dy", "1.2em")
             .text(d3.format(".1s"));
         
-        legend.append('rect')
-             .attr('width', 890)
-             .attr('height', 0.2)
-             .attr('x', -900)
-             .attr('y', 230)
-             .style('fill', '#bfbfbf')
-             .style('stroke', '#bfbfbf');
+        // legend.append('rect')
+        //      .attr('width', 890)
+        //      .attr('height', 0.2)
+        //      .attr('x', -900)
+        //      .attr('y', 230)
+        //      .style('fill', '#bfbfbf')
+        //      .style('stroke', '#bfbfbf');
 
         // Code to add Static D3 Legend text to the Geo-Graph  
-        legend.append('text')
-             .attr('x', -700 )
-             .attr('y', 245 )
-             .text( 'Total: Sum of all Mismatch conditions');
+        // legend.append('text')
+        //      .attr('x', -700 )
+        //      .attr('y', 245 )
+        //      .text( 'Total: Sum of all Mismatch conditions');
 
-        // Code to add Static D3 Legend text to the Geo-Graph  
-        legend.append('text')
-             .attr('x', -410)
-             .attr('y', 260)
-             .text('Outside Headend: Sum of (Single CMTS comparison - CMTS Mismatch, Headend Mismatch and Multiple CMTS comparison - CMTS Mismatch, Headend Mismatch)');
-
-        // Code to add Static D3 Legend text to the Geo-Graph    
-        legend.append('text')
-             .attr('x', -430)
-             .attr('y', 275)
-             .text('Within Headend: Sum of (Single CMTS comparison - CMTS Mismatch, Headend Match and Multiple CMTS comparison  - CMTS Mismatch, Headend Match)');
-            
-        // Code to add Static D3 Legend text to the Geo-Graph      
-        legend.append('text')
-             .attr('x', -398)
-             .attr('y', 290)
-             .text('FTA Searched due to Account and/or FiberNode issues: Sum of Multiple CMTS comparison (CMTS Mismatch, Headend Mismatch and CMTS Mismatch, Headend Match)');
+        // legend.append('text')
+        //      .attr('x', -410)
+        //      .attr('y', 260)
+        //      .text('Outside Headend: Sum of (Single CMTS comparison - CMTS Mismatch, Headend Mismatch and Multiple CMTS comparison - CMTS Mismatch, Headend Mismatch)');
+        
+        // legend.append('text')
+        //      .attr('x', -430)
+        //      .attr('y', 275)
+        //      .text('Within Headend: Sum of (Single CMTS comparison - CMTS Mismatch, Headend Match and Multiple CMTS comparison  - CMTS Mismatch, Headend Match)');
+        
+        // legend.append('text')
+        //      .attr('x', -398)
+        //      .attr('y', 290)
+        //      .text('FTA Searched due to Account and/or FiberNode issues: Sum of Multiple CMTS comparison (CMTS Mismatch, Headend Mismatch and CMTS Mismatch, Headend Match)');
     }
 }
 

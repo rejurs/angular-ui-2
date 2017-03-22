@@ -699,7 +699,7 @@ export class RealtimeScaleComponent implements OnInit {
         
         return `
             <p class="timeh"> ${ new Date(item.time).toLocaleString('en-US', {timeZone: 'UTC'}) } (UTC)</p>
-            <ul class="geoDataToolTip">
+            <!--<ul class="geoDataToolTip">
                 <li class='geoDataToolTipItem'>
                     <strong>${codeNames['1600112']} : </strong> ${(item[1600112] | 0)} 
                 </li>
@@ -712,7 +712,7 @@ export class RealtimeScaleComponent implements OnInit {
                 <li class="geoDataToolTipItem">
                     <strong>${codeNames['1600119']} : </strong> ${(item[1600119] | 0)} 
                 </li>
-            </ul>
+            </ul>-->
         `;
     }
 
